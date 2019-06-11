@@ -7,31 +7,49 @@
 // ===== Settings ===== //
 #define I2C_ADDR 0x31 // I2C address this (slave) device will listen to
 
-#define DEBUG         // Enable serial debugging output
+// #define DEBUG         // Enable serial debugging output
 
-#define MODE_MASK      0x78
-#define MODE_KEYBOARD  0x00
-#define MODE_MOUSE     0x10
+#define BUFFER_SIZE 512
+
+#define RES_CODE_OK 0x00
+#define RES_CODE_ERROR 0x01
 
 // ===== Libraries ===== //
-#include <Wire.h>           // I2C
-#include "SimpleKeyboard.h" // USB HID Keyboard
-#include "SimpleMouse.h"    // USB HID Mouse
+#include <Wire.h>     // I2C
+#include <Keyboard.h> // USB HID Keyboard
+
+// ===== Types ===== //
+typedef struct word_t {
+    char  * begin;
+    char  * end;
+    uint8_t len;
+} word_t;
 
 // ===== Global Variables ===== //
-uint8_t error = 0x00;       // Error Code
+uint8_t error = RES_CODE_OK;
 
-key_report   kr;            // Keyboard state
-mouse_report mr;            // Mouse state
+uint8_t mainBuffer[BUFFER_SIZE];
+uint8_t secondBuffer[BUFFER_SIZE];
 
-SimpleKeyboard keyboard;    // keyboard instance
-SimpleMouse    mouse;       // Mouse instance
+unsigned int mainBufferSize   = 0;
+unsigned int secondBufferSize = 0;
+
+bool inString     = false;
+bool inComment    = false;
+int  defaultDelay = 5;
+int  repeatNum    = 0;
 
 // ===== Global Functions ===== //
 // I2C Request
 void requestEvent() {
-    Wire.write(error); // Reply with error code
-    error = 0x00;      // Reset error code
+    Wire.write(mainBufferSize);
+    Wire.write(error);
+    Wire.write(repeatNum);
+
+    /*
+       Wire.write(error); // Reply with error code
+       error = 0x00;      // Reset error code
+     */
 
     #ifdef DEBUG
     Serial.println("Replied to request");
@@ -45,48 +63,19 @@ void receiveEvent(int len) {
     Serial.println(len);
     #endif // ifdef DEBUG
 
-    // Write byte stream into a structure
-    uint8_t mode = Wire.read();
-
-    if (((mode & MODE_MASK) == MODE_KEYBOARD) && (len == 8)) {
-        #ifdef DEBUG
-        Serial.println("Mode = Keyboard");
-        #endif // ifdef DEBUG
-
-        // Copy data into keyboard report structure
-        kr.modifiers = Wire.read();
-        kr.keys[0]   = Wire.read();
-        kr.keys[1]   = Wire.read();
-        kr.keys[2]   = Wire.read();
-        kr.keys[3]   = Wire.read();
-        kr.keys[4]   = Wire.read();
-        kr.keys[5]   = Wire.read();
-
-        // Run it!
-        keyboard.press(&kr);
-        if (mode & 0x01) keyboard.release();
-    } else if (((mode & MODE_MASK) == MODE_MOUSE) && (len == 5)) {
-        #ifdef DEBUG
-        Serial.println("Mode = Mouse");
-        #endif // ifdef DEBUG
-
-        // Copy data into mouse report structure
-        mr.buttons = Wire.read();
-        mr.x       = (int8_t)Wire.read();
-        mr.y       = (int8_t)Wire.read();
-        mr.scroll  = (int8_t)Wire.read();
-
-        // Run it!
-        mouse.move(&mr);
-        if (mode & 0x01) mouse.release();
+    if ((unsigned int)len < BUFFER_SIZE - mainBufferSize) {
+        Wire.readBytes(&mainBuffer[mainBufferSize], len);
+        mainBufferSize += len;
     } else {
+        error = RES_CODE_ERROR;
+
         #ifdef DEBUG
-        Serial.print("Unknown Mode ");
-        Serial.println(mode, BIN);
+        Serial.println("Buffer is full!");
         #endif // ifdef DEBUG
     }
 }
 
+// ===== SETUP ====== //
 void setup() {
     Serial.begin(115200);
 
@@ -103,4 +92,23 @@ void setup() {
     Wire.onReceive(receiveEvent);
 }
 
-void loop() {}
+// ===== LOOOP ===== //
+void loop() {
+    if (secondBufferSize > 0) {
+        // Serial.println();
+
+        for (unsigned int i = 0; i<secondBufferSize; i++) {
+            Serial.print((char)secondBuffer[i]);
+        }
+        // Serial.println();
+
+        secondBufferSize = 0;
+    }
+
+    // Copy incoming buffer
+    if (mainBufferSize > 0) {
+        memcpy(secondBuffer, mainBuffer, mainBufferSize);
+        secondBufferSize = mainBufferSize;
+        mainBufferSize   = 0;
+    }
+}
