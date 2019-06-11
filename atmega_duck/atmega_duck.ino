@@ -25,11 +25,16 @@ typedef struct word_t {
     uint8_t len;
 } word_t;
 
+extern "C" {
+#include "parser.h"     // parse_lines
+#include "comparator.h" // compare
+}
+
 // ===== Global Variables ===== //
 uint8_t error = RES_CODE_OK;
 
-uint8_t mainBuffer[BUFFER_SIZE];
-uint8_t secondBuffer[BUFFER_SIZE];
+char mainBuffer[BUFFER_SIZE];
+char secondBuffer[BUFFER_SIZE];
 
 unsigned int mainBufferSize   = 0;
 unsigned int secondBufferSize = 0;
@@ -75,6 +80,15 @@ void receiveEvent(int len) {
     }
 }
 
+void print(const char* str, size_t len) {
+    for (size_t i = 0; i<len; ++i) Serial.print(str[i]);
+}
+
+void println(const char* str, size_t len) {
+    print(str, len);
+    Serial.println();
+}
+
 // ===== SETUP ====== //
 void setup() {
     Serial.begin(115200);
@@ -95,13 +109,98 @@ void setup() {
 // ===== LOOOP ===== //
 void loop() {
     if (secondBufferSize > 0) {
-        // Serial.println();
+        // Split str into a list of lines
+        line_list* l = parse_lines(secondBuffer, secondBufferSize);
 
-        for (unsigned int i = 0; i<secondBufferSize; i++) {
-            Serial.print((char)secondBuffer[i]);
+        // Serial.print("Processing '");
+        // print(secondBuffer, secondBufferSize);
+        // Serial.println("'");
+
+        // Go through all lines and try to find a matching command
+        line_node* n = l->first;
+
+        while (n) {
+            word_list* wl        = n->words;
+            word_node* cmd_name  = wl->first;
+            word_node* first_arg = cmd_name->next;
+
+            const char* line_str = cmd_name->str + cmd_name->len + 1;
+            size_t line_str_len  = n->len - cmd_name->len - 1;
+
+            char last_char = secondBuffer[secondBufferSize-1];
+            bool line_end  = last_char == '\r' || last_char == '\n';
+
+            // REM
+            if (inComment || compare(cmd_name->str, cmd_name->len, "REM", true)) {
+                if (inComment) {
+                    print(n->str, n->len);
+                } else {
+                    print(line_str, line_str_len);
+                }
+
+                if (line_end) {
+                    Serial.println();
+                    inComment = false;
+                } else {
+                    inComment = true;
+                }
+            }
+
+            // STRING
+            else if (inString || compare(cmd_name->str, cmd_name->len, "STRING", true)) {
+                if (inString) {
+                    print(n->str, n->len);
+                } else {
+                    Serial.print("Type: '");
+                    print(line_str, line_str_len);
+                }
+
+                if (line_end) {
+                    Serial.println("'");
+                    inString = false;
+                } else {
+                    inString = true;
+                }
+            }
+
+            // DELAY
+            else if (compare(cmd_name->str, cmd_name->len, "DELAY", true)) {
+                Serial.print("Delay(");
+                print(first_arg->str, first_arg->len);
+                Serial.println("ms)");
+            }
+
+            // DEFAULTDELAY/DEFAULT_DELAY
+            else if (compare(cmd_name->str, cmd_name->len, "DEFAULTDELAY", true) || compare(cmd_name->str, cmd_name->len, "DEFAULT_DELAY", true)) {
+                Serial.print("DEFAULT_DELAY=");
+                print(first_arg->str, first_arg->len);
+                Serial.println("ms");
+            }
+
+            // REPEAT
+            else if (compare(cmd_name->str, cmd_name->len, "REPEAT", true)) {
+                Serial.print("REPEAT ");
+                print(first_arg->str, first_arg->len);
+                Serial.println(" times");
+            }
+
+            else {
+                word_node* w = wl->first;
+
+                while (w) {
+                    Serial.print("Press '");
+                    print(w->str, w->len);
+                    Serial.println("'");
+                    w = w->next;
+                }
+
+                if (line_end) Serial.println("Release");
+            }
+
+            n = n->next;
         }
-        // Serial.println();
 
+        line_list_destroy(l);
         secondBufferSize = 0;
     }
 
