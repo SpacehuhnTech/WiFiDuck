@@ -41,10 +41,10 @@ int compare(const char* user_str, size_t user_str_len, const char* templ_str, in
     // string can't be longer than templ_str (but can be smaller because of  '/' and ',')
     if (str_len > key_len) return COMPARE_UNEQUAL;
 
-    int res_i = 0;
-    int a     = 0;
-    int b     = 0;
-    int res   = 1;
+    unsigned int res_i = 0;
+    unsigned int a     = 0;
+    unsigned int b     = 0;
+    unsigned int res   = 1;
 
     while (a < str_len && b < key_len) {
         if (templ_str[b] == '/') {
