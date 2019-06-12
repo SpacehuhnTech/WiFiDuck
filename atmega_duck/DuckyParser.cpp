@@ -20,7 +20,7 @@ extern "C" {
 }
 
 void DuckyParser::type(const char* str, size_t len) {
-    Keyboard.write(str, len);
+    Keyboard.write((uint8_t*)str, len);
 }
 
 void DuckyParser::press(const char* str, size_t len) {
@@ -127,7 +127,7 @@ void DuckyParser::parse(char* str, size_t len) {
 
         // REPEAT (-> repeat last command n times)
         else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE)) {
-            repeatNum = toInt(line_str, line_str_len);
+            repeatNum = toInt(line_str, line_str_len) + 1;
         }
 
         // Otherwise go through words and look for keys to press
@@ -148,4 +148,10 @@ void DuckyParser::parse(char* str, size_t len) {
     }
 
     line_list_destroy(l);
+
+    if (repeatNum > 0) --repeatNum;
+}
+
+int DuckyParser::getRepeats() {
+    return repeatNum;
 }

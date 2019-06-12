@@ -24,6 +24,7 @@ class DuckyParser {
 
     public:
         void parse(char* str, size_t len);
+        int getRepeats();
 };
 
 #endif /* ifndef DuckyParser_h */

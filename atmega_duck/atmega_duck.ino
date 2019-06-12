@@ -13,6 +13,7 @@
 
 #define RESPONSE_OK 0x00
 #define RESPONSE_PROCESSING 0x01
+#define RESPONSE_REPEAT 0x02
 
 // ===== Libraries ===== //firefox0
 #include <Wire.h>        // I2C0
@@ -38,7 +39,11 @@ void requestEvent() {
         Wire.write(RESPONSE_PROCESSING);
     } else {
         processing = mainBuffer.len > 0;
+
         Wire.write(processing ? RESPONSE_PROCESSING : RESPONSE_OK);
+
+        Wire.write(ducky.getRepeats() >> 8);
+        Wire.write(ducky.getRepeats());
     }
 }
 
