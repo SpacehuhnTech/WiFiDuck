@@ -145,11 +145,11 @@ void DuckyParser::parse(char* str, size_t len) {
         n = n->next;
 
         if (!inString && !inComment) delay(defaultDelay);
+
+        if (line_end && (repeatNum > 0)) --repeatNum;
     }
 
     line_list_destroy(l);
-
-    if (repeatNum > 0) --repeatNum;
 }
 
 int DuckyParser::getRepeats() {
