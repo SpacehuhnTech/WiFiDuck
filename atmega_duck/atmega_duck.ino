@@ -9,13 +9,13 @@
 
 #define DEBUG         // Enable serial debugging output
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 512
 
-#define ERROR_OK 0x00
-#define ERROR_BUFFER 0x01
+#define RESPONSE_OK 0x00
+#define RESPONSE_PROCESSING 0x01
 
-// ===== Libraries ===== //
-#include <Wire.h>        // I2C
+// ===== Libraries ===== //firefox0
+#include <Wire.h>        // I2C0
 #include "DuckyParser.h" // Ducky Script language Interpreter
 
 // ===== Types ===== //
@@ -27,27 +27,27 @@ typedef struct buffer_t {
 // ===== Global Variables ===== //
 DuckyParser ducky;
 
-uint8_t error = ERROR_OK;
+bool processing = false;
 
 buffer_t mainBuffer;
-buffer_t secondBuffer;
 
 // ===== Global Functions ===== //
 // I2C Request
 void requestEvent() {
-    Wire.write(mainBuffer.len);
-    Wire.write(error);
-
-    // Serial.println("Replied to request");
+    if (processing) {
+        Wire.write(RESPONSE_PROCESSING);
+    } else {
+        processing = mainBuffer.len > 0;
+        Wire.write(processing ? RESPONSE_PROCESSING : RESPONSE_OK);
+    }
 }
 
 // I2C Receive
 void receiveEvent(int len) {
-    if ((unsigned int)len < BUFFER_SIZE - mainBuffer.len) {
+    if (mainBuffer.len + (unsigned int)len <= BUFFER_SIZE) {
         Wire.readBytes(&mainBuffer.data[mainBuffer.len], len);
         mainBuffer.len += len;
     } else {
-        error = ERROR_BUFFER;
         // Serial.println("Buffer is full!");
     }
 }
@@ -71,15 +71,9 @@ void setup() {
 
 // ===== LOOOP ===== //
 void loop() {
-    if (secondBuffer.len > 0) {
-        ducky.parse(secondBuffer.data, secondBuffer.len);
-        secondBuffer.len = 0;
-    }
-
-    // Copy incoming buffer
-    if (mainBuffer.len > 0) {
-        memcpy(secondBuffer.data, mainBuffer.data, mainBuffer.len);
-        secondBuffer.len = mainBuffer.len;
-        mainBuffer.len   = 0;
+    if (processing) {
+        ducky.parse(mainBuffer.data, mainBuffer.len);
+        mainBuffer.len = 0;
+        processing     = false;
     }
 }
