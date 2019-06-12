@@ -11,14 +11,16 @@
 
 class DuckyParser {
     private:
-        bool inString     = false;
-        bool inComment    = false;
-        int  defaultDelay = 5;
-        int  repeatNum    = 0;
+        bool inString    = false;
+        bool inComment   = false;
+        int defaultDelay = 5;
+        int repeatNum    = 0;
 
         void type(const char* str, size_t len);
         void press(const char* str, size_t len);
         void release();
+
+        int toInt(const char* str, size_t len);
 
     public:
         void parse(char* str, size_t len);
