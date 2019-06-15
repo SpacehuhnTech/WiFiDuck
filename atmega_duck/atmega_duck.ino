@@ -5,9 +5,9 @@
  */
 
 // ===== Settings ===== //
-#define I2C_ADDR 0x31 // I2C address this (slave) device will listen to
-
 #define DEBUG         // Enable serial debugging output
+
+#define I2C_ADDR 0x31 // I2C address this (slave) device will listen to
 
 #define BUFFER_SIZE 512
 
@@ -44,9 +44,14 @@ void requestEvent() {
             Wire.write(RESPONSE_PROCESSING);
         } else if (ducky.getRepeats() > 0) {
             Wire.write(RESPONSE_REPEAT);
+#ifdef DEBUG
             Serial.println("REPEAT");
+#endif // ifdef DEBUG
         } else {
             Wire.write(RESPONSE_OK);
+#ifdef DEBUG
+            Serial.println("Done");
+#endif // ifdef DEBUG
         }
     }
 }
@@ -54,20 +59,26 @@ void requestEvent() {
 // I2C Receive
 void receiveEvent(int len) {
     if (mainBuffer.len + (unsigned int)len <= BUFFER_SIZE) {
+#ifdef DEBUG
+        Serial.println("Received packet");
+#endif // ifdef DEBUG
         Wire.readBytes(&mainBuffer.data[mainBuffer.len], len);
         mainBuffer.len += len;
     } else {
-        // Serial.println("Buffer is full!");
+#ifdef DEBUG
+        Serial.println("!!! Buffer is full !!!");
+#endif // ifdef DEBUG
     }
 }
 
 // ===== SETUP ====== //
 void setup() {
+#ifdef DEBUG
     Serial.begin(115200);
 
     while (!Serial);
     Serial.println("Started!");
-
+#endif // ifdef DEBUG
 
     Wire.begin(I2C_ADDR); // Start I2C
 
@@ -81,6 +92,12 @@ void setup() {
 // ===== LOOOP ===== //
 void loop() {
     if (processing) {
+#ifdef DEBUG
+        Serial.print("Interpreting: ");
+
+        for (size_t i = 0; i<mainBuffer.len; i++) Serial.print(mainBuffer.data[i]);
+#endif // ifdef DEBUG
+
         ducky.parse(mainBuffer.data, mainBuffer.len);
         mainBuffer.len = 0;
         processing     = false;

@@ -82,9 +82,6 @@ int DuckyParser::toInt(const char* str, size_t len) {
 }
 
 void DuckyParser::parse(char* str, size_t len) {
-    for (size_t i = 0; i<len; i++) Serial.print(str[i]);
-    Serial.println();
-
     // Split str into a list of lines
     line_list* l = parse_lines(str, len);
 
@@ -125,7 +122,6 @@ void DuckyParser::parse(char* str, size_t len) {
         // DEFAULTDELAY/DEFAULT_DELAY (set default delay per command)
         else if (compare(cmd->str, cmd->len, "DEFAULTDELAY", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "DEFAULT_DELAY", CASE_SENSETIVE)) {
             defaultDelay = toInt(line_str, line_str_len);
-            Serial.println("DEFAULTDELAY="+String(defaultDelay));
         }
 
         // REPEAT (-> repeat last command n times)
