@@ -1,4 +1,10 @@
-#include "DuckyTransmitter.h"
+/*
+   Copyright (c) 2019 Stefan Kremser
+   This software is licensed under the MIT License. See the license file for details.
+   Source: github.com/spacehuhn/WiFiDuck
+ */
+
+ #include "DuckyTransmitter.h"
 
 // ===== PRIVATE ===== //
 void DuckyTransmitter::sendRequest() {
@@ -56,7 +62,7 @@ void DuckyTransmitter::begin() {
     sendRequest();
 }
 
-void DuckyTransmitter::sendMessage(String& msg) {
+void DuckyTransmitter::sendMessage(const String& msg) {
     sendMessage(msg.c_str());
 }
 

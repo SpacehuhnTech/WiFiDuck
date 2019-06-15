@@ -1,4 +1,10 @@
-#ifndef DuckyTransmitter_h
+/*
+   Copyright (c) 2019 Stefan Kremser
+   This software is licensed under the MIT License. See the license file for details.
+   Source: github.com/spacehuhn/WiFiDuck
+ */
+
+ #ifndef DuckyTransmitter_h
 #define DuckyTransmitter_h
 
 #include <Arduino.h>
@@ -16,7 +22,7 @@
 #define RESPONSE_REPEAT 0x02
 #define RESPONSE_I2C_ERROR 0xFF
 
-#define WAITING_TIME 25
+#define WAITING_TIME 5
 
 class DuckyTransmitter {
     private:
@@ -34,7 +40,7 @@ class DuckyTransmitter {
     public:
         void begin();
 
-        void sendMessage(String& msg);
+        void sendMessage(const String& msg);
         void sendMessage(const char* msg);
 
         bool connected();
