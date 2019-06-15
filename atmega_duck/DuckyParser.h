@@ -7,7 +7,7 @@
 #ifndef DuckyParser_h
 #define DuckyParser_h
 
-#include <Keyboard.h> // USB HID Keyboard
+#include "SimpleKeyboard.h"
 
 class DuckyParser {
     private:
@@ -21,6 +21,8 @@ class DuckyParser {
         void release();
 
         int toInt(const char* str, size_t len);
+
+        SimpleKeyboard keyboard;
 
     public:
         void parse(char* str, size_t len);

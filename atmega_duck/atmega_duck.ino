@@ -18,6 +18,7 @@
 // ===== Libraries ===== //firefox0
 #include <Wire.h>        // I2C0
 #include "DuckyParser.h" // Ducky Script language Interpreter
+#include "locales.h"
 
 // ===== Types ===== //
 typedef struct buffer_t {
@@ -85,8 +86,6 @@ void setup() {
     // Set I2C events
     Wire.onRequest(requestEvent);
     Wire.onReceive(receiveEvent);
-
-    Keyboard.begin();
 }
 
 // ===== LOOOP ===== //
