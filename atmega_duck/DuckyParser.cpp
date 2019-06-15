@@ -82,6 +82,9 @@ int DuckyParser::toInt(const char* str, size_t len) {
 }
 
 void DuckyParser::parse(char* str, size_t len) {
+    for (size_t i = 0; i<len; i++) Serial.print(str[i]);
+    Serial.println();
+
     // Split str into a list of lines
     line_list* l = parse_lines(str, len);
 

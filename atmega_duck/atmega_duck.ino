@@ -40,10 +40,14 @@ void requestEvent() {
     } else {
         processing = mainBuffer.len > 0;
 
-        Wire.write(processing ? RESPONSE_PROCESSING : RESPONSE_OK);
-
-        Wire.write(ducky.getRepeats() >> 8);
-        Wire.write(ducky.getRepeats());
+        if (processing) {
+            Wire.write(RESPONSE_PROCESSING);
+        } else if (ducky.getRepeats() > 0) {
+            Wire.write(RESPONSE_REPEAT);
+            Serial.println("REPEAT");
+        } else {
+            Wire.write(RESPONSE_OK);
+        }
     }
 }
 
@@ -59,11 +63,11 @@ void receiveEvent(int len) {
 
 // ===== SETUP ====== //
 void setup() {
-    /*
-       Serial.begin(115200);
-       while (!Serial);
-       Serial.println("Started!");
-     */
+    Serial.begin(115200);
+
+    while (!Serial);
+    Serial.println("Started!");
+
 
     Wire.begin(I2C_ADDR); // Start I2C
 
