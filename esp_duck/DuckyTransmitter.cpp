@@ -22,8 +22,8 @@ void DuckyTransmitter::sendRequest() {
 void DuckyTransmitter::wait() {
     sendRequest();
 
-    while (response == RESPONSE_PROCESSING) {
-        delay(WAITING_TIME);
+    while (response & 0x01 == RESPONSE_PROCESSING) {
+        delay(response);
         Serial.print('.');
         sendRequest();
     }

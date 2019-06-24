@@ -22,8 +22,6 @@
 #define RESPONSE_REPEAT 0x02
 #define RESPONSE_I2C_ERROR 0xFF
 
-#define WAITING_TIME 5
-
 class DuckyTransmitter {
     private:
         bool connection  = false;

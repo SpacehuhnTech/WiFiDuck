@@ -7,7 +7,7 @@
 #define ENABLE_DEFAULT_DELAY
 #define OPEN_NOTEPAD
 // #define HELLO_WORLD
-// #define DELAY_TEST
+#define DELAY_TEST
 // #define REPEAT_TEST
 // #define REPEAT_TEST
 // #define ALL_CHAR_TEST
@@ -51,9 +51,9 @@ void setup() {
 #ifdef DELAY_TEST
         duck.sendMessage("DELAY 1000\n");
         duck.sendMessage(".\n");
-        duck.sendMessage("DELAY 10000\n");
+        duck.sendMessage("DELAY 3000\n");
         duck.sendMessage(".\n");
-        duck.sendMessage("DELAY 30000\n");
+        duck.sendMessage("DELAY 5000\n");
         duck.sendMessage(".\n");
         duck.sendMessage("ENTER\n");
 #endif // ifdef HELLO_WORLD
@@ -75,7 +75,7 @@ void setup() {
 #endif // ifdef OVERFLOW_TEST
 
 #ifdef CLOSE_NOTEPAD
-        duck.sendMessage("DELAY 10000\n");
+        duck.sendMessage("DELAY 5000\n");
         duck.sendMessage("ALT F4\n");
         duck.sendMessage("RIGHT\n");
         duck.sendMessage("ENTER\n");

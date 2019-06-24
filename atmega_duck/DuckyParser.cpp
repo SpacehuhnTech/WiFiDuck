@@ -7,6 +7,7 @@
 #include "DuckyParser.h"
 
 #define CASE_SENSETIVE false
+#define DEFAULT_SLEEP 5
 
 extern "C" {
  #include "parser.h"     // parse_lines
@@ -80,7 +81,20 @@ int DuckyParser::toInt(const char* str, size_t len) {
     return val;
 }
 
+void DuckyParser::sleep(unsigned long time) {
+    unsigned long offset = millis() - interpretTime;
+
+    if (time > offset) {
+        sleepStartTime = millis();
+        sleepTime      = time - offset;
+
+        delay(sleepTime);
+    }
+}
+
 void DuckyParser::parse(char* str, size_t len) {
+    interpretTime = millis();
+
     // Split str into a list of lines
     line_list* l = parse_lines(str, len);
 
@@ -115,7 +129,7 @@ void DuckyParser::parse(char* str, size_t len) {
 
         // DELAY (-> sleep for x ms)
         else if (compare(cmd->str, cmd->len, "DELAY", CASE_SENSETIVE)) {
-            delay(toInt(line_str, line_str_len));
+            sleep(toInt(line_str, line_str_len));
         }
 
         // DEFAULTDELAY/DEFAULT_DELAY (set default delay per command)
@@ -142,9 +156,11 @@ void DuckyParser::parse(char* str, size_t len) {
 
         n = n->next;
 
-        if (!inString && !inComment) delay(defaultDelay);
+        if (!inString && !inComment) sleep(defaultDelay);
 
         if (line_end && (repeatNum > 0)) --repeatNum;
+
+        interpretTime = millis();
     }
 
     line_list_destroy(l);
@@ -152,4 +168,16 @@ void DuckyParser::parse(char* str, size_t len) {
 
 int DuckyParser::getRepeats() {
     return repeatNum;
+}
+
+unsigned int DuckyParser::getDelayTime() {
+    unsigned long finishTime  = sleepStartTime + sleepTime;
+    unsigned long currentTime = millis();
+
+    if (currentTime > finishTime) {
+        return DEFAULT_SLEEP;
+    } else {
+        unsigned long remainingTime = finishTime - currentTime;
+        return remainingTime | DEFAULT_SLEEP;
+    }
 }

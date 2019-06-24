@@ -37,12 +37,12 @@ buffer_t mainBuffer;
 // I2C Request
 void requestEvent() {
     if (processing) {
-        Wire.write(RESPONSE_PROCESSING);
+        Wire.write(ducky.getDelayTime() | RESPONSE_PROCESSING);
     } else {
         processing = mainBuffer.len > 0;
 
         if (processing) {
-            Wire.write(RESPONSE_PROCESSING);
+            Wire.write(ducky.getDelayTime() | RESPONSE_PROCESSING);
         } else if (ducky.getRepeats() > 0) {
             Wire.write(RESPONSE_REPEAT);
 #ifdef DEBUG
