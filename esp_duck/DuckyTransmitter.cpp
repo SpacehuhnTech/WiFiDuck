@@ -4,7 +4,7 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
- #include "DuckyTransmitter.h"
+#include "DuckyTransmitter.h"
 
 // ===== PRIVATE ===== //
 void DuckyTransmitter::sendRequest() {

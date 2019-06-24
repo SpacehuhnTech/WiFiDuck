@@ -4,7 +4,7 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
- #ifndef DuckyTransmitter_h
+#ifndef DuckyTransmitter_h
 #define DuckyTransmitter_h
 
 #include <Arduino.h>
