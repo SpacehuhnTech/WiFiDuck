@@ -59,12 +59,17 @@ void SimpleKeyboard::pressModifier(uint8_t key) {
 }
 
 void SimpleKeyboard::press(char c) {
+    uint8_t modifiers = pgm_read_byte(locale + (c * 2));
+    uint8_t key       = pgm_read_byte(locale + (c * 2) + 1);
+
     for (uint8_t i = 0; i<6; ++i) {
         if (prev_key_report.keys[i] == KEY_NONE) {
-            prev_key_report.modifiers |= pgm_read_byte(locale + ((int)c * 2));
-            prev_key_report.keys[i]    = pgm_read_byte(locale + ((int)c * 2) + 1);
+            prev_key_report.modifiers |= modifiers;
+            prev_key_report.keys[i]    = key;
+
             send(&prev_key_report);
-            return;
+
+            break;
         }
     }
 }

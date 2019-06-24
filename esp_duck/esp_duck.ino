@@ -7,12 +7,13 @@
 #define ENABLE_DEFAULT_DELAY
 #define OPEN_NOTEPAD
 // #define HELLO_WORLD
-#define DELAY_TEST
+// #define DELAY_TEST
 // #define REPEAT_TEST
 // #define REPEAT_TEST
-// #define ALL_CHAR_TEST
+// #define US_CHAR_TEST
+#define DE_CHAR_TEST
 // #define OVERFLOW_TEST
-#define CLOSE_NOTEPAD
+// #define CLOSE_NOTEPAD
 
 #include "DuckyTransmitter.h"
 
@@ -63,9 +64,15 @@ void setup() {
         duck.sendMessage("REPEAT 2\n");
 #endif // ifdef REPEAT_TEST
 
-#ifdef ALL_CHAR_TEST
+#ifdef US_CHAR_TEST
         duck.sendMessage("ENTER\n");
         duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\n");
+        duck.sendMessage("ENTER\n");
+#endif // ifdef ALL_CHAR_TEST
+
+#ifdef DE_CHAR_TEST
+        duck.sendMessage("ENTER\n");
+        duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~äöüÄÖÜß€` \n");
         duck.sendMessage("ENTER\n");
 #endif // ifdef ALL_CHAR_TEST
 
