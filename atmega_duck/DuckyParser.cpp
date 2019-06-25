@@ -130,6 +130,20 @@ void DuckyParser::parse(char* str, size_t len) {
             inString = !line_end;
         }
 
+        // LOCALE (-> change keyboard layout)
+        else if (compare(cmd->str, cmd->len, "LOCALE", CASE_SENSETIVE)) {
+            word_node* w = cmd->next;
+
+            if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
+                keyboard.setLocale(&locale_us);
+                Serial.println("Locale=us");
+            }
+            else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
+                keyboard.setLocale(&locale_de);
+                Serial.println("Locale=de");
+            }
+        }
+
         // DELAY (-> sleep for x ms)
         else if (compare(cmd->str, cmd->len, "DELAY", CASE_SENSETIVE)) {
             sleep(toInt(line_str, line_str_len));
