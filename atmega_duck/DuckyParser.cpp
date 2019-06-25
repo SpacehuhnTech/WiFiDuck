@@ -20,7 +20,7 @@ void DuckyParser::type(const char* str, size_t len) {
 
 void DuckyParser::press(const char* str, size_t len) {
     // character
-    if (len == 1) keyboard.press(str[0]);
+    if (len == 1) keyboard.press(str);
 
     // Keys
     else if (compare(str, len, "ENTER", CASE_SENSETIVE)) keyboard.pressKey(KEY_ENTER);
@@ -61,6 +61,9 @@ void DuckyParser::press(const char* str, size_t len) {
     else if (compare(str, len, "SHIFT", CASE_SENSETIVE)) keyboard.pressModifier(KEY_MOD_LSHIFT);
     else if (compare(str, len, "ALT", CASE_SENSETIVE)) keyboard.pressModifier(KEY_MOD_LALT);
     else if (compare(str, len, "WINDOWS", CASE_SENSETIVE) || compare(str, len, "GUI", CASE_SENSETIVE)) keyboard.pressModifier(KEY_MOD_LMETA);
+
+    // Utf8 character
+    else keyboard.press(str);
 }
 
 void DuckyParser::release() {

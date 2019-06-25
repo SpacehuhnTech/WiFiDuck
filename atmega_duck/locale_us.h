@@ -4,7 +4,7 @@
 #include "usb_hid_keys.h"
 
 // Modifier(s), Key
-const uint8_t locale_us[256*2] PROGMEM = {
+const uint8_t ascii_us[128 * 2] PROGMEM = {
     KEY_NONE,       KEY_NONE,       // NUL
     KEY_NONE,       KEY_NONE,       // SOH
     KEY_NONE,       KEY_NONE,       // STX
@@ -183,204 +183,13 @@ const uint8_t locale_us[256*2] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_BACKSLASH,  // |
     KEY_MOD_LSHIFT, KEY_RIGHTBRACE, // }
     KEY_MOD_LSHIFT, KEY_GRAVE,      // ~
-    KEY_NONE,       KEY_NONE,       // DEL
-
-
-    // ===== Extended ASCII ===== //
-
-    // 128, 0x80
-    KEY_NONE,       KEY_NONE, // Ç
-    KEY_NONE,       KEY_NONE, // ü
-    KEY_NONE,       KEY_NONE, // â
-    KEY_NONE,       KEY_NONE, // ä
-
-    // 132, 0x84
-    KEY_NONE,       KEY_NONE, // à
-    KEY_NONE,       KEY_NONE, // å
-    KEY_NONE,       KEY_NONE, // ç
-    KEY_NONE,       KEY_NONE, // ê
-
-    // 136, 0x88
-    KEY_NONE,       KEY_NONE, // ë
-    KEY_NONE,       KEY_NONE, // è
-    KEY_NONE,       KEY_NONE, // ï
-    KEY_NONE,       KEY_NONE, // î
-
-    // 140, 0x8c
-    KEY_NONE,       KEY_NONE, // ì
-    KEY_NONE,       KEY_NONE, // Ä
-    KEY_NONE,       KEY_NONE, // Å
-    KEY_NONE,       KEY_NONE, // É
-
-    // 144, 0x90
-    KEY_NONE,       KEY_NONE, // æ
-    KEY_NONE,       KEY_NONE, // Æ
-    KEY_NONE,       KEY_NONE, // ô
-    KEY_NONE,       KEY_NONE, // ö
-
-    // 148, 0x94
-    KEY_NONE,       KEY_NONE, // ò
-    KEY_NONE,       KEY_NONE, // û
-    KEY_NONE,       KEY_NONE, // ù
-    KEY_NONE,       KEY_NONE, // ÿ
-
-    // 152, 0x98
-    KEY_NONE,       KEY_NONE, // Ö
-    KEY_NONE,       KEY_NONE, // Ü
-    KEY_NONE,       KEY_NONE, // ¢
-    KEY_NONE,       KEY_NONE, // £
-
-    // 156, 0x9c
-    KEY_NONE,       KEY_NONE, // ¥
-    KEY_NONE,       KEY_NONE, // ₧
-    KEY_NONE,       KEY_NONE, // ƒ
-    KEY_NONE,       KEY_NONE, // á
-
-    // 160, 0xa0
-    KEY_NONE,       KEY_NONE, // í
-    KEY_NONE,       KEY_NONE, // ó
-    KEY_NONE,       KEY_NONE, // ú
-    KEY_NONE,       KEY_NONE, // ñ
-
-    // 164, 0xa4
-    KEY_NONE,       KEY_NONE, // Ñ
-    KEY_NONE,       KEY_NONE, // ª
-    KEY_NONE,       KEY_NONE, // º
-    KEY_NONE,       KEY_NONE, // ¿
-
-    // 168, 0xa8
-    KEY_NONE,       KEY_NONE, // ⌐
-    KEY_NONE,       KEY_NONE, // ¬
-    KEY_NONE,       KEY_NONE, // ½
-    KEY_NONE,       KEY_NONE, // ¼
-
-    // 172, 0xac
-    KEY_NONE,       KEY_NONE, // ¡
-    KEY_NONE,       KEY_NONE, // «
-    KEY_NONE,       KEY_NONE, // »
-    KEY_NONE,       KEY_NONE, // ░
-
-    // 176, 0xb0
-    KEY_NONE,       KEY_NONE, // ▒
-    KEY_NONE,       KEY_NONE, // ▒
-    KEY_NONE,       KEY_NONE, // ▓
-    KEY_NONE,       KEY_NONE, // │
-
-    // 180, 0xb4
-    KEY_NONE,       KEY_NONE, // ┤
-    KEY_NONE,       KEY_NONE, // ╡
-    KEY_NONE,       KEY_NONE, // ╢
-    KEY_NONE,       KEY_NONE, // ╖
-
-    // 184, 0xb8
-    KEY_NONE,       KEY_NONE, // ╕
-    KEY_NONE,       KEY_NONE, // ╣
-    KEY_NONE,       KEY_NONE, // ║
-    KEY_NONE,       KEY_NONE, // ╗
-
-    // 188, 0xbc
-    KEY_NONE,       KEY_NONE, // ╝
-    KEY_NONE,       KEY_NONE, // ╜
-    KEY_NONE,       KEY_NONE, // ╛
-    KEY_NONE,       KEY_NONE, // ┐
-
-    // 192, 0xc0
-    KEY_NONE,       KEY_NONE, // └
-    KEY_NONE,       KEY_NONE, // ┴
-    KEY_NONE,       KEY_NONE, // ┬
-    KEY_NONE,       KEY_NONE, // ├
-
-    // 196, 0xc4
-    KEY_NONE,       KEY_NONE, // ─
-    KEY_NONE,       KEY_NONE, // ┼
-    KEY_NONE,       KEY_NONE, // ╞
-    KEY_NONE,       KEY_NONE, // ╟
-
-    // 200, 0xc8
-    KEY_NONE,       KEY_NONE, // ╚
-    KEY_NONE,       KEY_NONE, // ╔
-    KEY_NONE,       KEY_NONE, // ╩
-    KEY_NONE,       KEY_NONE, // ╦
-
-    // 204, 0xcc
-    KEY_NONE,       KEY_NONE, // ╠
-    KEY_NONE,       KEY_NONE, // ═
-    KEY_NONE,       KEY_NONE, // ╬
-    KEY_NONE,       KEY_NONE, // ╧
-
-    // 208, 0xd0
-    KEY_NONE,       KEY_NONE, // ╨
-    KEY_NONE,       KEY_NONE, // ╤
-    KEY_NONE,       KEY_NONE, // ╥
-    KEY_NONE,       KEY_NONE, // ╙
-
-    // 212, 0xd4
-    KEY_NONE,       KEY_NONE, // ╘
-    KEY_NONE,       KEY_NONE, // ╒
-    KEY_NONE,       KEY_NONE, // ╓
-    KEY_NONE,       KEY_NONE, // ╫
-
-    // 216, 0xd8
-    KEY_NONE,       KEY_NONE, // ╪
-    KEY_NONE,       KEY_NONE, // ┘
-    KEY_NONE,       KEY_NONE, // ┌
-    KEY_NONE,       KEY_NONE, // █
-
-    // 220, 0xdc
-    KEY_NONE,       KEY_NONE, // ▄
-    KEY_NONE,       KEY_NONE, // ▌
-    KEY_NONE,       KEY_NONE, // ▐
-    KEY_NONE,       KEY_NONE, // ▀
-
-    // 224, 0xe0
-    KEY_NONE,       KEY_NONE, // α
-    KEY_NONE,       KEY_NONE, // ß
-    KEY_NONE,       KEY_NONE, // Γ
-    KEY_NONE,       KEY_NONE, // π
-
-    // 228, 0xe4
-    KEY_NONE,       KEY_NONE, // Σ
-    KEY_NONE,       KEY_NONE, // σ
-    KEY_NONE,       KEY_NONE, // µ
-    KEY_NONE,       KEY_NONE, // τ
-
-    // 232, 0xe8
-    KEY_NONE,       KEY_NONE, // Φ
-    KEY_NONE,       KEY_NONE, // Θ
-    KEY_NONE,       KEY_NONE, // Ω
-    KEY_NONE,       KEY_NONE, // δ
-
-    // 236, 0xec
-    KEY_NONE,       KEY_NONE, // ∞
-    KEY_NONE,       KEY_NONE, // φ
-    KEY_NONE,       KEY_NONE, // ε
-    KEY_NONE,       KEY_NONE, // ∩
-
-    // 240, 0xf0
-    KEY_NONE,       KEY_NONE, // ≡
-    KEY_NONE,       KEY_NONE, // ±
-    KEY_NONE,       KEY_NONE, // ≥
-    KEY_NONE,       KEY_NONE, // ≤
-
-    // 244, 0xf4
-    KEY_NONE,       KEY_NONE, // ⌠
-    KEY_NONE,       KEY_NONE, // ⌡
-    KEY_NONE,       KEY_NONE, // ÷
-    KEY_NONE,       KEY_NONE, // ≈
-
-    // 248, 0xf8
-    KEY_NONE,       KEY_NONE, // °
-    KEY_NONE,       KEY_NONE, // ∙
-    KEY_NONE,       KEY_NONE, // ·
-    KEY_NONE,       KEY_NONE, // √
-
-    // 252, 0xfc
-    KEY_NONE,       KEY_NONE, // ⁿ
-    KEY_NONE,       KEY_NONE, // ²
-    KEY_NONE,       KEY_NONE, // ■
-    KEY_NONE,       KEY_NONE  //
+    KEY_NONE,       KEY_NONE        // DEL
 };
 
-const uint8_t utf8_de[0*6] PROGMEM = {};
+static locale_t locale_us {
+    (uint8_t*)&ascii_us, 128,
+    NULL, 0,
+    NULL, 0
+};
 
 #endif /* ifndef locale_us_h */

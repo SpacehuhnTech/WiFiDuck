@@ -50,7 +50,7 @@ typedef struct key_report {
 
 class SimpleKeyboard {
     private:
-        uint8_t  * locale          = (uint8_t*)locale_us;
+        locale_t * locale          = &locale_us;
         key_report prev_key_report = key_report { KEY_NONE, KEY_NONE, { KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE } };
 
         key_report makeReport(uint8_t modifiers = KEY_NONE, uint8_t key1 = KEY_NONE, uint8_t key2 = KEY_NONE, uint8_t key3 = KEY_NONE, uint8_t key4 = KEY_NONE, uint8_t key5 = KEY_NONE, uint8_t key6 = KEY_NONE);
@@ -58,17 +58,17 @@ class SimpleKeyboard {
     public:
         SimpleKeyboard();
 
-        void setLocale(uint8_t* locale);
+        void setLocale(locale_t* locale);
 
         void send(key_report* k);
         void release();
 
-        void pressKey(uint8_t key);
+        void pressKey(uint8_t key, uint8_t modifiers = KEY_NONE);
         void pressModifier(uint8_t key);
 
-        void press(char c);
+        uint8_t press(const char* strPtr);
 
-        void write(char c);
+        uint8_t write(const char* c);
         void write(const char* str, size_t len);
 };
 
