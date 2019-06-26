@@ -10,8 +10,9 @@
 // #define DELAY_TEST
 // #define REPEAT_TEST
 // #define REPEAT_TEST
-#define US_CHAR_TEST
+// #define US_CHAR_TEST
 // #define DE_CHAR_TEST
+// #define GB_CHAR_TEST
 // #define OVERFLOW_TEST
 // #define CLOSE_NOTEPAD
 
@@ -66,12 +67,20 @@ void setup() {
 #endif // ifdef REPEAT_TEST
 
 #ifdef US_CHAR_TEST
-        duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\n");
+        duck.sendMessage("LOCALE US\n");
+        duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~`\n");
         duck.sendMessage("ENTER\n");
 #endif // ifdef ALL_CHAR_TEST
 
 #ifdef DE_CHAR_TEST
+        duck.sendMessage("LOCALE DE\n");
         duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§` \n");
+        duck.sendMessage("ENTER\n");
+#endif // ifdef ALL_CHAR_TEST
+
+#ifdef GB_CHAR_TEST
+        duck.sendMessage("LOCALE GB\n");
+        duck.sendMessage("STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~£¦¬éíúóÉÍÚÓ€\n");
         duck.sendMessage("ENTER\n");
 #endif // ifdef ALL_CHAR_TEST
 

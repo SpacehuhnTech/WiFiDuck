@@ -4,7 +4,7 @@
 #include "usb_hid_keys.h"
 
 // Modifier(s), Key
-const uint8_t ascii_us[128 * 2] PROGMEM = {
+const uint8_t ascii_us[] PROGMEM = {
     KEY_NONE,       KEY_NONE,       // NUL
     KEY_NONE,       KEY_NONE,       // SOH
     KEY_NONE,       KEY_NONE,       // STX

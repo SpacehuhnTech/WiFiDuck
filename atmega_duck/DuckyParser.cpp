@@ -136,11 +136,10 @@ void DuckyParser::parse(char* str, size_t len) {
 
             if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
                 keyboard.setLocale(&locale_us);
-                Serial.println("Locale=us");
-            }
-            else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
+            } else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
                 keyboard.setLocale(&locale_de);
-                Serial.println("Locale=de");
+            } else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
+                keyboard.setLocale(&locale_gb);
             }
         }
 

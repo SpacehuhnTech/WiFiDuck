@@ -1,10 +1,10 @@
-#ifndef locale_de_h
-#define locale_de_h
+#ifndef locale_gb_h
+#define locale_gb_h
 
- #include "usb_hid_keys.h"
+#include "usb_hid_keys.h"
 
 // Modifier(s), Key
-const uint8_t ascii_de[] PROGMEM = {
+const uint8_t ascii_gb[] PROGMEM = {
     KEY_NONE,       KEY_NONE,       // NUL
     KEY_NONE,       KEY_NONE,       // SOH
     KEY_NONE,       KEY_NONE,       // STX
@@ -45,25 +45,25 @@ const uint8_t ascii_de[] PROGMEM = {
     KEY_NONE,       KEY_SPACE,      // ' '
     KEY_MOD_LSHIFT, KEY_1,          // !
     KEY_MOD_LSHIFT, KEY_2,          // "
-    KEY_NONE,       KEY_BACKSLASH,  // #
+    KEY_NONE, KEY_HASHTILDE,        // #
 
     // 36, 0x24
     KEY_MOD_LSHIFT, KEY_4,          // $
     KEY_MOD_LSHIFT, KEY_5,          // %
-    KEY_MOD_LSHIFT, KEY_6,          // &
-    KEY_MOD_LSHIFT, KEY_BACKSLASH,  // '
+    KEY_MOD_LSHIFT, KEY_7,          // &
+    KEY_NONE,       KEY_APOSTROPHE, // '
 
     // 40, 0x28
-    KEY_MOD_LSHIFT, KEY_8,          // (
-    KEY_MOD_LSHIFT, KEY_9,          // )
-    KEY_MOD_LSHIFT, KEY_RIGHTBRACE, // *
-    KEY_NONE,       KEY_RIGHTBRACE, // +
+    KEY_MOD_LSHIFT, KEY_9,          // (
+    KEY_MOD_LSHIFT, KEY_0,          // )
+    KEY_MOD_LSHIFT, KEY_8,          // *
+    KEY_MOD_LSHIFT, KEY_EQUAL,      // +
 
     // 44, 0x2c
     KEY_NONE,       KEY_COMMA,      // ,
-    KEY_NONE,       KEY_SLASH,      // -
+    KEY_NONE,       KEY_MINUS,      // -
     KEY_NONE,       KEY_DOT,        // .
-    KEY_MOD_LSHIFT, KEY_7,          // /
+    KEY_NONE,       KEY_SLASH,      // /
 
     // 48, 0x30
     KEY_NONE,       KEY_0,          // 0
@@ -80,17 +80,17 @@ const uint8_t ascii_de[] PROGMEM = {
     // 56, 0x38
     KEY_NONE,       KEY_8,          // 8
     KEY_NONE,       KEY_9,          // 9
-    KEY_MOD_LSHIFT, KEY_DOT,        // :
-    KEY_MOD_LSHIFT, KEY_COMMA,      // ;
+    KEY_MOD_LSHIFT, KEY_SEMICOLON,  // :
+    KEY_NONE,       KEY_SEMICOLON,  // ;
 
     // 60, 0x3c
-    KEY_NONE,       KEY_102ND,      // <
-    KEY_MOD_LSHIFT, KEY_0,          // =
-    KEY_MOD_LSHIFT, KEY_102ND,      // >
-    KEY_MOD_LSHIFT, KEY_MINUS,      // ?
+    KEY_MOD_LSHIFT, KEY_COMMA,      // <
+    KEY_NONE,       KEY_EQUAL,      // =
+    KEY_MOD_LSHIFT, KEY_DOT,        // >
+    KEY_MOD_LSHIFT, KEY_SLASH,      // ?
 
     // 64, 0x40
-    KEY_MOD_RALT, KEY_Q,            // @
+    KEY_MOD_LSHIFT, KEY_APOSTROPHE, // @
     KEY_MOD_LSHIFT, KEY_A,          // A
     KEY_MOD_LSHIFT, KEY_B,          // B
     KEY_MOD_LSHIFT, KEY_C,          // C
@@ -127,18 +127,18 @@ const uint8_t ascii_de[] PROGMEM = {
 
     // 88, 0x58
     KEY_MOD_LSHIFT, KEY_X,          // X
-    KEY_MOD_LSHIFT, KEY_Z,          // Y
-    KEY_MOD_LSHIFT, KEY_Y,          // Z
-    KEY_MOD_RALT,   KEY_8,          // [
+    KEY_MOD_LSHIFT, KEY_Y,          // Y
+    KEY_MOD_LSHIFT, KEY_Z,          // Z
+    KEY_NONE,       KEY_LEFTBRACE,  // [
 
     // 92, 0x5c
-    KEY_MOD_RALT,   KEY_MINUS,      // bslash
-    KEY_MOD_RALT,   KEY_9,          // ]
-    KEY_NONE,       KEY_GRAVE,      // ^
-    KEY_MOD_LSHIFT, KEY_SLASH,      // _
+    KEY_NONE,       KEY_BACKSLASH,  // bslash
+    KEY_NONE,       KEY_RIGHTBRACE, // ]
+    KEY_MOD_LSHIFT, KEY_6,          // ^
+    KEY_MOD_LSHIFT, KEY_MINUS,      // _
 
     // 96, 0x60
-    KEY_MOD_LSHIFT, KEY_EQUAL,      // `
+    KEY_NONE,       KEY_GRAVE,      // `
     KEY_NONE,       KEY_A,          // a
     KEY_NONE,       KEY_B,          // b
     KEY_NONE,       KEY_C,          // c
@@ -175,48 +175,47 @@ const uint8_t ascii_de[] PROGMEM = {
 
     // 120, 0x78
     KEY_NONE,       KEY_X,          // x
-    KEY_NONE,       KEY_Z,          // y
-    KEY_NONE,       KEY_Y,          // z
-    KEY_MOD_RALT,   KEY_7,          // {
+    KEY_NONE,       KEY_Y,          // y
+    KEY_NONE,       KEY_Z,          // z
+    KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // {
 
     // 124, 0x7c
-    KEY_MOD_RALT, KEY_102ND,        // |
-    KEY_MOD_RALT, KEY_0,            // }
-    KEY_MOD_RALT, KEY_RIGHTBRACE,   // ~
-    KEY_NONE,     KEY_BACKSPACE,    // DEL
+    KEY_MOD_LSHIFT, KEY_BACKSLASH,  // |
+    KEY_MOD_LSHIFT, KEY_RIGHTBRACE, // }
+    KEY_MOD_LSHIFT, KEY_HASHTILDE,  // ~
+    KEY_NONE,       KEY_NONE        // DEL
 };
 
-const uint8_t extended_ascii_de[] PROGMEM = {
-    0x84, KEY_NONE,       KEY_APOSTROPHE, // ä
-    0x94, KEY_NONE,       KEY_SEMICOLON,  // ö
-    0x81, KEY_NONE,       KEY_LEFTBRACE,  // ü
-    0x8e, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä
-    0x99, KEY_MOD_LSHIFT, KEY_SEMICOLON,  // Ö
-    0x9A, KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // Ü
-    0xE1, KEY_NONE,       KEY_MINUS,      // ß
-    0xF8, KEY_MOD_LSHIFT, KEY_GRAVE,      // °
-    0xFD, KEY_MOD_RALT,   KEY_2           // ²
+const uint8_t extended_ascii_gb[] PROGMEM = {
+    0x9c, KEY_MOD_LSHIFT, KEY_3,               // £
+    0xa6, KEY_MOD_RALT,   KEY_GRAVE,           // ¦
+    0xaa, KEY_MOD_LSHIFT, KEY_GRAVE,           // ¬
+    0x82, KEY_MOD_RALT, KEY_E,                 // é
+    0xa1, KEY_MOD_RALT, KEY_I,                 // í
+    0xa3, KEY_MOD_RALT, KEY_U,                 // ú
+    0xa2, KEY_MOD_RALT, KEY_O,                 // ó
+    0x90, KEY_MOD_RALT | KEY_MOD_LSHIFT, KEY_E // É
 };
 
-const uint8_t utf8_de[] PROGMEM = {
-    0xc3, 0xa4, 0x00, 0x00, KEY_NONE,       KEY_APOSTROPHE, // ä
-    0xc3, 0xb6, 0x00, 0x00, KEY_NONE,       KEY_SEMICOLON,  // ö
-    0xc3, 0xbc, 0x00, 0x00, KEY_NONE,       KEY_LEFTBRACE,  // ü
-    0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä
-    0xc3, 0x96, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_SEMICOLON,  // Ö
-    0xc3, 0x9c, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // Ü
-    0xc3, 0x9f, 0x00, 0x00, KEY_NONE,       KEY_MINUS,      // ß
-    0xc2, 0xa7, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_3,          // §
-    0xc2, 0xb0, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_GRAVE,      // °
-    0xe2, 0x82, 0xac, 0x00, KEY_MOD_RALT,   KEY_E,          // €
-    0xc2, 0xb2, 0x00, 0x00, KEY_MOD_RALT,   KEY_2,          // ²
-    0xc2, 0xb3, 0x00, 0x00, KEY_MOD_RALT,   KEY_3           // ³
+const uint8_t utf8_gb[] PROGMEM = {
+    0xc2, 0xa3, 0x00, 0x00, KEY_MOD_LSHIFT,                KEY_3,     // £
+    0xc2, 0xa6, 0x00, 0x00, KEY_MOD_RALT,                  KEY_GRAVE, // ¦
+    0xc2, 0xac, 0x00, 0x00, KEY_MOD_LSHIFT,                KEY_GRAVE, // ¬
+    0xc3, 0xa9, 0x00, 0x00, KEY_MOD_RALT,                  KEY_E,     // é
+    0xc3, 0xad, 0x00, 0x00, KEY_MOD_RALT,                  KEY_I,     // í
+    0xc3, 0xba, 0x00, 0x00, KEY_MOD_RALT,                  KEY_U,     // ú
+    0xc3, 0xb3, 0x00, 0x00, KEY_MOD_RALT,                  KEY_O,     // ó
+    0xc3, 0x89, 0x00, 0x00, KEY_MOD_RALT | KEY_MOD_LSHIFT, KEY_E,     // É
+    0xc3, 0x8d, 0x00, 0x00, KEY_MOD_RALT | KEY_MOD_LSHIFT, KEY_I,     // Í
+    0xc3, 0x9a, 0x00, 0x00, KEY_MOD_RALT | KEY_MOD_LSHIFT, KEY_U,     // Ú
+    0xc3, 0x93, 0x00, 0x00, KEY_MOD_RALT | KEY_MOD_LSHIFT, KEY_O,     // Ó
+    0xe2, 0x82, 0xac, 0x00, KEY_MOD_RALT,                  KEY_4      // €
 };
 
-static locale_t locale_de {
-    (uint8_t*)&ascii_de, sizeof(ascii_de) / 2,
-    (uint8_t*)extended_ascii_de,  sizeof(extended_ascii_de) / 3,
-    (uint8_t*)utf8_de, sizeof(utf8_de) / 6
+static locale_t locale_gb {
+    (uint8_t*)&ascii_gb, 128,
+    (uint8_t*)extended_ascii_gb, sizeof(extended_ascii_gb) / 3,
+    (uint8_t*)utf8_gb, sizeof(utf8_gb) / 6,
 };
 
-#endif /* ifndef locale_de_h */
+#endif /* ifndef locale_gb_h */
