@@ -6,9 +6,9 @@
 
 #define ENABLE_DEFAULT_DELAY
 #define OPEN_NOTEPAD
-// #define HELLO_WORLD
+#define HELLO_WORLD
 // #define DELAY_TEST
-// #define REPEAT_TEST
+#define REPEAT_TEST
 // #define REPEAT_TEST
 // #define US_CHAR_TEST
 // #define DE_CHAR_TEST

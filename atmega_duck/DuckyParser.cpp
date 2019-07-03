@@ -75,9 +75,24 @@ int DuckyParser::toInt(const char* str, size_t len) {
 
     int val = 0;
 
-    for (size_t i = 0; i < len; ++i) {
-        if ((str[i] >= '0') && (str[i] <= '9')) {
-            val = val * 10 + (str[i] - '0');
+    // HEX
+    if ((len > 2) && (str[0] == '0') && (str[1] == 'x')) {
+        for (size_t i = 2; i < len; ++i) {
+            uint8_t b = str[i];
+
+            if ((b >= '0') && (b <= '9')) b = b - '0';
+            else if ((b >= 'a') && (b <= 'f')) b = b - 'a' + 10;
+            else if ((b >= 'A') && (b <= 'F')) b = b - 'A' + 10;
+
+            val = (val << 4) | (b & 0xF);
+        }
+    }
+    // DECIMAL
+    else {
+        for (size_t i = 0; i < len; ++i) {
+            if ((str[i] >= '0') && (str[i] <= '9')) {
+                val = val * 10 + (str[i] - '0');
+            }
         }
     }
 
@@ -156,6 +171,22 @@ void DuckyParser::parse(char* str, size_t len) {
         // REPEAT (-> repeat last command n times)
         else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE)) {
             repeatNum = toInt(line_str, line_str_len) + 1;
+        }
+
+        // KEYCODE
+        else if (compare(cmd->str, cmd->len, "KEYCODE", CASE_SENSETIVE)) {
+            key_report k;
+
+            word_node* w = cmd->next;
+
+            k.modifiers = w ? toInt(w->str, w->len) : 0;
+
+            for (uint8_t i = 0; w && i<6; ++i) {
+                w         = w->next;
+                k.keys[i] = w ? toInt(w->str, w->len) : 0;
+            }
+
+            keyboard.send(&k);
         }
 
         // Otherwise go through words and look for keys to press
