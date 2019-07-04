@@ -25,7 +25,7 @@ class DuckyParser {
         void press(const char* str, size_t len);
         void release();
 
-        int toInt(const char* str, size_t len);
+        unsigned int toInt(const char* str, size_t len);
 
         void sleep(unsigned long delayTime);
 

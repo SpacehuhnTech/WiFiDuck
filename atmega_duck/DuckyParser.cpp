@@ -70,10 +70,10 @@ void DuckyParser::release() {
     keyboard.release();
 }
 
-int DuckyParser::toInt(const char* str, size_t len) {
+unsigned int DuckyParser::toInt(const char* str, size_t len) {
     if (!str || (len == 0)) return 0;
 
-    int val = 0;
+    unsigned int val = 0;
 
     // HEX
     if ((len > 2) && (str[0] == '0') && (str[1] == 'x')) {
@@ -175,18 +175,26 @@ void DuckyParser::parse(char* str, size_t len) {
 
         // KEYCODE
         else if (compare(cmd->str, cmd->len, "KEYCODE", CASE_SENSETIVE)) {
-            key_report k;
-
             word_node* w = cmd->next;
+            if (w) {
+                key_report k;
 
-            k.modifiers = w ? toInt(w->str, w->len) : 0;
+                k.modifiers = (uint8_t)toInt(w->str, w->len);
+                k.reserved  = 0;
+                w           = w->next;
 
-            for (uint8_t i = 0; w && i<6; ++i) {
-                w         = w->next;
-                k.keys[i] = w ? toInt(w->str, w->len) : 0;
+                for (uint8_t i = 0; i<6; ++i) {
+                    if (w) {
+                        k.keys[i] = (uint8_t)toInt(w->str, w->len);
+                        w         = w->next;
+                    } else {
+                        k.keys[i] = 0;
+                    }
+                }
+
+                keyboard.send(&k);
+                keyboard.release();
             }
-
-            keyboard.send(&k);
         }
 
         // Otherwise go through words and look for keys to press

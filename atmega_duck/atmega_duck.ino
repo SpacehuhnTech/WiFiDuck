@@ -15,8 +15,8 @@
 #define RESPONSE_PROCESSING 0x01
 #define RESPONSE_REPEAT 0x02
 
-// ===== Libraries ===== //firefox0
-#include <Wire.h>        // I2C0
+// ===== Libraries ===== //
+#include <Wire.h>        // I2C
 #include "DuckyParser.h" // Ducky Script language Interpreter
 #include "locales.h"
 
@@ -36,6 +36,9 @@ buffer_t mainBuffer;
 // ===== Global Functions ===== //
 // I2C Request
 void requestEvent() {
+#ifdef DEBUG
+    Serial.println("I2C REQUEST");
+#endif // ifdef DEBUG
     if (processing) {
         Wire.write(ducky.getDelayTime() | RESPONSE_PROCESSING);
     } else {
@@ -46,7 +49,7 @@ void requestEvent() {
         } else if (ducky.getRepeats() > 0) {
             Wire.write(RESPONSE_REPEAT);
 #ifdef DEBUG
-            Serial.println("REPEAT");
+            Serial.println("I2C REPEAT");
 #endif // ifdef DEBUG
         } else {
             Wire.write(RESPONSE_OK);
@@ -59,6 +62,9 @@ void requestEvent() {
 
 // I2C Receive
 void receiveEvent(int len) {
+#ifdef DEBUG
+    Serial.println("RECEIVE");
+#endif // ifdef DEBUG
     if (mainBuffer.len + (unsigned int)len <= BUFFER_SIZE) {
 #ifdef DEBUG
         Serial.println("Received packet");
