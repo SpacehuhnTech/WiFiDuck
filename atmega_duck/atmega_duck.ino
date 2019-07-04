@@ -15,8 +15,13 @@
 #define RESPONSE_PROCESSING 0x01
 #define RESPONSE_REPEAT 0x02
 
+#define ENABLE_NEOPIXEL
+#define NEOPIXEL_PIN 4
+#define NEOPIXEL_NUM 1
+
 // ===== Libraries ===== //
 #include <Wire.h>        // I2C
+#include "NeoPixel.h"    // WS2812b
 #include "DuckyParser.h" // Ducky Script language Interpreter
 #include "locales.h"
 
@@ -27,6 +32,8 @@ typedef struct buffer_t {
 } buffer_t;
 
 // ===== Global Variables ===== //
+NeoPixel* led = NULL;
+
 DuckyParser ducky;
 
 bool processing = false;
@@ -80,6 +87,12 @@ void receiveEvent(int len) {
 
 // ===== SETUP ====== //
 void setup() {
+#ifdef ENABLE_NEOPIXEL
+    led = new NeoPixel(NEOPIXEL_NUM, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+    led->begin();
+    led->show();
+#endif // ifdef ENABLE_NEOPIXEL
+
 #ifdef DEBUG
     Serial.begin(115200);
 

@@ -197,6 +197,30 @@ void DuckyParser::parse(char* str, size_t len) {
             }
         }
 
+        // LED
+        else if (compare(cmd->str, cmd->len, "LED", CASE_SENSETIVE)) {
+            word_node* w = cmd->next;
+
+            if (led) {
+                uint8_t c[3];
+
+                for (uint8_t i = 0; i<3; ++i) {
+                    if (w) {
+                        c[i] = (uint8_t)toInt(w->str, w->len);
+                        w    = w->next;
+                    } else {
+                        c[i] = 0;
+                    }
+                }
+
+                for (int i = 0; i<led->numPixels(); i++) {
+                    led->setPixelColor(i, c[0], c[1], c[2]);
+                }
+
+                led->show();
+            }
+        }
+
         // Otherwise go through words and look for keys to press
         else {
             word_node* w = wl->first;

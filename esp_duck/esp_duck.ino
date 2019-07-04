@@ -4,8 +4,9 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
-#define ENABLE_DEFAULT_DELAY
-#define OPEN_NOTEPAD
+// #define ENABLE_DEFAULT_DELAY
+// #define LED_TEST
+// #define OPEN_NOTEPAD
 // #define HELLO_WORLD
 // #define DELAY_TEST
 // #define REPEAT_TEST
@@ -14,7 +15,7 @@
 // #define DE_CHAR_TEST
 // #define GB_CHAR_TEST
 // #define OVERFLOW_TEST
-#define KEYCODE_TEST
+// #define KEYCODE_TEST
 // #define CLOSE_NOTEPAD
 
 #include "DuckyTransmitter.h"
@@ -32,10 +33,20 @@ void setup() {
     if (duck.connected()) {
         Serial.println("Connected!");
 
+        duck.sendMessage("LED 0 100 0\n");
+
         delay(2000);
 
 #ifdef ENABLE_DEFAULT_DELAY
         duck.sendMessage("DEFAULTDELAY 200\n");
+#endif // ifdef ENABLE_DEFAULT_DELAY
+
+#ifdef LED_TEST
+        duck.sendMessage("LED 255 0 0\n");
+        duck.sendMessage("DELAY 1000\n");
+        duck.sendMessage("LED 0 255 0\n");
+        duck.sendMessage("DELAY 1000\n");
+        duck.sendMessage("LED 0 0 255\n");
 #endif // ifdef ENABLE_DEFAULT_DELAY
 
 #ifdef OPEN_NOTEPAD

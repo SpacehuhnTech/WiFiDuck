@@ -8,6 +8,9 @@
 #define DuckyParser_h
 
 #include "SimpleKeyboard.h"
+#include "NeoPixel.h"
+
+extern NeoPixel* led;
 
 class DuckyParser {
     private:
