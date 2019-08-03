@@ -4,8 +4,7 @@
    Source: github.com/spacehuhn/SimpleCLI
  */
 
-#ifndef comparator_h
-#define comparator_h
+#pragma once
 
 #include <stddef.h> // size_t
 
@@ -16,5 +15,3 @@
 #define COMPARE_CASE_SENSETIVE 1
 
 int compare(const char* user_str, size_t user_str_len, const char* templ_str, int case_sensetive);
-
-#endif /* ifndef comparator_h */
