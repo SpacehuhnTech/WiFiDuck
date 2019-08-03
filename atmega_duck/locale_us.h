@@ -1,5 +1,10 @@
-#ifndef locale_us_h
-#define locale_us_h
+/*
+   Copyright (c) 2019 Stefan Kremser
+   This software is licensed under the MIT License. See the license file for details.
+   Source: github.com/spacehuhn/WiFiDuck
+ */
+
+#pragma once
 
 #include "usb_hid_keys.h"
 
@@ -191,5 +196,3 @@ static locale_t locale_us {
     NULL, 0,
     NULL, 0
 };
-
-#endif /* ifndef locale_us_h */

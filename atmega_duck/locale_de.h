@@ -1,7 +1,12 @@
-#ifndef locale_de_h
-#define locale_de_h
+/*
+   Copyright (c) 2019 Stefan Kremser
+   This software is licensed under the MIT License. See the license file for details.
+   Source: github.com/spacehuhn/WiFiDuck
+ */
 
- #include "usb_hid_keys.h"
+#pragma once
+
+#include "usb_hid_keys.h"
 
 // Modifier(s), Key
 const uint8_t ascii_de[] PROGMEM = {
@@ -218,5 +223,3 @@ static locale_t locale_de {
     (uint8_t*)extended_ascii_de,  sizeof(extended_ascii_de) / 3,
     (uint8_t*)utf8_de, sizeof(utf8_de) / 6
 };
-
-#endif /* ifndef locale_de_h */

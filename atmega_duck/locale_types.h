@@ -1,5 +1,10 @@
-#ifndef locale_types_h
-#define locale_types_h
+/*
+   Copyright (c) 2019 Stefan Kremser
+   This software is licensed under the MIT License. See the license file for details.
+   Source: github.com/spacehuhn/WiFiDuck
+ */
+
+#pragma once
 
 typedef struct locale_t {
     uint8_t* ascii;
@@ -11,5 +16,3 @@ typedef struct locale_t {
     uint8_t* utf8;
     size_t   utf8_len;
 } locale_t;
-
-#endif /* ifndef locale_types_h */
