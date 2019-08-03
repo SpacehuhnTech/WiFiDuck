@@ -12,8 +12,7 @@
 #include "led.h"
 
 extern "C" {
- #include "parser.h"     // parse_lines
- #include "comparator.h" // compare
+ #include "parser.h" // parse_lines
 }
 
 namespace duckparser {

@@ -6,7 +6,40 @@
 
 #pragma once
 
-#include "parser_types.h"
+#include <stddef.h> // size_t
+
+#define COMPARE_UNEQUAL 0
+#define COMPARE_EQUAL 1
+
+#define COMPARE_CASE_INSENSETIVE 0
+#define COMPARE_CASE_SENSETIVE 1
+
+int compare(const char* user_str, size_t user_str_len, const char* templ_str, int case_sensetive);
+
+typedef struct word_node {
+    const char      * str;
+    size_t            len;
+    struct word_node* next;
+} word_node;
+
+typedef struct word_list {
+    struct word_node* first;
+    struct word_node* last;
+    size_t            size;
+} word_list;
+
+typedef struct line_node {
+    const char      * str;
+    size_t            len;
+    struct word_list* words;
+    struct line_node* next;
+} line_node;
+
+typedef struct line_list {
+    struct line_node* first;
+    struct line_node* last;
+    size_t            size;
+} line_list;
 
 // ===== Word Node ===== //
 word_node* word_node_create(const char* str, size_t len);
