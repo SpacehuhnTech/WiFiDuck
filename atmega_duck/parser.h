@@ -4,8 +4,7 @@
    Source: github.com/spacehuhn/SimpleCLI
  */
 
-#ifndef parser_h
-#define parser_h
+#pragma once
 
 #include "parser_types.h"
 
@@ -36,5 +35,3 @@ line_node* line_list_get(line_list* l, size_t i);
 // ===== Parser ===== //
 word_list* parse_words(const char* str, size_t len);
 line_list* parse_lines(const char* str, size_t len);
-
-#endif /* ifndef parser_h */

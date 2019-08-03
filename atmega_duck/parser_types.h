@@ -4,8 +4,7 @@
    Source: github.com/spacehuhn/SimpleCLI
  */
 
-#ifndef parser_types_h
-#define parser_types_h
+#pragma once
 
 #include <stddef.h> // size_t
 
@@ -33,5 +32,3 @@ typedef struct line_list {
     struct line_node* last;
     size_t            size;
 } line_list;
-
-#endif /* ifndef parser_types_h */
