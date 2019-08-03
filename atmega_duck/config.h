@@ -20,3 +20,7 @@
 #define NEOPIXEL
 #define NEOPIXEL_PIN 7
 #define NEOPIXEL_NUM 1
+
+// Parser Settings
+#define CASE_SENSETIVE false
+#define DEFAULT_SLEEP 5
