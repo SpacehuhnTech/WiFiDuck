@@ -40,7 +40,7 @@ namespace educk {
     void wait() {
         sendRequest();
 
-        while (response & 0x01 == RESPONSE_PROCESSING) {
+        while ((response) & (0x01) == RESPONSE_PROCESSING) {
             delay(response);
             debug('.');
             sendRequest();
