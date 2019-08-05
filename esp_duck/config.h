@@ -10,6 +10,10 @@
 #define DEBUG
 #define DEBUG_BAUD 115200
 
+// WiFi Settings
+#define WIFI_SSID "Duck"
+#define WIFI_PASSWORD "quackquack"
+
 // Connection Settings
 #define NUMBER_CONNECTION_TRIES 1
 #define CONNECTION_DELAY 5000
@@ -24,7 +28,7 @@
 #define PACKET_SIZE 32
 
 // Test Settings
-#define ENABLE_DEFAULT_DELAY
+// #define ENABLE_DEFAULT_DELAY
 // #define LED_TEST
 // #define OPEN_NOTEPAD
 // #define HELLO_WORLD
