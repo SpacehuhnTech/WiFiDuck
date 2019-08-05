@@ -6,13 +6,6 @@
 
 #pragma once
 
-#include <Arduino.h> // String
-
-namespace educk {
-    void begin();
-
-    void sendMessage(const String& msg);
-    void sendMessage(const char* msg);
-
-    bool connected();
+namespace ducktest {
+    void run();
 };

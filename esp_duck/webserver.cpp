@@ -13,7 +13,7 @@
 #include "config.h"
 #include "debug.h"
 
-#include "educk.h"
+#include "i2c.h"
 
 namespace webserver {
     // ===== PRIVATE ===== //
@@ -56,7 +56,7 @@ namespace webserver {
                     msg[len] = 0;
                     debugf("%s", msg);
 
-                    educk::sendMessage(msg);
+                    // duck::sendMessage(msg);
 
                     client->text("I got your text message");
                 } else {
