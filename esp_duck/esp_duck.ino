@@ -4,9 +4,11 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
-#include "educk.h"
 #include "config.h"
 #include "debug.h"
+
+#include "educk.h"
+#include "webserver.h"
 
 size_t tries { 0 };
 
@@ -15,9 +17,9 @@ void setup() {
     Serial.begin(DEBUG_BAUD);
 #endif // ifdef DEBUG
 
-    debugln();
-    debugln("Started");
+    debugln("\nStarted");
 
+    webserver::begin();
     educk::begin();
 
     if (!educk::connected()) {
