@@ -8,16 +8,16 @@
 
 #include <Arduino.h>
 
-#ifdef DEBUG
+#ifdef ENABLE_DEBUG
 
 #define debug(...) Serial.print(__VA_ARGS__)
 #define debugln(...) Serial.println(__VA_ARGS__)
 #define debugf(...) Serial.printf(__VA_ARGS__)
 
-#else /* ifdef DEBUG */
+#else /* ifdef ENABLE_DEBUG */
 
 #define debug(...) 0
 #define debugln(...) 0
 #define debugf(...) 0
 
-#endif /* ifdef DEBUG */
+#endif /* ifdef ENABLE_DEBUG */

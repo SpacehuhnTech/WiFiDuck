@@ -14,9 +14,9 @@
 
 // ===== SETUP ====== //
 void setup() {
-#ifdef DEBUG
+#ifdef ENABLE_DEBUG
     Serial.begin(DEBUG_BAUD);
-#endif // ifdef DEBUG
+#endif // ifdef ENABLE_DEBUG
 
     keyboard::begin();
     led::begin();

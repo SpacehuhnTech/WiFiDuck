@@ -7,7 +7,7 @@
 #pragma once
 
 // DEBUG Settings
-#define DEBUG
+#define ENABLE_DEBUG
 #define DEBUG_BAUD 115200
 
 // I2C Settings

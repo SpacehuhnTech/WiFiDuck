@@ -13,7 +13,7 @@
 size_t tries { 0 };
 
 void setup() {
-#ifdef DEBUG
+#ifdef ENABLE_DEBUG
     Serial.begin(DEBUG_BAUD);
 #endif // ifdef DEBUG
 
