@@ -20,6 +20,22 @@ void setup() {
 
     webserver::begin();
     i2c::begin();
+
+    i2c::setOnOK([]() {
+        debugln("OK");
+    });
+
+    i2c::setOnError([]() {
+        debugln("ERROR");
+    });
+
+    i2c::setOnRepeat([]() {
+        debugln("REPEAT");
+    });
+
+    i2c::setOnProcessing([]() {
+        debugln("PROCESSING");
+    });
 }
 
 void loop() {

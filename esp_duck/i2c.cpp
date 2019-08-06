@@ -21,10 +21,16 @@ namespace i2c {
     bool   connection { false };
     size_t connection_tries { 0 };
 
+    bool responseChanged { false };
     uint8_t response   { RESPONSE_OK };
 
     unsigned long connectionTime { 0 };
     unsigned long requestTime { 0 };
+
+    i2c_callback callback_ok { NULL };
+    i2c_callback callback_processing { NULL };
+    i2c_callback callback_repeat { NULL };
+    i2c_callback callback_error { NULL };
 
     // ===== PUBLIC ===== //
     void begin() {
@@ -50,6 +56,20 @@ namespace i2c {
                 && (millis() - requestTime > response)) {
                 sendRequest();
             }
+        }
+
+        if (responseChanged) {
+            switch (getStatus()) {
+                case status::OK:
+                    if (callback_ok) callback_ok();
+                case status::PROCESSING:
+                    if (callback_processing) callback_processing();
+                case status::REPEAT:
+                    if (callback_repeat) callback_repeat();
+                case status::ERROR:
+                    if (callback_error) callback_error();
+            }
+            responseChanged = false;
         }
     }
 
@@ -82,7 +102,10 @@ namespace i2c {
         Wire.requestFrom(I2C_ADDR, 1);
 
         if (Wire.available()) {
+            uint8_t prev_response = response;
             response = Wire.read();
+
+            responseChanged = (prev_response != response);
         } else {
             connection = false;
             response   = RESPONSE_I2C_ERROR;
@@ -113,5 +136,21 @@ namespace i2c {
 
             Wire.endTransmission();
         }
+    }
+
+    void setOnOK(i2c_callback c) {
+        callback_ok = c;
+    }
+
+    void setOnProcessing(i2c_callback c) {
+        callback_processing = c;
+    }
+
+    void setOnRepeat(i2c_callback c) {
+        callback_repeat = c;
+    }
+
+    void setOnError(i2c_callback c) {
+        callback_error = c;
     }
 }
