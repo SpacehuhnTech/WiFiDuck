@@ -41,7 +41,7 @@ void setup() {
         debugln("PROCESSING");
     });
 
-    ducktest::run();
+    ducktest::runTest();
 }
 
 void loop() {

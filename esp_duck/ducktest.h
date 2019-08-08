@@ -9,7 +9,7 @@
 #include <Arduino.h> // String
 
 namespace ducktest {
-    void run();
+    void runTest();
     void run(const String& fileName);
 
     void update();
