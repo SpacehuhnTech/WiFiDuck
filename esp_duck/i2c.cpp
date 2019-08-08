@@ -61,27 +61,27 @@ namespace i2c {
         if (responseChanged) {
             responseChanged = false;
 
-            debug("STATUS=");
+            debugf("NEW STATUS [%u] = ", response);
 
             switch (getStatus()) {
                 case status::OK:
-                    debugf("OK [%u]\n", response);
+                    debugln("OK");
                     if (callback_ok) callback_ok();
                     break;
                 case status::PROCESSING:
-                    debugf("PROCESSING [%u]\n", response);
+                    debugln("PROCESSING");
                     if (callback_processing) callback_processing();
                     break;
                 case status::REPEAT:
-                    debugf("REPEAT [%u]\n", response);
+                    debugln("REPEAT");
                     if (callback_repeat) callback_repeat();
                     break;
                 case status::ERROR:
-                    debugf("ERROR [%u]\n", response);
+                    debugln("ERROR");
                     if (callback_error) callback_error();
                     break;
                 default:
-                    debugf("UNKOWN [%u]\n", response);
+                    debugln("UNKOWN");
             }
         }
     }

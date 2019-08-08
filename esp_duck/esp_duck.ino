@@ -25,37 +25,14 @@ void setup() {
 
     debugln("\nStarted");
 
-    i2c::setOnOK([]() {
-        debugln("OK");
-    });
-
-    i2c::setOnError([]() {
-        debugln("ERROR");
-    });
-
-    i2c::setOnRepeat([]() {
-        debugln("REPEAT");
-    });
-
-    i2c::setOnProcessing([]() {
-        debugln("PROCESSING");
-    });
+    i2c::setOnOK(ducktest::nextLine);
+    // i2c::setOnProcessing();
+    i2c::setOnError(ducktest::stop);
+    i2c::setOnRepeat(ducktest::repeat);
 
     ducktest::runTest();
 }
 
 void loop() {
     i2c::update();
-
-    switch (i2c::getStatus()) {
-        case i2c::status::OK:
-            ducktest::update();
-            break;
-        case i2c::status::ERROR:
-            ducktest::stop();
-            break;
-        case i2c::status::REPEAT:
-            ducktest::repeat();
-            break;
-    }
 }

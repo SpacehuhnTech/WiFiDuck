@@ -121,10 +121,8 @@ namespace ducktest {
         update();
     }
 
-    void update() {
+    void nextLine() {
         if (!running) return;
-
-        if (i2c::getStatus() != i2c::status::OK) return;
 
         if (!f) {
             debugln("File error");
@@ -168,8 +166,8 @@ namespace ducktest {
             if (!prevMessage) {
                 stop();
             } else {
-                i2c::transmit((const uint8_t*)prevMessage, prevMessageLen);
                 debugln("Repeating last message");
+                i2c::transmit((const uint8_t*)prevMessage, prevMessageLen);
             }
         }
     }

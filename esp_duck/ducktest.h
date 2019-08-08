@@ -12,7 +12,7 @@ namespace ducktest {
     void runTest();
     void run(const String& fileName);
 
-    void update();
+    void nextLine();
     void repeat();
     void stop();
 };
