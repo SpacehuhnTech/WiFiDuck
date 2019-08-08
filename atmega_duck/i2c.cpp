@@ -24,7 +24,8 @@ namespace i2c {
         debugln("I2C REQUEST");
 
         if (buffer.len > 0) {
-            Wire.write(duckparser::getDelayTime() | RESPONSE_PROCESSING);
+            if (duckparser::getDelayTime() > 255) Wire.write(255);
+            else Wire.write(duckparser::getDelayTime() | RESPONSE_PROCESSING);
             startParser = true;
         } else if (duckparser::getRepeats() > 0) {
             Wire.write(RESPONSE_REPEAT);
