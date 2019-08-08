@@ -4,7 +4,7 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
-#include "ducktest.h"
+#include "duckscript.h"
 
 #include "config.h"
 #include "debug.h"
@@ -17,7 +17,7 @@
 #define RESPONSE_REPEAT 0x02
 #define RESPONSE_I2C_ERROR 0xFF
 
-namespace ducktest {
+namespace duckscript {
     // ===== PRIVATE ===== //
     File f;
 
@@ -118,7 +118,7 @@ namespace ducktest {
         debugf("Run file %s\n", fileName.c_str());
         f       = spiffs::openFile(fileName);
         running = true;
-        update();
+        nextLine();
     }
 
     void nextLine() {

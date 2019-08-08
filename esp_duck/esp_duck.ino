@@ -8,7 +8,7 @@
 #include "debug.h"
 
 #include "i2c.h"
-#include "ducktest.h"
+#include "duckscript.h"
 #include "webserver.h"
 #include "spiffs.h"
 
@@ -25,12 +25,12 @@ void setup() {
 
     debugln("\nStarted");
 
-    i2c::setOnOK(ducktest::nextLine);
+    i2c::setOnOK(duckscript::nextLine);
     // i2c::setOnProcessing();
-    i2c::setOnError(ducktest::stop);
-    i2c::setOnRepeat(ducktest::repeat);
+    i2c::setOnError(duckscript::stop);
+    i2c::setOnRepeat(duckscript::repeat);
 
-    ducktest::runTest();
+    duckscript::runTest();
 }
 
 void loop() {

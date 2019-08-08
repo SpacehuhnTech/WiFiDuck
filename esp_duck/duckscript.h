@@ -8,7 +8,7 @@
 
 #include <Arduino.h> // String
 
-namespace ducktest {
+namespace duckscript {
     void runTest();
     void run(const String& fileName);
 
