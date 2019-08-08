@@ -10,16 +10,20 @@
 #include "i2c.h"
 #include "ducktest.h"
 #include "webserver.h"
+#include "spiffs.h"
 
 void setup() {
 #ifdef ENABLE_DEBUG
     Serial.begin(DEBUG_BAUD);
 #endif // ifdef DEBUG
 
-    debugln("\nStarted");
-
     webserver::begin();
     i2c::begin();
+
+    spiffs::begin();
+    // spiffs::format();
+
+    debugln("\nStarted");
 
     i2c::setOnOK([]() {
         debugln("OK");
@@ -36,12 +40,22 @@ void setup() {
     i2c::setOnProcessing([]() {
         debugln("PROCESSING");
     });
+
+    ducktest::run();
 }
 
 void loop() {
     i2c::update();
 
-    if (i2c::connected()) {
-        ducktest::run();
+    switch (i2c::getStatus()) {
+        case i2c::status::OK:
+            ducktest::update();
+            break;
+        case i2c::status::ERROR:
+            ducktest::stop();
+            break;
+        case i2c::status::REPEAT:
+            ducktest::repeat();
+            break;
     }
 }

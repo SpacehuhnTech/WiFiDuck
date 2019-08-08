@@ -6,17 +6,18 @@
 
 #pragma once
 
-#include <stdint.h> // uint8_t
-#include <stddef.h> // size_t
+#include <stdint.h>  // uint8_t
+#include <stddef.h>  // size_t
+#include <Arduino.h> // Stream
 
 typedef void (* i2c_callback)();
 
 namespace i2c {
     enum class status {
-        OK         = 0x00,
-        PROCESSING = 0x01,
-        REPEAT     = 0x02,
-        ERROR      = 0xFF
+        OK,
+        PROCESSING,
+        REPEAT,
+        ERROR
     };
 
     void begin();
@@ -27,7 +28,7 @@ namespace i2c {
     status getStatus();
 
     void sendRequest();
-    void transmit(uint8_t* data, size_t len);
+    size_t transmit(const uint8_t* data, size_t len);
 
     void setOnOK(i2c_callback c);
     void setOnProcessing(i2c_callback c);

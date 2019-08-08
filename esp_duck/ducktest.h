@@ -6,6 +6,13 @@
 
 #pragma once
 
+#include <Arduino.h> // String
+
 namespace ducktest {
     void run();
+    void run(const String& fileName);
+
+    void update();
+    void repeat();
+    void stop();
 };

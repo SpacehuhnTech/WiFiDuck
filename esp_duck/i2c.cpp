@@ -51,25 +51,38 @@ namespace i2c {
     void update() {
         if (!connection && (connection_tries < NUMBER_CONNECTION_TRIES)) {
             begin();
-        } else {
-            if ((((response) & (0x01)) == RESPONSE_PROCESSING)
-                && (millis() - requestTime > response)) {
-                sendRequest();
-            }
+        }
+
+        if ((response & 0x01) && (response != RESPONSE_I2C_ERROR)
+            && (millis() - requestTime > response)) {
+            sendRequest();
         }
 
         if (responseChanged) {
+            responseChanged = false;
+
+            debug("STATUS=");
+
             switch (getStatus()) {
                 case status::OK:
+                    debugf("OK [%u]\n", response);
                     if (callback_ok) callback_ok();
+                    break;
                 case status::PROCESSING:
+                    debugf("PROCESSING [%u]\n", response);
                     if (callback_processing) callback_processing();
+                    break;
                 case status::REPEAT:
+                    debugf("REPEAT [%u]\n", response);
                     if (callback_repeat) callback_repeat();
+                    break;
                 case status::ERROR:
+                    debugf("ERROR [%u]\n", response);
                     if (callback_error) callback_error();
+                    break;
+                default:
+                    debugf("UNKOWN [%u]\n", response);
             }
-            responseChanged = false;
         }
     }
 
@@ -101,41 +114,53 @@ namespace i2c {
 
         Wire.requestFrom(I2C_ADDR, 1);
 
-        if (Wire.available()) {
-            uint8_t prev_response = response;
-            response = Wire.read();
+        uint8_t prev_response = response;
 
-            responseChanged = (prev_response != response);
+        if (Wire.available()) {
+            response = Wire.read();
         } else {
             connection = false;
             response   = RESPONSE_I2C_ERROR;
-
             debugln("Request error :(");
         }
+
+        responseChanged = (prev_response != response);
     }
 
-    void transmit(uint8_t* data, size_t len) {
-        if (!connection) return;
+    size_t transmit(const uint8_t* data, size_t len) {
+        if (!connection) return 0;
         if (len > BUFFER_SIZE) len = BUFFER_SIZE;
 
         unsigned int transmissions {
             (len / PACKET_SIZE) + (len % PACKET_SIZE > 0)
         };
 
-        unsigned int data_i       { 0 };
-        unsigned int transmission_i { 0 };
-        unsigned int packet_i       { 0 };
+        size_t data_i         { 0 };
+        size_t transmission_i { 0 };
+        size_t packet_i       { 0 };
 
-        for (transmission_i = 0; transmission_i < transmissions; ++transmission_i) {
+        bool eol { false }; // End Of Line
+
+        for (transmission_i = 0; transmission_i < transmissions && !eol; ++transmission_i) {
             Wire.beginTransmission(I2C_ADDR);
 
-            for (packet_i = 0; packet_i < PACKET_SIZE && data_i < len; ++packet_i) {
-                debug(char(data[data_i]));
-                Wire.write(data[data_i++]);
+            for (packet_i = 0; packet_i < PACKET_SIZE && data_i < len && !eol; ++packet_i) {
+                uint8_t b = data[data_i];
+
+                eol = (b == '\n');
+
+                debug(char(b));
+                Wire.write(b);
+
+                ++data_i;
             }
 
             Wire.endTransmission();
         }
+
+        sendRequest();
+
+        return data_i;
     }
 
     void setOnOK(i2c_callback c) {
