@@ -24,7 +24,7 @@ namespace spiffs {
         SPIFFS.begin();
         if (!exists("/settings.ini")) {
             format();
-            File f = SPIFFS.open("/settings.ini", "w");
+            File f { SPIFFS.open("/settings.ini", "w") };
             f.close();
         }
     }
@@ -57,8 +57,8 @@ namespace spiffs {
     }
 
     size_t size(String fileName) {
-        String path = fixPath(fileName);
-        File   f    = SPIFFS.open(path.c_str(), "r");
+        String path { fixPath(fileName) };
+        File   f { SPIFFS.open(path.c_str(), "r") };
 
         return f.size();
     }
@@ -68,33 +68,33 @@ namespace spiffs {
     }
 
     File open(String fileName) {
-        String path = fixPath(fileName);
+        String path { fixPath(fileName) };
 
         return SPIFFS.open(path.c_str(), "a+");
     }
 
     void create(String fileName) {
-        String path = fixPath(fileName);
+        String path { fixPath(fileName) };
         File   f { SPIFFS.open(path.c_str(), "a+") };
 
         f.close();
     }
 
     void remove(String fileName) {
-        String path = fixPath(fileName);
+        String path { fixPath(fileName) };
 
         SPIFFS.remove(path.c_str());
     }
 
     void rename(String oldName, String newName) {
-        String oldPath = fixPath(oldName);
-        String newPath = fixPath(newName);
+        String oldPath { fixPath(oldName) };
+        String newPath { fixPath(newName) };
 
         SPIFFS.rename(oldPath.c_str(), newPath.c_str());
     }
 
     void write(String fileName, const uint8_t* buf, size_t len) {
-        File f = open(fileName);
+        File f { open(fileName) };
 
         if (f) {
             f.write(buf, len);
@@ -103,5 +103,22 @@ namespace spiffs {
         } else {
             debugln("File error");
         }
+    }
+
+    String listDir(String dirName) {
+        String res;
+
+        String path { fixPath(dirName) };
+
+        Dir dir { SPIFFS.openDir(path.c_str()) };
+
+        while (dir.next()) {
+            res += dir.fileName();
+            res += ',';
+            res += size(dir.fileName());
+            res += '\n';
+        }
+
+        return res;
     }
 }
