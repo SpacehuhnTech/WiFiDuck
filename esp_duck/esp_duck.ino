@@ -11,24 +11,26 @@
 #include "duckscript.h"
 #include "webserver.h"
 #include "spiffs.h"
+#include "settings.h"
 
 void setup() {
 #ifdef ENABLE_DEBUG
     Serial.begin(DEBUG_BAUD);
 #endif // ifdef DEBUG
 
-    webserver::begin();
     i2c::begin();
-
-    spiffs::begin();
-    // spiffs::format();
-
-    debugln("\nStarted");
-
     i2c::setOnOK(duckscript::nextLine);
     // i2c::setOnProcessing();
     i2c::setOnError(duckscript::stop);
     i2c::setOnRepeat(duckscript::repeat);
+
+    spiffs::begin();
+
+    settings::begin();
+
+    webserver::begin();
+
+    debugln("\nStarted");
 
     duckscript::runTest();
 }
