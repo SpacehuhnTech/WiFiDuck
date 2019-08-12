@@ -17,12 +17,13 @@ namespace spiffs {
     size_t usedBytes();
     size_t freeBytes();
 
-    size_t size(const String& fileName);
+    size_t size(String fileName);
+    bool exists(String fileName);
 
-    void remove(const String& fileName);
-    void rename(const String& oldName, const String& newName);
-    void write(const String& fileName, const uint8_t* buf, size_t len);
-    void append(const String& fileName, const uint8_t* buf, size_t len);
+    File open(String fileName);
+    void create(String fileName);
 
-    File openFile(const String& fileName);
+    void remove(String fileName);
+    void rename(String oldName, const String& newName);
+    void write(String fileName, const uint8_t* buf, size_t len);
 }

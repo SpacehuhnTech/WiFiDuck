@@ -27,7 +27,7 @@ namespace duckscript {
     bool running { false };
 
     void write(const char* msg) {
-        spiffs::append("/test.script", (const uint8_t*)msg, strlen(msg));
+        spiffs::write("/test.script", (const uint8_t*)msg, strlen(msg));
         debugf("Writing \"%s\" to file\n", msg);
     }
 
@@ -116,7 +116,7 @@ namespace duckscript {
 
     void run(const String& fileName) {
         debugf("Run file %s\n", fileName.c_str());
-        f       = spiffs::openFile(fileName);
+        f       = spiffs::open(fileName);
         running = true;
         nextLine();
     }

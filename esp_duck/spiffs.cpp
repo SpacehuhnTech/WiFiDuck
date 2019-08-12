@@ -22,6 +22,11 @@ namespace spiffs {
     // ===== PUBLIC ====== //
     void begin() {
         SPIFFS.begin();
+        if (!exists("/settings.ini")) {
+            format();
+            File f = SPIFFS.open("/settings.ini", "w");
+            f.close();
+        }
     }
 
     void format() {
@@ -51,53 +56,52 @@ namespace spiffs {
         return fs_info.totalBytes - fs_info.usedBytes;
     }
 
-    size_t size(const String& fileName) {
+    size_t size(String fileName) {
         String path = fixPath(fileName);
         File   f    = SPIFFS.open(path.c_str(), "r");
 
         return f.size();
     }
 
-    void remove(const String& fileName) {
+    bool exists(String fileName) {
+        return SPIFFS.exists(fileName);
+    }
+
+    File open(String fileName) {
+        String path = fixPath(fileName);
+
+        return SPIFFS.open(path.c_str(), "a+");
+    }
+
+    void create(String fileName) {
+        String path = fixPath(fileName);
+        File   f { SPIFFS.open(path.c_str(), "a+") };
+
+        f.close();
+    }
+
+    void remove(String fileName) {
         String path = fixPath(fileName);
 
         SPIFFS.remove(path.c_str());
     }
 
-    void rename(const String& oldName, const String& newName) {
+    void rename(String oldName, String newName) {
         String oldPath = fixPath(oldName);
         String newPath = fixPath(newName);
 
         SPIFFS.rename(oldPath.c_str(), newPath.c_str());
     }
 
-    void write(const String& fileName, const uint8_t* buf, size_t len) {
-        String path = fixPath(fileName);
-
-        File f = SPIFFS.open(path, "w");
+    void write(String fileName, const uint8_t* buf, size_t len) {
+        File f = open(fileName);
 
         if (f) {
             f.write(buf, len);
             f.close();
             debugln("Wrote file");
+        } else {
+            debugln("File error");
         }
-    }
-
-    void append(const String& fileName, const uint8_t* buf, size_t len) {
-        String path = fixPath(fileName);
-
-        File f = SPIFFS.open(path.c_str(), "a");
-
-        if (f) {
-            f.write(buf, len);
-            f.close();
-            debugln("Appended file");
-        }
-    }
-
-    File openFile(const String& fileName) {
-        String path = fixPath(fileName);
-
-        return SPIFFS.open(path.c_str(), "r");
     }
 }
