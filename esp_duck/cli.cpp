@@ -10,20 +10,43 @@
 
 #include <SimpleCLI.h>
 
+typedef void (* PrintFunction)(const char* s);
+
 namespace cli {
+    // ===== PRIVATE ===== //
     SimpleCLI cli;
     Command   cmd_ls;
 
+    PrintFunction printfunc;
+
+    // PrintFunction for Serial and Web Socket
+    void printSerial(const char* s) {
+        Serial.print(s);
+    }
+
+    void printWS(const char* s) {}
+
+    // Internal print functions
+    void print(const char* s) {
+        if (printfunc) printfunc(s);
+    }
+
+    void println(const char* s) {
+        print(s);
+        print("\n");
+    }
+
+    // CLI callbacks
     void error(cmd_error* e) {
         CommandError cmdError(e); // Create wrapper object
 
-        Serial.print("ERROR: ");
-        Serial.println(cmdError.toString());
+        print("ERROR: ");
+        println(cmdError.toString().c_str());
 
         if (cmdError.hasCommand()) {
-            Serial.print("Did you mean \"");
-            Serial.print(cmdError.getCommand().toString());
-            Serial.println("\"?");
+            print("Did you mean \"");
+            print(cmdError.getCommand().toString().c_str());
+            println("\"?");
         }
     }
 
@@ -31,19 +54,27 @@ namespace cli {
         Command  cmd { c };
         Argument arg { cmd.getArg(0) };
 
-        Serial.print("ls ");
-        Serial.print(arg.getValue());
-        Serial.println(":");
-
-        Serial.println(spiffs::listDir(arg.getValue()));
+        println(spiffs::listDir(arg.getValue()).c_str());
     }
 
+    // ===== PUBLIC ===== //
     void begin() {
         cli.setOnError(error); // Set error Callback
         cmd_ls = cli.addSingleArgCmd("ls", ls);
     }
 
-    void parse(String input /*, printfunc*/) {
+    void execSerial(const char* input) {
+        printfunc = printSerial;
+
+        print("# ");
+        println(input);
+
+        cli.parse(input);
+    }
+
+    void execWS(const char* input) {
+        printfunc = printWS;
+
         cli.parse(input);
     }
 }

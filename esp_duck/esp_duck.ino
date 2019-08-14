@@ -17,6 +17,7 @@
 void setup() {
 #ifdef ENABLE_DEBUG
     Serial.begin(DEBUG_BAUD);
+    Serial.setTimeout(200);
 #endif // ifdef DEBUG
 
     i2c::begin();
@@ -40,4 +41,9 @@ void setup() {
 
 void loop() {
     i2c::update();
+
+    if (Serial.available()) {
+        String input = Serial.readStringUntil('\n');
+        cli::execSerial(input.c_str());
+    }
 }
