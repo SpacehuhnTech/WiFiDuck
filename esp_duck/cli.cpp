@@ -7,6 +7,7 @@
 #include "cli.h"
 
 #include "spiffs.h"
+#include "duckscript.h"
 
 #include <SimpleCLI.h>
 
@@ -15,7 +16,6 @@ typedef void (* PrintFunction)(const char* s);
 namespace cli {
     // ===== PRIVATE ===== //
     SimpleCLI cli;
-    Command   cmd_ls;
 
     PrintFunction printfunc;
 
@@ -36,31 +36,73 @@ namespace cli {
         print("\n");
     }
 
-    // CLI callbacks
-    void error(cmd_error* e) {
-        CommandError cmdError(e); // Create wrapper object
-
-        print("ERROR: ");
-        println(cmdError.toString().c_str());
-
-        if (cmdError.hasCommand()) {
-            print("Did you mean \"");
-            print(cmdError.getCommand().toString().c_str());
-            println("\"?");
-        }
-    }
-
-    void ls(cmd* c) {
-        Command  cmd { c };
-        Argument arg { cmd.getArg(0) };
-
-        println(spiffs::listDir(arg.getValue()).c_str());
-    }
-
     // ===== PUBLIC ===== //
     void begin() {
-        cli.setOnError(error); // Set error Callback
-        cmd_ls = cli.addSingleArgCmd("ls", ls);
+        cli.setOnError([](cmd_error* e) {
+            CommandError cmdError(e); // Create wrapper object
+
+            print("ERROR: ");
+            println(cmdError.toString().c_str());
+
+            if (cmdError.hasCommand()) {
+                print("Did you mean \"");
+                print(cmdError.getCommand().toString().c_str());
+                println("\"?");
+            }
+        });
+
+        cli.addCommand("help", [](cmd* c) {
+            println(cli.toString().c_str());
+        });
+
+        cli.addSingleArgCmd("ls", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            println(spiffs::listDir(arg.getValue()).c_str());
+        });
+
+        cli.addSingleArgCmd("cat", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            File f = spiffs::open(arg.getValue());
+
+            char buffer[32];
+
+            while (f && f.available()) {
+                for (size_t i = 0; i<32; ++i) {
+                    if (!f.available() || (i == 31)) {
+                        buffer[i] = '\0';
+                        i         = 32;
+                    } else {
+                        buffer[i] = f.read();
+                    }
+                }
+                print(buffer);
+            }
+        });
+
+        cli.addSingleArgCmd("run", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            duckscript::run(arg.getValue());
+        });
+
+        cli.addSingleArgCmd("create", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            spiffs::create(arg.getValue());
+        });
+
+        cli.addSingleArgCmd("remove", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            spiffs::remove(arg.getValue());
+        });
     }
 
     void execSerial(const char* input) {
