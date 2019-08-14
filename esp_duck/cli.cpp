@@ -9,6 +9,7 @@
 #include "spiffs.h"
 #include "duckscript.h"
 #include "webserver.h"
+#include "i2c.h"
 
 #include <SimpleCLI.h>
 
@@ -106,6 +107,15 @@ namespace cli {
             Argument arg { cmd.getArg(0) };
 
             duckscript::run(arg.getValue());
+        });
+
+        cli.addSingleArgCmd("exec", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            String argValue { arg.getValue() };
+
+            i2c::transmit((uint8_t*)argValue.c_str(), argValue.length());
         });
 
         cli.addSingleArgCmd("create", [](cmd* c) {
