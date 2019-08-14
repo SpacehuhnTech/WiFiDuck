@@ -8,4 +8,5 @@
 
 namespace webserver {
     void begin();
+    void send(const char* str);
 }

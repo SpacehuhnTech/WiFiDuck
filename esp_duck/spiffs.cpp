@@ -114,7 +114,7 @@ namespace spiffs {
 
         while (dir.next()) {
             res += dir.fileName();
-            res += ',';
+            res += ' ';
             res += size(dir.fileName());
             res += '\n';
         }

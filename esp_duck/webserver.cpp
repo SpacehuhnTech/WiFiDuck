@@ -12,6 +12,7 @@
 
 #include "config.h"
 #include "debug.h"
+#include "cli.h"
 
 #include "i2c.h"
 
@@ -19,6 +20,8 @@ namespace webserver {
     // ===== PRIVATE ===== //
     AsyncWebServer server(80);
     AsyncWebSocket ws("/ws");
+
+    AsyncWebSocketClient* currentClient { nullptr };
 
     void notFound(AsyncWebServerRequest* request) {
         request->send(404, "text/plain", "Not found");
@@ -56,17 +59,17 @@ namespace webserver {
                     msg[len] = 0;
                     debugf("%s", msg);
 
-                    // duck::sendMessage(msg);
-
-                    client->text("I got your text message");
-                } else {
-                    for (size_t i = 0; i < info->len; ++i) {
+                    currentClient = client;
+                    cli::execWS(msg);
+                    currentClient = nullptr;
+                } /*else {
+                     for (size_t i = 0; i < info->len; ++i) {
                         debugf("%02x ", data[i]);
-                    }
-                    debugln();
+                     }
+                     debugln();
 
-                    client->binary("I got your binary message");
-                }
+                     client->binary("I got your binary message");
+                     }*/
             }
 
             // Multiple packets
@@ -96,10 +99,12 @@ namespace webserver {
                     if (info->final) {
                         debugf("WS Client %u message end\n", client->id());
 
-                        if (info->message_opcode == WS_TEXT)
+                        /*
+                           if (info->message_opcode == WS_TEXT) {
                             client->text("I got your text message");
-                    } else {
-                        client->binary("I got your binary message");
+                           } else {
+                             client->binary("I got your binary message");
+                             }*/
                     }
                 }
             }
@@ -126,5 +131,9 @@ namespace webserver {
         // Start Server
         server.begin();
         debugln("Started Webserver");
+    }
+
+    void send(const char* str) {
+        if (currentClient) currentClient->text(str);
     }
 }

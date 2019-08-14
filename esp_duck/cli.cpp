@@ -8,6 +8,7 @@
 
 #include "spiffs.h"
 #include "duckscript.h"
+#include "webserver.h"
 
 #include <SimpleCLI.h>
 
@@ -20,11 +21,13 @@ namespace cli {
     PrintFunction printfunc;
 
     // PrintFunction for Serial and Web Socket
-    void printSerial(const char* s) {
-        Serial.print(s);
+    void printSerial(const char* str) {
+        Serial.print(str);
     }
 
-    void printWS(const char* s) {}
+    void printWS(const char* str) {
+        webserver::send(str);
+    }
 
     // Internal print functions
     void print(const char* s) {
