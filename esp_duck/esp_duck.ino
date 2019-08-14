@@ -12,6 +12,7 @@
 #include "webserver.h"
 #include "spiffs.h"
 #include "settings.h"
+#include "cli.h"
 
 void setup() {
 #ifdef ENABLE_DEBUG
@@ -28,9 +29,11 @@ void setup() {
 
     settings::begin();
 
+    cli::begin();
+
     webserver::begin();
 
-    debugln("\nStarted");
+    debugln("\nESP Duck Started");
 
     duckscript::runTest();
 }
