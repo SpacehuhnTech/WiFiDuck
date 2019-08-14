@@ -62,6 +62,20 @@ namespace cli {
             println(spiffs::listDir(arg.getValue()).c_str());
         });
 
+        cli.addCommand("mem", [](cmd* c) {
+            String s { NULL };
+            s.reserve(64);
+
+            s  = String(spiffs::size());
+            s += " byte\n";
+            s += String(spiffs::usedBytes());
+            s += " byte used\n";
+            s += String(spiffs::freeBytes());
+            s += " byte free\n";
+
+            print(s.c_str());
+        });
+
         cli.addSingleArgCmd("cat", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -81,6 +95,7 @@ namespace cli {
                 }
                 print(buffer);
             }
+            println("");
         });
 
         cli.addSingleArgCmd("run", [](cmd* c) {
@@ -103,6 +118,38 @@ namespace cli {
 
             spiffs::remove(arg.getValue());
         });
+
+        Command cmdRename {
+            cli.addCommand("rename", [](cmd* c) {
+                Command  cmd { c };
+
+                Argument argA { cmd.getArg(0) };
+                Argument argB { cmd.getArg(1) };
+
+                String fileA { argA.getValue() };
+                String fileB { argB.getValue() };
+
+                spiffs::rename(fileA, fileB);
+            })
+        };
+        cmdRename.addPosArg("fileA,a");
+        cmdRename.addPosArg("fileB,b");
+
+        Command cmdWrite {
+            cli.addCommand("write", [](cmd* c) {
+                Command  cmd { c };
+
+                Argument argFileName { cmd.getArg(0) };
+                Argument argContent { cmd.getArg(1) };
+
+                String fileName { argFileName.getValue() };
+                String content { argContent.getValue() };
+
+                spiffs::write(fileName, (uint8_t*)content.c_str(), content.length());
+            })
+        };
+        cmdWrite.addPosArg("f/ile");
+        cmdWrite.addPosArg("c/ontent");
     }
 
     void execSerial(const char* input) {
