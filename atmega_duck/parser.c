@@ -282,13 +282,17 @@ line_list* parse_lines(const char* str, size_t len) {
 
     int ignore_delimiter = 0;
     int delimiter        = 0;
+    int linebreak        = 0;
+    int endofline        = 0;
 
     for (i = 0; i <= len; ++i) {
         if ((str[i] == '"') && ((str[i-1] != '\\') || (i==0))) ignore_delimiter = !ignore_delimiter;
 
         delimiter = (str[i] == ';' && str[i+1] == ';' && !ignore_delimiter && (i == 0 || str[i-1] != '\\'));
+        linebreak = ((str[i] == '\r') || (str[i] == '\n')) && !ignore_delimiter;
+        endofline = (i == len);
 
-        if ((str[i] == '\r') || (str[i] == '\n') || (i == len) || delimiter) {
+        if (linebreak || endofline || delimiter) {
             size_t k = i - j; // length of line
 
             // for every line, parse_words and add to list
