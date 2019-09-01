@@ -30,7 +30,10 @@
   }
 
   function onMessage(evt) {
-	res = evt.data.replace("\n", "<br>");
+	res = evt.data.replace(/\n/g, "<br>");
+	
+	console.log(evt.data);
+	console.log(res);
     writeToScreen('<span style="color: blue;">' + res + '</span>');
     //websocket.close();
   }
@@ -58,7 +61,15 @@
 	}
 	
 	function delaytest() {
-		doSend("LED 255 0 0\nDELAY 1000\nLED 0 255 0\nDELAY 3000\nLED 0 0 255\nDELAY 5000\nLED 0 0 0");
+		doSend("remove \"/scripts/temp.script\"");
+		doSend("write \"/scripts/temp.script\" \"LED 255 0 0\n\"");
+		doSend("write \"/scripts/temp.script\" \"DELAY 1000\n\"");
+		doSend("write \"/scripts/temp.script\" \"LED 0 255 0\n\"");
+		doSend("write \"/scripts/temp.script\" \"DELAY 3000\n\"");
+		doSend("write \"/scripts/temp.script\" \"ED 0 0 255\n\"");
+		doSend("write \"/scripts/temp.script\" \"DELAY 5000\n\"");
+		doSend("write \"/scripts/temp.script\" \"LED 0 0 0\n\"");
+		doSend("run \"/scripts/temp.script\"");
 	}
   </script>
 </head>

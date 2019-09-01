@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>WiFi Duck</title>
+
+  <link href="entireframework.min.css" rel="stylesheet" type="text/css">
+
+  <style>
+    #status {
+      text-align: center;
+      padding: 0.5rem;
+      background: #20C20E;
+      color: #fff;
+    }
+
+    textarea {
+      border-radius: 4px;
+      background: #f2f2f2;
+      width: 100%;
+      height: 10rem;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      margin: .5rem 0;
+    }
+
+    input[type="text"] {
+      border-radius: 4px;
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav" tabindex="-1" onclick="this.focus()">
+    <div class="container">
+      <a class="pagename current" href="#">WiFi Duck</a>
+      <!--
+      <a href="#">One</a>
+      <a href="#">Two</a>
+      <a href="#">Three</a>-->
+    </div>
+  </nav>
+  <button class="btn-close btn btn-sm">×</button>
+
+  <div id="status">Connected</div>
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col c12">
+        <h2>Status</h2>
+        <p><b>i2c connection: </b><span>OK</span></p>
+        <p><b>Free memory: </b><span>x Bytes</span></p>
+        <a class="btn btn-c btn-sm smooth">STOP</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col c12">
+        <h2>Scripts</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>/test.script</td>
+              <td>
+                <a class="btn btn-a btn-sm smooth">edit</a>
+                <a class="btn btn-c btn-sm smooth">run</a>
+              </td>
+            </tr>
+            <tr>
+              <td>/tmp.script</td>
+              <td>
+                <a class="btn btn-a btn-sm smooth">edit</a>
+                <a class="btn btn-c btn-sm smooth">run</a>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col c12">
+        <h2>Edit</h2>
+
+        <input type="text" class="smooth" value="/test.script" />
+        <textarea class="smooth">
+          DELAY 2000
+          GUI r
+        </textarea>
+
+        <a class="btn btn-a btn-sm smooth">save</a>
+        <a class="btn btn-c btn-sm smooth">run</a>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col c12">
+        <hr>
+        <p>Copyleft: someone</p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
