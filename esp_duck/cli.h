@@ -8,9 +8,10 @@
 
 #include <Arduino.h> // String
 
+typedef void (* PrintFunction)(const char* s);
+
 namespace cli {
     void begin();
 
-    void execSerial(const char* input);
-    void execWS(const char* input);
+    void parse(const char* input, PrintFunction printfunc);
 }

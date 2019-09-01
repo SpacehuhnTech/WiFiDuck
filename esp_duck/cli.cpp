@@ -8,27 +8,14 @@
 
 #include "spiffs.h"
 #include "duckscript.h"
-#include "webserver.h"
-#include "i2c.h"
 
 #include <SimpleCLI.h>
-
-typedef void (* PrintFunction)(const char* s);
 
 namespace cli {
     // ===== PRIVATE ===== //
     SimpleCLI cli;
 
     PrintFunction printfunc;
-
-    // PrintFunction for Serial and Web Socket
-    void printSerial(const char* str) {
-        Serial.print(str);
-    }
-
-    void printWS(const char* str) {
-        webserver::send(str);
-    }
 
     // Internal print functions
     void print(const char* s) {
@@ -109,15 +96,6 @@ namespace cli {
             duckscript::run(arg.getValue());
         });
 
-        cli.addSingleArgCmd("exec", [](cmd* c) {
-            Command  cmd { c };
-            Argument arg { cmd.getArg(0) };
-
-            String argValue { arg.getValue() };
-
-            i2c::transmit((uint8_t*)argValue.c_str(), argValue.length());
-        });
-
         cli.addSingleArgCmd("create", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -165,17 +143,11 @@ namespace cli {
         cmdWrite.addPosArg("c/ontent");
     }
 
-    void execSerial(const char* input) {
-        printfunc = printSerial;
+    void parse(const char* input, PrintFunction printfunc) {
+        cli::printfunc = printfunc;
 
         print("# ");
         println(input);
-
-        cli.parse(input);
-    }
-
-    void execWS(const char* input) {
-        printfunc = printWS;
 
         cli.parse(input);
     }

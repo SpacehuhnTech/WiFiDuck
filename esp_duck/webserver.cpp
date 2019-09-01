@@ -51,16 +51,18 @@ namespace webserver {
 
             // Single message
             if (info->final && (info->index == 0) && (info->len == len)) {
-                debugf("Message from %u [%llu byte]", client->id(), info->len);
+                debugf("Message from %u [%llu byte]\n", client->id(), info->len);
 
                 if (info->opcode == WS_TEXT) {
                     char* msg = (char*)data;
 
                     msg[len] = 0;
-                    debugf("%s", msg);
+                    debugf("%s\n", msg);
 
                     currentClient = client;
-                    cli::execWS(msg);
+                    cli::parse(msg, [](const char* str) {
+                        webserver::send(str);
+                    });
                     currentClient = nullptr;
                 } /*else {
                      for (size_t i = 0; i < info->len; ++i) {

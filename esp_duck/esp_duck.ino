@@ -44,6 +44,8 @@ void loop() {
 
     if (Serial.available()) {
         String input = Serial.readStringUntil('\n');
-        cli::execSerial(input.c_str());
+        cli::parse(input.c_str(), [](const char* str) {
+            Serial.print(str);
+        });
     }
 }
