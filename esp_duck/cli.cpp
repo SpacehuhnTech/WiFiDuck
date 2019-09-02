@@ -143,11 +143,13 @@ namespace cli {
         cmdWrite.addPosArg("c/ontent");
     }
 
-    void parse(const char* input, PrintFunction printfunc) {
+    void parse(const char* input, PrintFunction printfunc, bool echo) {
         cli::printfunc = printfunc;
 
-        print("# ");
-        println(input);
+        if (echo) {
+            print("# ");
+            println(input);
+        }
 
         cli.parse(input);
     }

@@ -49,7 +49,7 @@
       color: #fff;
       cursor: pointer;
       display: inline-block;
-      margin: 2px 0;
+      margin: 2px;
       padding: 12px 30px 14px
     }
 
@@ -339,7 +339,16 @@
   </style>
 
   <script>
+    var ws;
+    var ws_callback = log;
+    var file_list = "";
+
+    function status(mode) {
+      document.getElementById("status").innerHTML = mode;
+    }
+
     function ws_init() {
+      status("connecting...");
       ws = new WebSocket("ws://192.168.4.1/ws");
       ws.onopen = ws_open;
       ws.onclose = ws_close;
@@ -349,40 +358,108 @@
 
     function ws_open(evt) {
       console.log("[WS] Connected");
+      status("connected");
+      ws_ls();
       //writeToScreen("CONNECTED");
       //doSend("WebSocket rocks");
     }
 
     function ws_close(evt) {
       console.log("[WS] Disconnected");
+      status("disconnected");
       //writeToScreen("DISCONNECTED");
     }
 
     function ws_message(evt) {
-      console.log("[WS] Message: \"" + evt.data + "\"");
+      //if (evt.data.length > 1 || evt.data.trim().length > 0) {
+
+      ws_callback(evt.data);
+
       //res = evt.data.replace(/\n/g, "<br>");
 
       //console.log(evt.data);
       //console.log(res);
       //writeToScreen('<span style="color: blue;">' + res + '</span>');
       //websocket.close();
+      //}
     }
 
     function ws_error(evt) {
       console.log("[WS] Error");
+      status("errored");
       //writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
     }
 
-    function ws_send(message) {
+    function ws_send(message, callback) {
       //writeToScreen("# " + message);
-      //websocket.send(message);
+      ws.send(message);
+      ws_callback = callback;
     }
 
-    function ws_ping() {
+    // ===== WebSocket Callback Functions ===== //
 
+    function log(msg) {
+      console.log("[WS] Message: \"" + msg + "\"");
     }
 
-    window.addEventListener("load", ws_init, false);
+    function set_scripts(csv) {
+      file_list += csv;
+
+      console.log(file_list);
+
+      var lines = file_list.split(/\n/);
+      var tableHTML = "<thead><tr><th>File</th><th>Actions</th></tr></thead><tbody>";
+
+      for (var i = 0; i < lines.length; i++) {
+        console.log(lines[i]);
+        var data = lines[i].split(" ");
+        var fileName = data[0];
+        if (fileName.length > 0) {
+          tableHTML += "<tr><td>" + fileName + "</td><td><a class=\"btn btn-a btn-sm smooth\" onclick=\"ws_cat('" + fileName + "')\">edit</a><a class=\"btn btn-c btn-sm smooth\">run</a></td></tr>";
+        }
+      }
+
+      tableHTML += "<tr><td><input type=\"text\" class=\"smooth\" value=\"/x.script\"/></td><td><a class=\"btn btn-b btn-sm smooth\">create</a></td></tr></tbody>"
+
+      document.getElementById("scriptTable").innerHTML = tableHTML;
+    }
+
+    function set_editor(content) {
+      document.getElementById("editor").value += content;
+    }
+
+    // ===== WebSocket Actions ===== //
+
+    function ws_ls() {
+      file_list = "";
+      ws_send("ls\n", set_scripts);
+    }
+
+    function ws_cat(fileName) {
+      document.getElementById("editorFile").value = fileName;
+      document.getElementById("editor").value = "";
+      ws_send("cat " + fileName + "\n", set_editor);
+    }
+
+    function ws_save(fileName) {
+      ws_send("remove " + fileName, log);
+      ws_send("create " + fileName, log);
+
+      var content = document.getElementById("editor").value;
+      content = content.replace(/"/g, '\\"');
+
+      ws_send("write " + fileName + " \"" + content + "\"", log);
+
+      ws_ls();
+    }
+
+    // ===== Startup ===== //
+    window.addEventListener("load", function() {
+      ws_init();
+      document.getElementById("editorSave").onclick = function() {
+        ws_save(document.getElementById("editorFile").value);
+      };
+    }, false);
   </script>
 </head>
 
@@ -399,7 +476,7 @@
   </nav>
   <button class="btn-close btn btn-sm">×</button>
 
-  <div id="status">Connected</div>
+  <div id="status"></div>
 
   <div class="container">
 
@@ -415,38 +492,7 @@
     <div class="row">
       <div class="col c12">
         <h2>Scripts</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>File</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>/test.script</td>
-              <td>
-                <a class="btn btn-a btn-sm smooth">edit</a>
-                <a class="btn btn-c btn-sm smooth">run</a>
-              </td>
-            </tr>
-            <tr>
-              <td>/tmp.script</td>
-              <td>
-                <a class="btn btn-a btn-sm smooth">edit</a>
-                <a class="btn btn-c btn-sm smooth">run</a>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="text" class="smooth" value="/test.script" /></td>
-              <td>
-                <a class="btn btn-b btn-sm smooth">create</a>
-              </td>
-            </tr>
-          </tbody>
-
-        </table>
+        <table class="table" id="scriptTable"></table>
       </div>
     </div>
 
@@ -455,14 +501,13 @@
       <div class="col c12">
         <h2>Editor</h2>
 
-        <input type="text" class="smooth" value="/test.script" />
-        <textarea class="smooth">
-DELAY 2000
-GUI r
+        <input type="text" class="smooth" value="/test.script" id="editorFile" />
+        <textarea class="smooth" id="editor">
+REM Hello World!
         </textarea>
 
-        <a class="btn btn-a btn-sm smooth">save</a>
-        <a class="btn btn-c btn-sm smooth">run</a>
+        <a class="btn btn-a btn-sm smooth" id="editorSave">save</a>
+        <a class="btn btn-c btn-sm smooth" id="editorRun">run</a>
       </div>
 
     </div>

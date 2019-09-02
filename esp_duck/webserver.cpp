@@ -39,7 +39,7 @@ namespace webserver {
         if (type == WS_EVT_CONNECT) {
             debugf("WS Client connected %u\n", client->id());
 
-            client->printf("Hello Client %u\n", client->id());
+            // client->printf("%u", client->id());
         }
 
         else if (type == WS_EVT_DISCONNECT) {
@@ -70,7 +70,7 @@ namespace webserver {
                     currentClient = client;
                     cli::parse(msg, [](const char* str) {
                         webserver::send(str);
-                    });
+                    }, false);
                     currentClient = nullptr;
                 } /*else {
                      for (size_t i = 0; i < info->len; ++i) {

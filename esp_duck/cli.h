@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <Arduino.h> // String
+#include <Arduino.h> // String, bool
 
 typedef void (* PrintFunction)(const char* s);
 
 namespace cli {
     void begin();
 
-    void parse(const char* input, PrintFunction printfunc);
+    void parse(const char* input, PrintFunction printfunc, bool echo = true);
 }
