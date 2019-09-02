@@ -337,6 +337,53 @@
       border: none;
     }
   </style>
+
+  <script>
+    function ws_init() {
+      ws = new WebSocket("ws://192.168.4.1/ws");
+      ws.onopen = ws_open;
+      ws.onclose = ws_close;
+      ws.onmessage = ws_message;
+      ws.onerror = ws_error;
+    }
+
+    function ws_open(evt) {
+      console.log("[WS] Connected");
+      //writeToScreen("CONNECTED");
+      //doSend("WebSocket rocks");
+    }
+
+    function ws_close(evt) {
+      console.log("[WS] Disconnected");
+      //writeToScreen("DISCONNECTED");
+    }
+
+    function ws_message(evt) {
+      console.log("[WS] Message: \"" + evt.data + "\"");
+      //res = evt.data.replace(/\n/g, "<br>");
+
+      //console.log(evt.data);
+      //console.log(res);
+      //writeToScreen('<span style="color: blue;">' + res + '</span>');
+      //websocket.close();
+    }
+
+    function ws_error(evt) {
+      console.log("[WS] Error");
+      //writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+
+    function ws_send(message) {
+      //writeToScreen("# " + message);
+      //websocket.send(message);
+    }
+
+    function ws_ping() {
+
+    }
+
+    window.addEventListener("load", ws_init, false);
+  </script>
 </head>
 
 <body>
