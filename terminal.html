@@ -313,7 +313,6 @@
     #status {
       text-align: center;
       padding: 0.5rem;
-      background: #20C20E;
       color: #fff;
       position: sticky;
       top: 0;
@@ -348,6 +347,14 @@
 
     // ===== Helper Functions ===== //
     function status(mode) {
+      if (mode == "connected") {
+        document.getElementById("status").style.backgroundColor = "#3c5";
+      } else if (mode == "disconnected") {
+        document.getElementById("status").style.backgroundColor = "#d33";
+      } else if (mode == "connecting...") {
+        document.getElementById("status").style.backgroundColor = "#0ae";
+      }
+
       document.getElementById("status").innerHTML = mode;
     }
 

@@ -166,6 +166,11 @@ namespace cli {
         };
         cmdWrite.addPosArg("f/ile");
         cmdWrite.addPosArg("c/ontent");
+
+        cli.addCommand("format", [](cmd* c) {
+            spiffs::format();
+            println("Formatted SPIFFS");
+        });
     }
 
     void parse(const char* input, PrintFunction printfunc, bool echo) {
