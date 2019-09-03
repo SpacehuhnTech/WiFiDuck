@@ -179,4 +179,12 @@ namespace duckscript {
             debugln("Stopped script");
         }
     }
+
+    void stop(const String& fileName) {
+        if (running && f && ((strlen(fileName.c_str()) == 0) || (strcmp(f.name(), fileName.c_str()) == 0))) {
+            f.close();
+            running = false;
+            debugln("Stopped script");
+        }
+    }
 }

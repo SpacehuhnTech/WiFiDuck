@@ -15,4 +15,5 @@ namespace duckscript {
     void nextLine();
     void repeat();
     void stop();
+    void stop(const String& fileName);
 };

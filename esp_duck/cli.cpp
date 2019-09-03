@@ -96,6 +96,13 @@ namespace cli {
             duckscript::run(arg.getValue());
         });
 
+        cli.addSingleArgCmd("stop", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            duckscript::stop(arg.getValue());
+        });
+
         cli.addSingleArgCmd("create", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };

@@ -342,11 +342,21 @@
     var ws;
     var ws_callback = log;
     var file_list = "";
+    // ===== Helper Functions ===== //
+    function getFileName() {
+      return document.getElementById("editorFile").value;
+    }
+
+    function fixFileName(fileName) {
+      if (fileName.length > 0 && fileName[0] != '/') fileName = '/' + fileName;
+      return fileName;
+    }
 
     function status(mode) {
       document.getElementById("status").innerHTML = mode;
     }
 
+    // ===== WebSocket Functions ===== //
     function ws_init() {
       status("connecting...");
       ws = new WebSocket("ws://192.168.4.1/ws");
@@ -415,7 +425,7 @@
         var data = lines[i].split(" ");
         var fileName = data[0];
         if (fileName.length > 0) {
-          tableHTML += "<tr><td>" + fileName + "</td><td><a class=\"btn btn-a btn-sm smooth\" onclick=\"ws_cat('" + fileName + "')\">edit</a><a class=\"btn btn-c btn-sm smooth\">run</a></td></tr>";
+          tableHTML += "<tr><td>" + fileName + "</td><td><a class=\"btn btn-a btn-sm smooth\" onclick=\"ws_cat('" + fileName + "')\">edit</a><a class=\"btn btn-c btn-sm smooth\" onclick=\"ws_run('" + fileName + "')\">run</a></td></tr>";
         }
       }
 
@@ -429,6 +439,15 @@
     }
 
     // ===== WebSocket Actions ===== //
+    function ws_run(fileName) {
+      fileName = fixFileName(fileName);
+      ws_send("run " + fileName);
+    }
+
+    function ws_stop(fileName) {
+      fileName = fixFileName(fileName);
+      ws_send("stop " + fileName);
+    }
 
     function ws_ls() {
       file_list = "";
@@ -436,15 +455,20 @@
     }
 
     function ws_cat(fileName) {
-      if (fileName[0] != '/') fileName = '/' + fileName;
+      ws_stop(fileName);
+
+      fileName = fixFileName(fileName);
 
       document.getElementById("editorFile").value = fileName;
       document.getElementById("editor").value = "";
+
       ws_send("cat " + fileName + "\n", set_editor);
     }
 
     function ws_save(fileName) {
-      if (fileName[0] != '/') fileName = '/' + fileName;
+      ws_stop(fileName);
+
+      fileName = fixFileName(fileName);
 
       ws_send("remove " + fileName, log);
       ws_send("create " + fileName, log);
@@ -458,38 +482,33 @@
     }
 
     function ws_remove(fileName) {
-      if (fileName[0] != '/') fileName = '/' + fileName;
+      ws_stop(fileName);
+
+      fileName = fixFileName(fileName);
       ws_send("remove " + fileName);
 
       ws_ls();
     }
 
-    function ws_run(fileName) {
-      if (fileName[0] != '/') fileName = '/' + fileName;
-      ws_send("run " + fileName);
-    }
 
     // ===== Startup ===== //
     window.addEventListener("load", function() {
 
-      document.getElementById("editorSave").onclick = function() {
-        var fileName = document.getElementById("editorFile").value;
+      document.getElementById("stop").onclick = function() {
+        ws_stop("");
+      };
 
-        ws_save(fileName);
+      document.getElementById("editorSave").onclick = function() {
+        ws_save(getFileName());
       };
 
       document.getElementById("editorDelete").onclick = function() {
-        var fileName = document.getElementById("editorFile").value;
-
-        if (confirm("Delete " + fileName + "?")) {
-          ws_remove(fileName);
-        }
+        if (confirm("Delete " + getFileName() + "?")) ws_remove(getFileName());
       };
 
       document.getElementById("editorRun").onclick = function() {
-        var fileName = document.getElementById("editorFile").value;
-
-        ws_run(fileName);
+        ws_save(getFileName());
+        ws_run(getFileName());
       };
 
       ws_init();
@@ -519,7 +538,7 @@
         <h2>Status</h2>
         <p><b>i2c connection: </b><span>OK</span></p>
         <p><b>Free memory: </b><span>x Bytes</span></p>
-        <a class="btn btn-c btn-sm smooth">STOP</a>
+        <a class="btn btn-c btn-sm smooth" id="stop">STOP</a>
       </div>
     </div>
 
