@@ -10,6 +10,8 @@
 #include "debug.h"
 
 namespace spiffs {
+    File streamFile;
+
     // ===== PRIVATE ===== //
     String fixPath(const String& path) {
         if (path.startsWith("/")) {
@@ -120,5 +122,43 @@ namespace spiffs {
         }
 
         return res;
+    }
+
+    void streamOpen(String fileName) {
+        streamClose();
+        streamFile = open(fileName);
+    }
+
+    void streamWrite(const char* buf, size_t len) {
+        if (streamFile) streamFile.write(buf, len);
+        else debugln("ERROR: No stream file open");
+    }
+
+    size_t streamRead(char* buf, size_t len) {
+        if (streamFile) {
+            size_t i;
+
+            for (i = 0; i<len; ++i) {
+                if (!streamFile.available() || (i == len-1)) {
+                    buf[i] = '\0';
+                    if (!streamFile.available()) break;
+                } else {
+                    buf[i] = streamFile.read();
+                }
+            }
+
+            return i;
+        } else {
+            debugln("ERROR: No stream file open");
+            return 0;
+        }
+    }
+
+    void streamClose() {
+        streamFile.close();
+    }
+
+    bool streaming() {
+        return streamFile;
     }
 }

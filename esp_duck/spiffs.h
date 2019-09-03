@@ -28,4 +28,10 @@ namespace spiffs {
     void write(String fileName, const uint8_t* buf, size_t len);
 
     String listDir(String dirName);
+
+    void streamOpen(String fileName);
+    void streamWrite(const char* buf, size_t len);
+    size_t streamRead(char* buf, size_t len);
+    void streamClose();
+    bool streaming();
 }
