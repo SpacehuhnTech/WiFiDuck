@@ -340,24 +340,13 @@
 
   <script>
     function log(msg) {
-      console.log("[WS] Message: " + msg);
+      console.log("[WS] Message: \"" + msg + "\"");
     }
 
     var ws;
     var ws_callback = log;
-    var file_list = "";
 
     // ===== Helper Functions ===== //
-    function getFileName() {
-      return document.getElementById("editorFile").value;
-    }
-
-    function fixFileName(fileName) {
-      if (fileName.length > 0 && fileName[0] != '/') fileName = '/' + fileName;
-      fileName = fileName.replace(/ /g, '\-');
-      return fileName;
-    }
-
     function status(mode) {
       document.getElementById("status").innerHTML = mode;
     }
@@ -389,12 +378,7 @@
     function ws_message(evt) {
       //if (evt.data.length > 1 || evt.data.trim().length > 0) {
 
-      var msg = evt.data;
-
-      if (msg.length > 0) {
-        if (msg[0] == '>') log(msg.substring(2));
-        else ws_callback(msg);
-      }
+      ws_callback(evt.data);
 
       //res = evt.data.replace(/\n/g, "<br>");
 
@@ -417,108 +401,18 @@
       ws_callback = callback;
     }
 
-    // ===== WebSocket Callback Functions ===== //
-    function set_scripts(csv) {
-      file_list += csv;
-
-      //console.log(file_list);
-
-      var lines = file_list.split(/\n/);
-      var tableHTML = "<thead><tr><th>File</th><th>Size</th><th>Actions</th></tr></thead><tbody>";
-
-      for (var i = 0; i < lines.length; i++) {
-        //console.log(lines[i]);
-        var data = lines[i].split(" ");
-        var fileName = data[0];
-        var fileSize = data[1];
-        if (fileName.length > 0) {
-          tableHTML += "<tr><td>" + fileName + "</td>";
-          tableHTML += "<td>" + fileSize + "</td>";
-          tableHTML += "<td><a class=\"btn btn-a btn-sm smooth\" onclick=\"ws_cat('" + fileName + "')\">edit</a><a class=\"btn btn-c btn-sm smooth\" onclick=\"ws_run('" + fileName + "')\">run</a></td></tr>";
-        }
-      }
-
-      tableHTML += "<tr><td><input type=\"text\" class=\"smooth\" value=\"/x.script\"/></td><td>-</td><td><a class=\"btn btn-b btn-sm smooth\">create</a></td></tr></tbody>"
-
-      document.getElementById("scriptTable").innerHTML = tableHTML;
-    }
-
-    function set_editor(content) {
-      document.getElementById("editor").value += content;
-    }
-
-    // ===== WebSocket Actions ===== //
-    function ws_run(fileName) {
-      fileName = fixFileName(fileName);
-      ws_send("run \"" + fileName + "\"", log);
-    }
-
-    function ws_stop(fileName) {
-      fileName = fixFileName(fileName);
-      ws_send("stop \"" + fileName + "\"", log);
-    }
-
-    function ws_ls() {
-      file_list = "";
-      ws_send("ls\n", set_scripts);
-    }
-
-    function ws_cat(fileName) {
-      ws_stop(fileName);
-
-      fileName = fixFileName(fileName);
-
-      document.getElementById("editorFile").value = fileName;
-      document.getElementById("editor").value = "";
-
-      ws_send("cat \"" + fileName + "\"\n", set_editor);
-    }
-
-    function ws_save(fileName) {
-      ws_stop(fileName);
-
-      fileName = fixFileName(fileName);
-      var content = document.getElementById("editor").value;
-      content = content.replace(/"/g, '\\"');
-
-      ws_send("remove \"/temporary_script\"", log);
-      ws_send("create \"/temporary_script\"", log);
-      ws_send("write \"/temporary_script\" \"" + content + "\"", log);
-
-      ws_send("remove \"" + fileName + "\"", log);
-      ws_send("rename \"/temporary_script\" \"" + fileName + "\"", log);
-
-      ws_ls();
-    }
-
-    function ws_remove(fileName) {
-      ws_stop(fileName);
-
-      fileName = fixFileName(fileName);
-      ws_send("remove \"" + fileName + "\"", log);
-
-      ws_ls();
-    }
-
 
     // ===== Startup ===== //
     window.addEventListener("load", function() {
 
-      document.getElementById("stop").onclick = function() {
-        ws_stop("");
-      };
+      document.getElementById("send").onclick = function() {
+        var input = document.getElementById("input").value;
 
-      document.getElementById("editorSave").onclick = function() {
-        ws_save(getFileName());
-      };
+        document.getElementById("output").innerHTML += "# " + input + "<br>";
 
-      document.getElementById("editorDelete").onclick = function() {
-        if (confirm("Delete " + getFileName() + "?")) ws_remove(getFileName());
-      };
-
-      document.getElementById("editorRun").onclick = function() {
-        ws_save(getFileName());
-        ws_run(getFileName());
+        ws_send(input, function(msg) {
+          document.getElementById("output").innerHTML += msg.replace(/\n/g, "<br>");
+        });
       };
 
       ws_init();
@@ -545,35 +439,10 @@
 
     <div class="row">
       <div class="col c12">
-        <h2>Status</h2>
-        <p><b>i2c connection: </b><span>OK</span></p>
-        <p><b>Free memory: </b><span>x Bytes</span></p>
-        <a class="btn btn-c btn-sm smooth" id="stop">STOP</a>
+        <input type="text" class="smooth" id="input" />
+        <a class="btn btn-a btn-sm smooth" id="send">send</a>
+        <p id="output"></p>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col c12">
-        <h2>Scripts</h2>
-        <table class="table" id="scriptTable"></table>
-      </div>
-    </div>
-
-    <div class="row">
-
-      <div class="col c12">
-        <h2>Editor</h2>
-
-        <input type="text" class="smooth" value="/test.script" id="editorFile" />
-        <textarea class="smooth" id="editor">
-REM Hello World!
-        </textarea>
-
-        <a class="btn btn-b btn-sm smooth" id="editorSave">save</a>
-        <a class="btn btn-a btn-sm smooth" id="editorDelete">delete</a>
-        <a class="btn btn-c btn-sm smooth" id="editorRun">run</a>
-      </div>
-
     </div>
 
     <div class="row">

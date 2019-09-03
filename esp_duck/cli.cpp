@@ -94,6 +94,9 @@ namespace cli {
             Argument arg { cmd.getArg(0) };
 
             duckscript::run(arg.getValue());
+
+            String response = "> started \"" + arg.getValue() + "\"\n";
+            print(response.c_str());
         });
 
         cli.addSingleArgCmd("stop", [](cmd* c) {
@@ -101,6 +104,9 @@ namespace cli {
             Argument arg { cmd.getArg(0) };
 
             duckscript::stop(arg.getValue());
+
+            String response = "> stopped \"" + arg.getValue() + "\"\n";
+            print(response.c_str());
         });
 
         cli.addSingleArgCmd("create", [](cmd* c) {
@@ -108,6 +114,9 @@ namespace cli {
             Argument arg { cmd.getArg(0) };
 
             spiffs::create(arg.getValue());
+
+            String response = "> created file \"" + arg.getValue() + "\"\n";
+            print(response.c_str());
         });
 
         cli.addSingleArgCmd("remove", [](cmd* c) {
@@ -115,6 +124,9 @@ namespace cli {
             Argument arg { cmd.getArg(0) };
 
             spiffs::remove(arg.getValue());
+
+            String response = "> removed file \"" + arg.getValue() + "\"\n";
+            print(response.c_str());
         });
 
         Command cmdRename {
@@ -128,6 +140,9 @@ namespace cli {
                 String fileB { argB.getValue() };
 
                 spiffs::rename(fileA, fileB);
+
+                String response = "> renamed \"" + fileA + "\" to \"" + fileB + "\"\n";
+                print(response.c_str());
             })
         };
         cmdRename.addPosArg("fileA,a");
@@ -144,6 +159,9 @@ namespace cli {
                 String content { argContent.getValue() };
 
                 spiffs::write(fileName, (uint8_t*)content.c_str(), content.length());
+
+                String response = "> wrote to file \"" + fileName + "\"\n";
+                print(response.c_str());
             })
         };
         cmdWrite.addPosArg("f/ile");
