@@ -349,6 +349,7 @@
 
     function fixFileName(fileName) {
       if (fileName.length > 0 && fileName[0] != '/') fileName = '/' + fileName;
+      fileName = fileName.replace(/ /g, '\-');
       return fileName;
     }
 
@@ -441,12 +442,12 @@
     // ===== WebSocket Actions ===== //
     function ws_run(fileName) {
       fileName = fixFileName(fileName);
-      ws_send("run " + fileName);
+      ws_send("run \"" + fileName + "\"");
     }
 
     function ws_stop(fileName) {
       fileName = fixFileName(fileName);
-      ws_send("stop " + fileName);
+      ws_send("stop \"" + fileName + "\"");
     }
 
     function ws_ls() {
@@ -462,21 +463,22 @@
       document.getElementById("editorFile").value = fileName;
       document.getElementById("editor").value = "";
 
-      ws_send("cat " + fileName + "\n", set_editor);
+      ws_send("cat \"" + fileName + "\"\n", set_editor);
     }
 
     function ws_save(fileName) {
       ws_stop(fileName);
 
       fileName = fixFileName(fileName);
-
-      ws_send("remove " + fileName, log);
-      ws_send("create " + fileName, log);
-
       var content = document.getElementById("editor").value;
       content = content.replace(/"/g, '\\"');
 
-      ws_send("write " + fileName + " \"" + content + "\"", log);
+      ws_send("remove \"/temporary_script\"", log);
+      ws_send("create \"/temporary_script\"", log);
+      ws_send("write \"/temporary_script\" \"" + content + "\"", log);
+
+      ws_send("remove \"" + fileName + "\"", log);
+      ws_send("rename \"/temporary_script\" \"" + fileName + "\"", log);
 
       ws_ls();
     }
@@ -485,7 +487,7 @@
       ws_stop(fileName);
 
       fileName = fixFileName(fileName);
-      ws_send("remove " + fileName);
+      ws_send("remove \"" + fileName + "\"");
 
       ws_ls();
     }
