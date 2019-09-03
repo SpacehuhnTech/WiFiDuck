@@ -73,13 +73,14 @@ namespace cli {
 
             File f = spiffs::open(arg.getValue());
 
-            char buffer[32];
+            int buf_size { 256 };
+            char buffer[buf_size];
 
             while (f && f.available()) {
-                for (size_t i = 0; i<32; ++i) {
-                    if (!f.available() || (i == 31)) {
+                for (size_t i = 0; i<buf_size; ++i) {
+                    if (!f.available() || (i == buf_size-1)) {
                         buffer[i] = '\0';
-                        i         = 32;
+                        i         = buf_size;
                     } else {
                         buffer[i] = f.read();
                     }
