@@ -13,7 +13,7 @@
 #include "config.h"
 #include "debug.h"
 #include "cli.h"
-
+#include "spiffs.h"
 #include "i2c.h"
 
 // Minified using: https://www.willpeavy.com/tools/minifier
@@ -57,65 +57,25 @@ namespace webserver {
         else if (type == WS_EVT_DATA) {
             AwsFrameInfo* info = (AwsFrameInfo*)arg;
 
-            // Single message
-            if (info->final && (info->index == 0) && (info->len == len)) {
+            if (info->opcode == WS_TEXT) {
                 debugf("Message from %u [%llu byte]\n", client->id(), info->len);
 
-                if (info->opcode == WS_TEXT) {
-                    char* msg = (char*)data;
+                char* msg = (char*)data;
 
-                    msg[len] = 0;
-                    debugf("%s\n", msg);
+                msg[len] = 0;
+                debugf("%s\n", msg);
 
+                if (spiffs::streaming() && (strcmp(msg, "close") != 0) && (strcmp(msg, "read") != 0)) {
+                    spiffs::streamWrite(msg, len);
+                    debugln("Written data to file");
+                    client->text("> Written data to file");
+                } else {
                     currentClient = client;
                     cli::parse(msg, [](const char* str) {
                         webserver::send(str);
+                        Serial.print(str);
                     }, false);
                     currentClient = nullptr;
-                } /*else {
-                     for (size_t i = 0; i < info->len; ++i) {
-                        debugf("%02x ", data[i]);
-                     }
-                     debugln();
-
-                     client->binary("I got your binary message");
-                     }*/
-            }
-
-            // Multiple packets
-            else {
-                if (info->index == 0) {
-                    if (info->num == 0) {
-                        debugf("WS Client %u message start\n", client->id());
-                    }
-                    debugf("WS Client %u - frame number %u start [%llu bytes]\n", client->id(), info->num, info->len);
-                }
-
-                debugf("WS Client %u - frame number %u [%llu - %llu bytes]: ", client->id(), info->num, info->index, info->index + len);
-
-                if (info->message_opcode == WS_TEXT) {
-                    data[len] = 0;
-                    debugf("%s\n", (char*)data);
-                } else {
-                    for (size_t i = 0; i < len; ++i) {
-                        debugf("%02x ", data[i]);
-                    }
-                    debugln();
-                }
-
-                if ((info->index + len) == info->len) {
-                    debugf("WS Client %u - frame number %u end\n", client->id(), info->num);
-
-                    if (info->final) {
-                        debugf("WS Client %u message end\n", client->id());
-
-                        /*
-                           if (info->message_opcode == WS_TEXT) {
-                            client->text("I got your text message");
-                           } else {
-                             client->binary("I got your binary message");
-                             }*/
-                    }
                 }
             }
         }

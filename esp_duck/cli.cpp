@@ -172,6 +172,33 @@ namespace cli {
             spiffs::format();
             println("Formatted SPIFFS");
         });
+
+        cli.addSingleArgCmd("stream", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            spiffs::streamOpen(arg.getValue());
+
+            String response = "> opened stream \"" + arg.getValue() + "\"\n";
+            print(response.c_str());
+        });
+
+        cli.addCommand("close", [](cmd* c) {
+            spiffs::streamClose();
+            print("> closed stream\n");
+        });
+
+        // Command cmdRead {
+        cli.addCommand("read", [](cmd* c) {
+            size_t len = 256;
+
+            char buffer[len];
+
+            size_t read = spiffs::streamRead(buffer, len);
+
+            print(buffer);
+            if (read < len) print("> END");
+        });
     }
 
     void parse(const char* input, PrintFunction printfunc, bool echo) {

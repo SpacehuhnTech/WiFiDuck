@@ -357,6 +357,8 @@
     var ws;
     var ws_callback = log;
     var file_list = "";
+    var messageQueue = [];
+    var cts = false;
 
     // ===== Helper Functions ===== //
     function getNewFileName() {
@@ -385,6 +387,8 @@
       ws.onclose = ws_close;
       ws.onmessage = ws_message;
       ws.onerror = ws_error;
+
+      cts = true;
     }
 
     function ws_open(evt) {
@@ -396,38 +400,30 @@
     function ws_close(evt) {
       console.log("[WS] Disconnected");
       status("disconnected");
-      //writeToScreen("DISCONNECTED");
     }
 
     function ws_message(evt) {
-      //if (evt.data.length > 1 || evt.data.trim().length > 0) {
-
       var msg = evt.data;
+
+      console.debug("> " + evt.data);
 
       if (msg.length > 0) {
         if (msg[0] == '>') log(msg.substring(2));
-        else ws_callback(msg);
+        ws_callback(msg);
       }
-
-      //res = evt.data.replace(/\n/g, "<br>");
-
-      //console.log(evt.data);
-      //console.log(res);
-      //writeToScreen('<span style="color: blue;">' + res + '</span>');
-      //websocket.close();
-      //}
+      cts = true;
     }
 
     function ws_error(evt) {
       console.log("[WS] Error");
       status("errored");
-      //writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
     }
 
     function ws_send(message, callback) {
-      //writeToScreen("# " + message);
-      ws.send(message);
-      ws_callback = callback;
+      messageQueue.push({
+        "message": message,
+        "callback": callback
+      });
     }
 
     // ===== WebSocket Actions ===== //
@@ -495,6 +491,17 @@
       });
     }
 
+    function ws_read() {
+      ws_send("read", function(content) {
+        if (content != "> END") {
+          document.getElementById("editor").value += content;
+          ws_read();
+        } else {
+          ws_send("close", log);
+        }
+      });
+    }
+
     function ws_cat(fileName) {
       ws_stop(fileName);
 
@@ -503,9 +510,8 @@
       document.getElementById("editorFile").value = fileName;
       document.getElementById("editor").value = "";
 
-      ws_send("cat \"" + fileName + "\"\n", function(content) {
-        document.getElementById("editor").value += content;
-      });
+      ws_send("stream \"" + fileName + "\"\n", log);
+      ws_read();
     }
 
     function ws_create(fileName) {
@@ -519,7 +525,7 @@
       ws_send("create \"" + fileName + "\"\n", log);
     }
 
-    function ws_save(fileName, content) {
+    function ws_write(fileName, content) {
       ws_stop(fileName);
 
       fileName = fixFileName(fileName);
@@ -527,7 +533,18 @@
 
       ws_send("remove \"/temporary_script\"", log);
       ws_send("create \"/temporary_script\"", log);
-      ws_send("write \"/temporary_script\" \"" + content + "\"", log);
+
+      ws_send("stream \"/temporary_script\"", log);
+
+      var pktsize = 64;
+      for (var i = 0; i < Math.ceil(content.length / pktsize); i++) {
+        var begin = i * pktsize;
+        var end = begin + pktsize;
+        if (end > content.length) end = content.length;
+
+        ws_send(content.substring(begin, end), log);
+      }
+      ws_send("close", log);
 
       ws_send("remove \"" + fileName + "\"", log);
       ws_send("rename \"/temporary_script\" \"" + fileName + "\"", log);
@@ -569,7 +586,7 @@
       };
 
       document.getElementById("editorSave").onclick = function() {
-        ws_save(getEditorFileName(), getEditorContent());
+        ws_write(getEditorFileName(), getEditorContent());
       };
 
       document.getElementById("editorDelete").onclick = function() {
@@ -601,6 +618,23 @@
       };
 
       ws_init();
+
+      setInterval(function() {
+        if (cts && messageQueue.length > 0) {
+          var item = messageQueue.shift();
+
+          var message = item.message;
+          var callback = item.callback;
+
+          ws.send(message);
+          ws_callback = callback;
+
+          console.debug("# " + message);
+
+          cts = false;
+        }
+
+      }, 1);
     }, false);
   </script>
 </head>
