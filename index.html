@@ -436,12 +436,16 @@
     }
 
     function ws_cat(fileName) {
+      if (fileName[0] != '/') fileName = '/' + fileName;
+
       document.getElementById("editorFile").value = fileName;
       document.getElementById("editor").value = "";
       ws_send("cat " + fileName + "\n", set_editor);
     }
 
     function ws_save(fileName) {
+      if (fileName[0] != '/') fileName = '/' + fileName;
+
       ws_send("remove " + fileName, log);
       ws_send("create " + fileName, log);
 
@@ -453,12 +457,42 @@
       ws_ls();
     }
 
+    function ws_remove(fileName) {
+      if (fileName[0] != '/') fileName = '/' + fileName;
+      ws_send("remove " + fileName);
+
+      ws_ls();
+    }
+
+    function ws_run(fileName) {
+      if (fileName[0] != '/') fileName = '/' + fileName;
+      ws_send("run " + fileName);
+    }
+
     // ===== Startup ===== //
     window.addEventListener("load", function() {
-      ws_init();
+
       document.getElementById("editorSave").onclick = function() {
-        ws_save(document.getElementById("editorFile").value);
+        var fileName = document.getElementById("editorFile").value;
+
+        ws_save(fileName);
       };
+
+      document.getElementById("editorDelete").onclick = function() {
+        var fileName = document.getElementById("editorFile").value;
+
+        if (confirm("Delete " + fileName + "?")) {
+          ws_remove(fileName);
+        }
+      };
+
+      document.getElementById("editorRun").onclick = function() {
+        var fileName = document.getElementById("editorFile").value;
+
+        ws_run(fileName);
+      };
+
+      ws_init();
     }, false);
   </script>
 </head>
@@ -506,7 +540,8 @@
 REM Hello World!
         </textarea>
 
-        <a class="btn btn-a btn-sm smooth" id="editorSave">save</a>
+        <a class="btn btn-b btn-sm smooth" id="editorSave">save</a>
+        <a class="btn btn-a btn-sm smooth" id="editorDelete">delete</a>
         <a class="btn btn-c btn-sm smooth" id="editorRun">run</a>
       </div>
 
