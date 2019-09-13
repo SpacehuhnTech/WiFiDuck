@@ -8,6 +8,7 @@
 
 #include "spiffs.h"
 #include "duckscript.h"
+#include "settings.h"
 
 #include <SimpleCLI.h>
 
@@ -44,6 +45,11 @@ namespace cli {
 
         cli.addCommand("help", [](cmd* c) {
             println(cli.toString().c_str());
+        });
+
+        cli.addCommand("settings", [](cmd* c) {
+            settings::load();
+            print(settings::toString().c_str());
         });
 
         cli.addSingleArgCmd("ls", [](cmd* c) {

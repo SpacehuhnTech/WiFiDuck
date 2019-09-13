@@ -15,6 +15,7 @@
 #include "cli.h"
 #include "spiffs.h"
 #include "i2c.h"
+#include "settings.h"
 
 // Minified using: https://www.willpeavy.com/tools/minifier
 // And escaped using: http://easyonlineconverter.com/converters/cpp-string-escape.html
@@ -84,8 +85,11 @@ namespace webserver {
     // ===== PUBLIC ===== //
     void begin() {
         // Access Point
-        WiFi.softAP(WIFI_SSID, WIFI_PASSWORD);
-        debugf("Started Access Point \"%s\":\"%s\"\n", WIFI_SSID, WIFI_PASSWORD);
+        const char* ssid     = settings::getSSID();
+        const char* password = settings::getPassword();
+
+        WiFi.softAP(ssid ? ssid : WIFI_SSID, password ? password : WIFI_PASSWORD);
+        debugf("Started Access Point \"%s\":\"%s\"\n", ssid ? ssid : WIFI_SSID, password ? password : WIFI_PASSWORD);
 
         // Webserver
         server.on("/", HTTP_GET, sendIndex);

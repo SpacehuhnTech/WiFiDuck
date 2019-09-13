@@ -24,10 +24,17 @@ namespace spiffs {
     // ===== PUBLIC ====== //
     void begin() {
         SPIFFS.begin();
-        if (!exists("/settings.ini")) {
+
+        String FILE_NAME = "/startup_spiffs_test";
+
+        remove(FILE_NAME);
+        create(FILE_NAME);
+        File f = open(FILE_NAME);
+        if (!f) {
             format();
-            File f { SPIFFS.open("/settings.ini", "w") };
+        } else {
             f.close();
+            remove(FILE_NAME);
         }
     }
 
@@ -93,6 +100,18 @@ namespace spiffs {
         String newPath { fixPath(newName) };
 
         SPIFFS.rename(oldPath.c_str(), newPath.c_str());
+    }
+
+    void write(String fileName, const char* str) {
+        File f { open(fileName) };
+
+        if (f) {
+            f.write(str);
+            f.close();
+            debugln("Wrote file");
+        } else {
+            debugln("File error");
+        }
     }
 
     void write(String fileName, const uint8_t* buf, size_t len) {

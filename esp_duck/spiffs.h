@@ -25,6 +25,7 @@ namespace spiffs {
 
     void remove(String fileName);
     void rename(String oldName, String newName);
+    void write(String fileName, const char* str);
     void write(String fileName, const uint8_t* buf, size_t len);
 
     String listDir(String dirName);
