@@ -42,7 +42,7 @@ namespace i2c {
             connectionTime = millis();
             ++connection_tries;
 
-            const char* led_cmd = "LED 0 0 100\n";
+            const char* led_cmd = "LED 0 0 25\n";
 
             transmit((uint8_t*)led_cmd, strlen(led_cmd));
             sendRequest();
