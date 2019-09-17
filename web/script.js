@@ -178,37 +178,37 @@ function ws_send_ls() {
     file_list += csv;
 
     var lines = file_list.split(/\n/);
-    var tableHTML = "<thead>\r\n";
+    var tableHTML = "<thead>\n";
 
-    tableHTML += "<tr>\r\n";
-    tableHTML += "<th>File</th>\r\n";
-    tableHTML += "<th>Size</th>\r\n";
-    tableHTML += "<th>Actions</th>\r\n";
-    tableHTML += "</tr>\r\n";
-    tableHTML += "</thead>\r\n";
-    tableHTML += "<tbody>\r\n";
+    tableHTML += "<tr>\n";
+    tableHTML += "<th>File</th>\n";
+    tableHTML += "<th>Size</th>\n";
+    tableHTML += "<th>Actions</th>\n";
+    tableHTML += "</tr>\n";
+    tableHTML += "</thead>\n";
+    tableHTML += "<tbody>\n";
 
     for (var i = 0; i < lines.length; i++) {
       var data = lines[i].split(" ");
       var fileName = data[0];
       var fileSize = data[1];
       if (fileName.length > 0) {
-        tableHTML += "<tr>\r\n";
-        tableHTML += "<td>" + fileName + "</td>\r\n";
-        tableHTML += "<td>" + fileSize + "</td>\r\n";
-        tableHTML += "<td>\r\n";
-        tableHTML += "<button class=\"primary\" onclick=\"ws_send_stream('" + fileName + "')\">edit</button>\r\n";
-        tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button></td>\r\n";
-        tableHTML += "</tr>\r\n";
+        tableHTML += "<tr>\n";
+        tableHTML += "<td>" + fileName + "</td>\n";
+        tableHTML += "<td>" + fileSize + "</td>\n";
+        tableHTML += "<td>\n";
+        tableHTML += "<button class=\"primary\" onclick=\"ws_send_stream('" + fileName + "')\">edit</button>\n";
+        tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button></td>\n";
+        tableHTML += "</tr>\n";
       }
     }
 
-    tableHTML += "<tr>\r\n";
-    tableHTML += "<td><input type=\"text\" class=\"smooth\" value=\"/\" id=\"newFile\"/></td>\r\n";
-    tableHTML += "<td>-</td>\r\n";
-    tableHTML += "<td><button class=\"success\" onclick=\"ws_send_create(getNewFileName())\">create</button></td>\r\n";
-    tableHTML += "</tr>\r\n";
-    tableHTML += "</tbody>\r\n";
+    tableHTML += "<tr>\n";
+    tableHTML += "<td><input type=\"text\" class=\"smooth\" value=\"/\" id=\"newFile\"/></td>\n";
+    tableHTML += "<td>-</td>\n";
+    tableHTML += "<td><button class=\"success\" onclick=\"ws_send_create(getNewFileName())\">create</button></td>\n";
+    tableHTML += "</tr>\n";
+    tableHTML += "</tbody>\n";
 
     E("scriptTable").innerHTML = tableHTML;
   });
