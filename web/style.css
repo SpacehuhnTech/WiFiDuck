@@ -294,8 +294,14 @@ nav {
   display: block;
   padding: 8px 10px;
   background: #2f3136;
+  font-weight: bold;
 }
 
+nav a {
+  color: inherit;
+}
+
+/*
 nav a {
   color: #bfbfbf;
   padding: .5em;
@@ -307,8 +313,7 @@ nav a:hover {
   background: #36393f;
   color: #cecece;
   border-radius: 4px;
-}
-
+}*/
 /* Inputs and buttons */
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;
