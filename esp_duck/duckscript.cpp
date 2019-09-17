@@ -187,4 +187,13 @@ namespace duckscript {
             debugln("Stopped script");
         }
     }
+
+    bool isRunning() {
+        return running;
+    }
+
+    String currentScript() {
+        if (!running) return String();
+        return String(f.name());
+    }
 }

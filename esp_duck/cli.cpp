@@ -9,6 +9,7 @@
 #include "spiffs.h"
 #include "duckscript.h"
 #include "settings.h"
+#include "i2c.h"
 
 #include <SimpleCLI.h>
 
@@ -52,6 +53,19 @@ namespace cli {
             print(settings::toString().c_str());
         });
 
+        cli.addCommand("status", [](cmd* c) {
+            if (i2c::connected()) {
+                if (duckscript::isRunning()) {
+                    String s { String("running ") + duckscript::currentScript() };
+                    print(s.c_str());
+                } else {
+                    print("connected");
+                }
+            } else {
+                print("i2c connection problem");
+            }
+        });
+
         cli.addSingleArgCmd("ls", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -63,7 +77,7 @@ namespace cli {
             String s { NULL };
             s.reserve(64);
 
-            s  = String(spiffs::size());
+            s += String(spiffs::size());
             s += " byte\n";
             s += String(spiffs::usedBytes());
             s += " byte used\n";

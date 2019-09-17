@@ -48,8 +48,10 @@ function ws_send_stream(fileName) {
       if (content != "> END") {
         E("editor").value += content;
         ws_send_read();
+        status("reading...");
       } else {
         ws_send("close", log_ws);
+        ws_update_status();
       }
     });
   };
@@ -137,13 +139,18 @@ function ws_send_write(fileName, content) {
 
   ws_send("stream \"/temporary_script\"", log_ws);
 
+  var ws_send_log = function(msg) {
+    status("saving...");
+    log_ws(msg);
+  };
+
   var pktsize = 64;
   for (var i = 0; i < Math.ceil(content.length / pktsize); i++) {
     var begin = i * pktsize;
     var end = begin + pktsize;
     if (end > content.length) end = content.length;
 
-    ws_send(content.substring(begin, end), log_ws);
+    ws_send(content.substring(begin, end), ws_send_log);
   }
   ws_send("close", log_ws);
 
@@ -151,6 +158,7 @@ function ws_send_write(fileName, content) {
   ws_send("rename \"/temporary_script\" \"" + fileName + "\"", log_ws);
 
   ws_send_mem_ls();
+  ws_update_status();
 }
 
 function ws_send_remove(fileName) {

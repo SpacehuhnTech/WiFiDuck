@@ -16,4 +16,7 @@ namespace duckscript {
     void repeat();
     void stop();
     void stop(const String& fileName);
+
+    bool isRunning();
+    String currentScript();
 };

@@ -36,7 +36,9 @@ function status(mode) {
     E("status").style.backgroundColor = "#3c5";
   } else if (mode == "disconnected") {
     E("status").style.backgroundColor = "#d33";
-  } else if (mode == "connecting...") {
+  } else if (mode.includes("problem") || mode.includes("error")) {
+    E("status").style.backgroundColor = "#ffc107";
+  } else /*if (mode == "connecting...")*/ {
     E("status").style.backgroundColor = "#0ae";
   }
 
@@ -68,6 +70,17 @@ function ws_msg_queue_update() {
 
     cts = false;
   }
+}
+
+function ws_send(message, callback) {
+  ws_msg_queue.push({
+    "message": message,
+    "callback": callback
+  });
+}
+
+function ws_update_status() {
+  ws_send("status", status);
 }
 
 function ws_init() {
@@ -109,11 +122,6 @@ function ws_init() {
   cts = true;
 
   setInterval(ws_msg_queue_update, 1);
-}
 
-function ws_send(message, callback) {
-  ws_msg_queue.push({
-    "message": message,
-    "callback": callback
-  });
+  setInterval(ws_update_status, 2000);
 }
