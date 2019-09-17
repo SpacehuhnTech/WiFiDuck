@@ -38,6 +38,8 @@ function fixFileName(fileName) {
 
 // ===== DOM Manipulation ===== //
 function status(mode) {
+  current_status = mode;
+
   if (mode == "connected") {
     E("status").style.backgroundColor = "#3c5";
   } else if (mode == "disconnected") {
@@ -60,6 +62,8 @@ var ws; // web socket instance
 var ws_callback = log_ws; // message receive callback
 var ws_msg_queue = []; // queue for outgoing messages
 var cts = false; // clear to send flag for message queue
+
+var current_status = "";
 
 // ===== WebSocket Functions ===== //
 function ws_msg_queue_update() {
@@ -90,6 +94,8 @@ function ws_update_status() {
 }
 
 function ws_init() {
+  ws_send("close");
+
   status("connecting...");
 
   ws = new WebSocket("ws://192.168.4.1/ws");
@@ -129,5 +135,5 @@ function ws_init() {
 
   setInterval(ws_msg_queue_update, 1);
 
-  setInterval(ws_update_status, 2000);
+  //setInterval(ws_update_status, 5000);
 }

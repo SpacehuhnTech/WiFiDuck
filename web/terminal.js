@@ -13,9 +13,12 @@ window.addEventListener("load", function() {
 
     E("output").innerHTML += "# " + input + "<br>";
 
+    E("reconnect").onclick = ws_init;
+
     ws_send(input, function(msg) {
       log(msg);
       E("output").innerHTML += msg.replace(/\n/g, "<br>");
+      E("output").scrollTop = E("output").scrollHeight;
     });
   };
 

@@ -337,6 +337,7 @@ nav a:hover {
   border: none;
   cursor: pointer;
   box-sizing: border-box;
+  margin: .2rem 0;
 }
 
 button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {

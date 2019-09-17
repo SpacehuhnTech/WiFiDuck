@@ -5,6 +5,7 @@
  */
 
 var file_list = ""; // file list string used for ls command
+var status_interval;
 
 // ===== Value Getters ===== //
 function getNewFileName() {
@@ -20,6 +21,13 @@ function getEditorContent() {
 }
 
 // ===== WebSocket Actions ===== //
+function check_status() {
+  ws_update_status();
+  if (current_status == "connected" || current_status == "disconnected") {
+    clearInterval(status_interval);
+  }
+}
+
 function ws_connected() {
   ws_send_mem_ls();
 }
@@ -33,10 +41,13 @@ function ws_send_format() {
 
 function ws_send_run(fileName) {
   ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
+  ws_update_status();
+  status_interval = setInterval(check_status, 200);
 }
 
 function ws_send_stop(fileName) {
   ws_send("stop \"" + fixFileName(fileName) + "\"", log_ws);
+  ws_update_status();
 }
 
 function ws_send_stream(fileName) {
@@ -150,7 +161,7 @@ function ws_send_write(fileName, content) {
     log_ws(msg);
   };
 
-  var pktsize = 64;
+  var pktsize = 1024;
   for (var i = 0; i < Math.ceil(content.length / pktsize); i++) {
     var begin = i * pktsize;
     var end = begin + pktsize;
@@ -178,21 +189,13 @@ function ws_send_remove(fileName) {
 // ===== Startup ===== //
 window.addEventListener("load", function() {
 
-  E("scriptsReload").onclick = function() {
-    ws_send_mem_ls();
-  };
+  E("scriptsReload").onclick = ws_send_mem_ls;
 
-  E("reconnect").onclick = function() {
-    ws_init();
-  };
+  E("reconnect").onclick = ws_init;
 
-  E("format").onclick = function() {
-    ws_send_format();
-  };
+  E("format").onclick = ws_send_format;
 
-  E("stop").onclick = function() {
-    ws_send_stop("");
-  };
+  E("stop").onclick = ws_send_stop;
 
   E("editorReload").onclick = function() {
     ws_send_stream(getEditorFileName());

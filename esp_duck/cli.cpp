@@ -210,7 +210,7 @@ namespace cli {
 
         // Command cmdRead {
         cli.addCommand("read", [](cmd* c) {
-            size_t len = 256;
+            size_t len = 1024;
 
             char buffer[len];
 
