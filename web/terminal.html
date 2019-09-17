@@ -14,14 +14,23 @@
 
   <link rel="stylesheet" type="text/css" href="style.css">
 
+  <style>
+    #output {
+      max-height: 100vh;
+      overflow: scroll;
+      padding: .5rem;
+      border-radius: 4px;
+    }
+  </style>
+
   <script src="script.js"></script>
-  <script src="index.js"></script>
+  <script src="terminal.js"></script>
 </head>
 
 <body>
 
   <nav>
-    <a href="index.html">WiFi Duck</a>
+    <a href="index.html">WiFi Duck</a> | Terminal
   </nav>
 
   <div id="status"></div>
@@ -30,27 +39,14 @@
     <div class="row">
       <div class="col-12">
 
-        <h2>Status</h2>
-        <button class=" danger" id="format">format</button>
-        <button class=" warn" id="stop">stop</button>
-        <button class="" id="reconnect">reconnect</button>
-        <p><b>SPIFFS: </b><span id="freeMemory">-</span></p>
+        <h2>Terminal</h2>
 
-        <h2>Scripts <a class="reload" id="scriptsReload">&#x21bb;</a></h2>
-        <table class="table" id="scriptTable"></table>
+        <input type="text" class="smooth" id="input" value="help">
 
-        <h2>Editor <a class="reload" id="editorReload">&#x21bb;</a></h2>
+        <button class="primary" id="send">send</button>
+        <button class="warn" id="clear">clear</button>
 
-        <label>Filename:</label>
-        <input type="text" class="smooth" value="/example" id="editorFile">
-
-        <textarea class="smooth" id="editor">REM Hello World!</textarea>
-
-        <button class="danger" id="editorDelete">delete</button>
-        <button class="primary" id="editorDownload">download</button>
-        <button class="warn" id="editorStop">stop</button>
-        <button class="warn" id="editorRun">run</button>
-        <button class="success" id="editorSave">save</button>
+        <p id="output"></p>
 
         <div id="copyright">
           <a href="https://github.com/spacehuhn/WiFiDuck" target="_blank">Source</a> |
