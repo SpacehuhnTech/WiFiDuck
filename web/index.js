@@ -23,7 +23,7 @@ function getEditorContent() {
 // ===== WebSocket Actions ===== //
 function check_status() {
   ws_update_status();
-  if (current_status == "connected" || current_status == "disconnected") {
+  if (!current_status.includes("running")) {
     clearInterval(status_interval);
   }
 }
@@ -46,8 +46,29 @@ function ws_send_run(fileName) {
 }
 
 function ws_send_stop(fileName) {
-  ws_send("stop \"" + fixFileName(fileName) + "\"", log_ws);
+  var cmd = "stop";
+
+  if (fileName) {
+    cmd += " \"" + fixFileName(fileName) + "\"";
+  }
+
+  if (status_interval) clearInterval(status_interval);
+
+  ws_send(cmd, log_ws, true);
   ws_update_status();
+}
+
+function ws_send_read() {
+  ws_send("read", function(content) {
+    if (content != "> END") {
+      E("editor").value += content;
+      ws_send_read();
+      status("reading...");
+    } else {
+      ws_send("close", log_ws);
+      ws_update_status();
+    }
+  });
 }
 
 function ws_send_stream(fileName) {
@@ -59,19 +80,6 @@ function ws_send_stream(fileName) {
   E("editor").value = "";
 
   ws_send("stream \"" + fileName + "\"\n", log_ws);
-
-  var ws_send_read = function() {
-    ws_send("read", function(content) {
-      if (content != "> END") {
-        E("editor").value += content;
-        ws_send_read();
-        status("reading...");
-      } else {
-        ws_send("close", log_ws);
-        ws_update_status();
-      }
-    });
-  };
 
   ws_send_read();
 }
@@ -195,7 +203,9 @@ window.addEventListener("load", function() {
 
   E("format").onclick = ws_send_format;
 
-  E("stop").onclick = ws_send_stop;
+  E("stop").onclick = function() {
+    ws_send_stop();
+  }
 
   E("editorReload").onclick = function() {
     ws_send_stream(getEditorFileName());

@@ -82,11 +82,17 @@ function ws_msg_queue_update() {
   }
 }
 
-function ws_send(message, callback) {
-  ws_msg_queue.push({
+function ws_send(message, callback, force = false) {
+  var obj = {
     "message": message,
     "callback": callback
-  });
+  };
+
+  if (force) {
+    ws_msg_queue.unshift(obj);
+  } else {
+    ws_msg_queue.push(obj);
+  }
 }
 
 function ws_update_status() {
