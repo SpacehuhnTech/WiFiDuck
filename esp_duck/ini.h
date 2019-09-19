@@ -35,7 +35,7 @@ typedef struct ini_file {
 ini_pair* ini_pair_create(const char* key, size_t key_len, const char* value, size_t value_len, const char* comment, size_t comment_len);
 ini_pair* ini_pair_copy(ini_pair* pair);
 ini_pair* ini_pair_destroy(ini_pair* pair);
-char* ini_pair_str(ini_pair* pair);
+void ini_pair_str(ini_pair* pair, char* str);
 int ini_pair_equals(ini_pair* a, ini_pair* b);
 void ini_pair_set_value(ini_pair* pair, char* value);
 void ini_pair_print(ini_pair* pair, ini_print print);
@@ -46,7 +46,7 @@ ini_section* ini_section_create(const char* name, size_t name_len, const char* c
 ini_section* ini_section_copy(ini_section* section);
 ini_section* ini_section_destroy(ini_section* section);
 ini_pair* ini_section_get_pair(ini_section* section, const char* key);
-char* ini_section_str(ini_section* section);
+void ini_section_str(ini_section* section, char* str);
 ini_section* ini_section_add_pair(ini_section* section, ini_pair* pair);
 int ini_section_equals(ini_section* a, ini_section* b);
 void ini_section_print(ini_section* section, ini_print print);
@@ -57,7 +57,7 @@ ini_file* ini_file_create();
 ini_file* ini_file_copy(ini_file* file);
 ini_file* ini_file_destroy(ini_file* file);
 ini_section* ini_file_get_section(ini_file* file, const char* section_name);
-char* ini_file_str(ini_file* file);
+void ini_file_str(ini_file* file, char* str);
 ini_file* ini_file_add_section(ini_file* file, ini_section* section);
 void ini_file_print(ini_file* file, ini_print print);
 size_t ini_file_strlen(ini_file* file);

@@ -11,7 +11,9 @@
 namespace settings {
     void begin();
     void load();
+
     String toString();
+
     const char* getSSID();
     const char* getPassword();
 }

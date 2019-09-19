@@ -23,6 +23,8 @@ namespace settings {
     }
 
     void load() {
+        ini = ini_file_destroy(ini);
+
         const char* FILE_NAME = "/settings.ini";
 
         if (!spiffs::exists(FILE_NAME)) {
@@ -35,23 +37,27 @@ namespace settings {
         spiffs::streamOpen(FILE_NAME);
 
         size_t read;
-        size_t buffer_size = 256;
+        size_t buffer_size = 1024;
         char   buffer[buffer_size];
 
         do {
-            read = spiffs::streamRead(buffer, buffer_size);
+            read = spiffs::streamReadUntil(buffer, '\n', buffer_size);
             ini  = ini_parse(ini, buffer, read);
-        } while (read == buffer_size);
+        } while (read > 0 && spiffs::streaming());
 
         spiffs::streamClose();
     }
 
     String toString() {
-        char * cstr = ini_file_str(ini);
-        String str(cstr);
+        size_t len = ini_file_strlen(ini);
 
-        free(cstr);
-        return str;
+        char str[len+1];
+
+        str[len] = '\0';
+
+        ini_file_str(ini, str);
+
+        return String(str);
     }
 
     const char* getSSID() {

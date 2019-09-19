@@ -160,9 +160,31 @@ namespace spiffs {
             for (i = 0; i<len; ++i) {
                 if (!streamFile.available() || (i == len-1)) {
                     buf[i] = '\0';
-                    if (!streamFile.available()) break;
+                    break;
                 } else {
                     buf[i] = streamFile.read();
+                }
+            }
+
+            return i;
+        } else {
+            debugln("ERROR: No stream file open");
+            return 0;
+        }
+    }
+
+    size_t streamReadUntil(char* buf, char delimiter, size_t max_len) {
+        if (streamFile) {
+            size_t i;
+            char   c;
+
+            for (i = 0; i<max_len; ++i) {
+                if ((c == delimiter) || !streamFile.available() || (i == max_len-1)) {
+                    buf[i] = '\0';
+                    break;
+                } else {
+                    c      = streamFile.read();
+                    buf[i] = c;
                 }
             }
 
@@ -178,6 +200,6 @@ namespace spiffs {
     }
 
     bool streaming() {
-        return streamFile;
+        return streamFile && streamFile.available();
     }
 }

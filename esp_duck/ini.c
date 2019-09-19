@@ -15,22 +15,18 @@ char * cstr   = NULL;
 size_t cstr_i = 0;
 
 void print_to_sum(const char* str) {
-    sum += strlen(str);
+    if (str) {
+        sum += strlen(str);
+    }
 }
 
 void print_to_str(const char* str) {
-    size_t str_len = strlen(str);
+    if (str && cstr) {
+        size_t len = strlen(str);
 
-    memcpy(&cstr[cstr_i], str, str_len);
-    cstr_i += str_len;
-}
-
-void make_cstr(size_t len) {
-    if (cstr) free(cstr);
-
-    cstr      = (char*)malloc(len+1);
-    cstr[len] = '\0';
-    cstr_i    = 0;
+        memcpy(&cstr[cstr_i], str, len);
+        cstr_i += len;
+    }
 }
 
 // ===== ini_pair ===== //
@@ -88,16 +84,14 @@ ini_pair* ini_pair_destroy(ini_pair* pair) {
     return NULL;
 }
 
-char* ini_pair_str(ini_pair* pair) {
-    make_cstr(ini_pair_strlen(pair));
-    ini_pair_print(pair, print_to_str);
+void ini_pair_str(ini_pair* pair, char* str) {
+    cstr   = str;
+    cstr_i = 0;
 
-    char* tmp = cstr;
+    ini_pair_print(pair, print_to_str);
 
     cstr   = NULL;
     cstr_i = 0;
-
-    return tmp;
 }
 
 int ini_pair_equals(ini_pair* a, ini_pair* b) {
@@ -213,16 +207,14 @@ ini_pair* ini_section_get_pair(ini_section* section, const char* key) {
     return NULL;
 }
 
-char* ini_section_str(ini_section* section) {
-    make_cstr(ini_section_strlen(section));
-    ini_section_print(section, print_to_str);
+void ini_section_str(ini_section* section, char* str) {
+    cstr   = str;
+    cstr_i = 0;
 
-    char* tmp = cstr;
+    ini_section_print(section, print_to_str);
 
     cstr   = NULL;
     cstr_i = 0;
-
-    return tmp;
 }
 
 ini_section* ini_section_add_pair(ini_section* section, ini_pair* pair) {
@@ -343,16 +335,14 @@ ini_section* ini_file_get_section(ini_file* file, const char* section_name) {
     return NULL;
 }
 
-char* ini_file_str(ini_file* file) {
-    make_cstr(ini_file_strlen(file));
-    ini_file_print(file, print_to_str);
+void ini_file_str(ini_file* file, char* str) {
+    cstr   = str;
+    cstr_i = 0;
 
-    char* tmp = cstr;
+    ini_file_print(file, print_to_str);
 
     cstr   = NULL;
     cstr_i = 0;
-
-    return tmp;
 }
 
 ini_file* ini_file_add_section(ini_file* file, ini_section* section) {
@@ -398,14 +388,12 @@ ini_file* ini_parse(ini_file* file, char* str, size_t len) {
 
     if (!str || (len == 0)) return file;
 
-    ini_section* current_section;
+    ini_section* current_section = file->default_section;
 
     if (file->sections) {
         current_section = file->sections;
 
         while (current_section->next) current_section = current_section->next;
-    } else {
-        current_section = file->default_section;
     }
 
     // Go through string and look for /r and /n to split it into lines
