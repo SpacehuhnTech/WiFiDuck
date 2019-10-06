@@ -6,14 +6,22 @@
 
 #pragma once
 
-#include <Arduino.h>
+#include <string>
 
 namespace settings {
     void begin();
     void load();
 
-    String toString();
+    void check_and_repair();
+    void reset();
+
+    std::string toString();
 
     const char* getSSID();
     const char* getPassword();
+    uint8_t getChannel();
+
+    void setSSID(char* ssid);
+    void setPassword(char* password);
+    void setChannel(char* channel);
 }

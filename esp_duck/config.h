@@ -11,8 +11,9 @@
 #define DEBUG_BAUD 115200
 
 // WiFi Settings
-#define WIFI_SSID "Duck"
-#define WIFI_PASSWORD "quackquack"
+#define WIFI_SSID "wifiduck"
+#define WIFI_PASSWORD "wifiduck"
+#define WIFI_CHANNEL "1"
 
 // Connection Settings
 #define NUMBER_CONNECTION_TRIES 1

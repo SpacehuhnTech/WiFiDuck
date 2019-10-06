@@ -8,14 +8,18 @@
 
 #include "spiffs.h"
 #include "debug.h"
+#include "config.h"
 
 extern "C" {
     #include "ini.h"
 }
 
+#include <stdlib.h> // atoi
+
 namespace settings {
     // ===== PRIVATE ===== //
-    ini_file* ini = NULL;
+    ini_file  * ini       = NULL;
+    const char* FILE_NAME = "/settings.ini";
 
     // ===== PUBLIC ====== //
     void begin() {
@@ -25,13 +29,8 @@ namespace settings {
     void load() {
         ini = ini_file_destroy(ini);
 
-        const char* FILE_NAME = "/settings.ini";
-
         if (!spiffs::exists(FILE_NAME)) {
-            spiffs::create(FILE_NAME);
-            spiffs::write(FILE_NAME, "[WiFi]\n"
-                                     "SSID=wifiduck\n"
-                                     "password=wifiduck\n");
+            reset();
         }
 
         spiffs::streamOpen(FILE_NAME);
@@ -46,9 +45,34 @@ namespace settings {
         } while (read > 0 && spiffs::streaming());
 
         spiffs::streamClose();
+
+        check_and_repair();
     }
 
-    String toString() {
+    void check_and_repair() {
+        if (!getSSID()) {
+            setSSID(WIFI_SSID);
+        }
+
+        if (strlen(getPassword()) < 8) {
+            setPassword(WIFI_PASSWORD);
+        }
+
+        if ((getChannel() == 0) || (getChannel() > 14)) {
+            setChannel(WIFI_CHANNEL);
+        }
+    }
+
+    void reset() {
+        spiffs::remove(FILE_NAME);
+        spiffs::create(FILE_NAME);
+        spiffs::write(FILE_NAME, "[WiFi]\n"
+                                 "SSID=\n"
+                                 "password=\n"
+                                 "channel=\n");
+    }
+
+    std::string toString() {
         size_t len = ini_file_strlen(ini);
 
         char str[len+1];
@@ -57,26 +81,30 @@ namespace settings {
 
         ini_file_str(ini, str);
 
-        return String(str);
+        return std::string(str);
     }
 
     const char* getSSID() {
-        ini_section* section = ini_file_get_section(ini, "WiFi");
-        ini_pair   * pair    = ini_section_get_pair(section, "SSID");
-
-        if (!section) debugln("No section found");
-        if (!pair) debugln("No pair found");
-
-        if (pair) debugln(pair->value);
-
-        if (pair) return pair->value;
-        return NULL;
+        return ini_file_get_value(ini, "SSID");
     }
 
     const char* getPassword() {
-        ini_pair* pair = ini_section_get_pair(ini_file_get_section(ini, "WiFi"), "password");
+        return ini_file_get_value(ini, "password");
+    }
 
-        if (pair) return pair->value;
-        return NULL;
+    uint8_t getChannel() {
+        return atoi(ini_file_get_value(ini, "channel"));
+    }
+
+    void setSSID(char* ssid) {
+        ini_file_set_value(ini, "SSID", ssid);
+    }
+
+    void setPassword(char* password) {
+        ini_file_set_value(ini, "password", password);
+    }
+
+    void setChannel(char* channel) {
+        ini_file_set_value(ini, "channel", channel);
     }
 }
