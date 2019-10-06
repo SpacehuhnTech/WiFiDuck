@@ -11,7 +11,11 @@
 #include "settings.h"
 #include "i2c.h"
 
+
 #include <SimpleCLI.h>
+extern "C" {
+#include "user_interface.h"
+}
 
 namespace cli {
     // ===== PRIVATE ===== //
@@ -46,6 +50,12 @@ namespace cli {
 
         cli.addCommand("help", [](cmd* c) {
             println(cli.toString().c_str());
+        });
+
+        cli.addCommand("ram", [](cmd* c) {
+            String freeRam { system_get_free_heap_size() };
+            String response = freeRam + " bytes available\n";
+            print(response.c_str());
         });
 
         cli.addCommand("settings", [](cmd* c) {
