@@ -306,6 +306,10 @@ nav a {
   color: inherit;
 }
 
+nav a:last-of-type {
+  float: right;
+}
+
 /*
 nav a {
   color: #bfbfbf;

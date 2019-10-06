@@ -58,16 +58,19 @@ function log_ws(msg) {
   log("[WS] " + msg);
 }
 
-var ws; // web socket instance
+var ws = null; // web socket instance
 var ws_callback = log_ws; // message receive callback
 var ws_msg_queue = []; // queue for outgoing messages
 var cts = false; // clear to send flag for message queue
 
 var current_status = "";
 
+var ws_queue_interval = null;
+
 // ===== WebSocket Functions ===== //
 function ws_msg_queue_update() {
   if (cts && ws_msg_queue.length > 0) {
+
     var item = ws_msg_queue.shift();
 
     var message = item.message;
@@ -77,7 +80,6 @@ function ws_msg_queue_update() {
     ws_callback = callback;
 
     console.debug("# " + message);
-
     cts = false;
   }
 }
@@ -100,8 +102,6 @@ function ws_update_status() {
 }
 
 function ws_init() {
-  ws_send("close");
-
   status("connecting...");
 
   ws = new WebSocket("ws://192.168.4.1/ws");
@@ -110,6 +110,7 @@ function ws_init() {
     log_ws("connected");
     status("connected");
 
+    ws_send("close", log_ws, true);
     ws_connected();
   };
 
@@ -123,7 +124,7 @@ function ws_init() {
 
     log_ws(msg);
 
-    if (msg.length > 0) {
+    if (ws_callback && msg.length > 0) {
       ws_callback(msg);
     }
 
@@ -139,7 +140,6 @@ function ws_init() {
 
   cts = true;
 
-  setInterval(ws_msg_queue_update, 1);
-
-  //setInterval(ws_update_status, 5000);
+  if (ws_queue_interval) clearInterval(ws_queue_interval);
+  ws_queue_interval = setInterval(ws_msg_queue_update, 1);
 }
