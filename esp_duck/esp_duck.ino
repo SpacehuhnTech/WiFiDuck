@@ -35,8 +35,6 @@ void setup() {
     webserver::begin();
 
     debugln("\nESP Duck Started");
-
-    duckscript::runTest();
 }
 
 void loop() {

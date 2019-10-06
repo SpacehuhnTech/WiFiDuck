@@ -32,17 +32,3 @@
 
 #define BUFFER_SIZE 512
 #define PACKET_SIZE 32
-
-// Test Settings
-// #define ENABLE_DEFAULT_DELAY
-// #define LED_TEST
-// #define OPEN_NOTEPAD
-// #define HELLO_WORLD
-// define DELAY_TEST
-// #define REPEAT_TEST
-// #define US_CHAR_TEST
-// #define DE_CHAR_TEST
-// #define GB_CHAR_TEST
-// #define OVERFLOW_TEST
-// #define KEYCODE_TEST
-// #define CLOSE_NOTEPAD
