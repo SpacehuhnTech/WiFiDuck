@@ -115,7 +115,7 @@ input[type="text"] {
   z-index: 99;
 }
 
-#copyright {
+footer {
   font-size: .95em;
   text-align: center;
   margin-top: 3em;
