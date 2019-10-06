@@ -53,6 +53,31 @@ namespace cli {
             print(settings::toString().c_str());
         });
 
+        Command cmdSet {
+            cli.addCommand("set", [](cmd* c) {
+                Command  cmd { c };
+
+                Argument argName { cmd.getArg(0) };
+                Argument argValue { cmd.getArg(1) };
+
+                String name { argName.getValue() };
+                String value { argValue.getValue() };
+
+                settings::set(name.c_str(), value.c_str());
+
+                String response = "> set \"" + name + "\" to \"" + value + "\"\n";
+
+                print(response.c_str());
+            })
+        };
+        cmdSet.addPosArg("n/ame");
+        cmdSet.addPosArg("v/alue");
+
+        cli.addCommand("reset", [](cmd* c) {
+            settings::reset();
+            print(settings::toString().c_str());
+        });
+
         cli.addCommand("status", [](cmd* c) {
             if (i2c::connected()) {
                 if (duckscript::isRunning()) {
