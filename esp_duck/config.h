@@ -10,6 +10,11 @@
 #define ENABLE_DEBUG
 #define DEBUG_BAUD 115200
 
+// EEPROM Settings
+#define EEPROM_SIZE       4095
+#define EEPROM_BOOT_ADDR  3210
+#define BOOT_MAGIC_NUM    1234567890
+
 // WiFi Settings
 #define WIFI_SSID "wifiduck"
 #define WIFI_PASSWORD "wifiduck"
