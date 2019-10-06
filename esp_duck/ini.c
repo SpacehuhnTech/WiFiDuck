@@ -100,7 +100,14 @@ int ini_pair_equals(ini_pair* a, ini_pair* b) {
     return strcmp(a->key, b->key) == 0;
 }
 
-void ini_pair_set_value(ini_pair* pair, char* value) {
+const char* ini_pair_get_value(ini_pair* pair) {
+    if (pair) {
+        return pair->value;
+    }
+    return NULL;
+}
+
+void ini_pair_set_value(ini_pair* pair, const char* value) {
     if (pair) {
         if (pair->value) {
             free(pair->value);
@@ -333,6 +340,30 @@ ini_section* ini_file_get_section(ini_file* file, const char* section_name) {
     }
 
     return NULL;
+}
+
+ini_pair* ini_file_get_pair(ini_file* file, const char* pair_name) {
+    if (file) {
+        ini_section* h = file->sections;
+        ini_pair   * p = NULL;
+
+        while (h && !p) {
+            p = ini_section_get_pair(h, pair_name);
+            h = h->next;
+        }
+
+        return p;
+    }
+
+    return NULL;
+}
+
+const char* ini_file_get_value(ini_file* file, const char* pair_name) {
+    return ini_pair_get_value(ini_file_get_pair(file, pair_name));
+}
+
+void ini_file_set_value(ini_file* file, const char* pair_name, const char* pair_value) {
+    ini_pair_set_value(ini_file_get_pair(file, pair_name), pair_value);
 }
 
 void ini_file_str(ini_file* file, char* str) {
