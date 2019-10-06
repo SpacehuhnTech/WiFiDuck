@@ -12,16 +12,18 @@ namespace settings {
     void begin();
     void load();
 
-    void check_and_repair();
     void reset();
+    void save();
 
     std::string toString();
 
     const char* getSSID();
     const char* getPassword();
-    uint8_t getChannel();
+    const char* getChannel();
 
-    void setSSID(char* ssid);
-    void setPassword(char* password);
-    void setChannel(char* channel);
+    void set(const char* name, const char* value);
+
+    void setSSID(const char* ssid);
+    void setPassword(const char* password);
+    void setChannel(const char* channel);
 }

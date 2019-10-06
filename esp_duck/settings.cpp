@@ -9,17 +9,22 @@
 #include "spiffs.h"
 #include "debug.h"
 #include "config.h"
+#include "eeprom.h"
 
-extern "C" {
-    #include "ini.h"
-}
-
-#include <stdlib.h> // atoi
+#define SETTINGS_ADDRES 1
+#define SETTINGS_MAGIC_NUM 1234567891
 
 namespace settings {
     // ===== PRIVATE ===== //
-    ini_file  * ini       = NULL;
-    const char* FILE_NAME = "/settings.ini";
+    typedef struct settings_t {
+        uint32_t magic_num;
+
+        char ssid[33];
+        char password[65];
+        char channel[5];
+    } settings_t;
+
+    settings_t data;
 
     // ===== PUBLIC ====== //
     void begin() {
@@ -27,84 +32,89 @@ namespace settings {
     }
 
     void load() {
-        ini = ini_file_destroy(ini);
-
-        if (!spiffs::exists(FILE_NAME)) {
-            reset();
-        }
-
-        spiffs::streamOpen(FILE_NAME);
-
-        size_t read;
-        size_t buffer_size = 1024;
-        char   buffer[buffer_size];
-
-        do {
-            read = spiffs::streamReadUntil(buffer, '\n', buffer_size);
-            ini  = ini_parse(ini, buffer, read);
-        } while (read > 0 && spiffs::streaming());
-
-        spiffs::streamClose();
-
-        check_and_repair();
-    }
-
-    void check_and_repair() {
-        if (!getSSID()) {
-            setSSID(WIFI_SSID);
-        }
-
-        if (strlen(getPassword()) < 8) {
-            setPassword(WIFI_PASSWORD);
-        }
-
-        if ((getChannel() == 0) || (getChannel() > 14)) {
-            setChannel(WIFI_CHANNEL);
-        }
+        eeprom::getObject(SETTINGS_ADDRES, data);
+        if (data.magic_num != SETTINGS_MAGIC_NUM) reset();
     }
 
     void reset() {
-        spiffs::remove(FILE_NAME);
-        spiffs::create(FILE_NAME);
-        spiffs::write(FILE_NAME, "[WiFi]\n"
-                                 "SSID=\n"
-                                 "password=\n"
-                                 "channel=\n");
+        data.magic_num = SETTINGS_MAGIC_NUM;
+        setSSID(WIFI_SSID);
+        setPassword(WIFI_PASSWORD);
+        setChannel(WIFI_CHANNEL);
+    }
+
+    void save() {
+        eeprom::saveObject(SETTINGS_ADDRES, data);
     }
 
     std::string toString() {
-        size_t len = ini_file_strlen(ini);
+        std::string s;
 
-        char str[len+1];
+        s.append("ssid=");
+        s.append(getSSID());
+        s.append("\n");
+        s.append("password=");
+        s.append(getPassword());
+        s.append("\n");
+        s.append("channel=");
+        s.append(getChannel());
+        s.append("\n");
 
-        str[len] = '\0';
-
-        ini_file_str(ini, str);
-
-        return std::string(str);
+        return s;
     }
 
     const char* getSSID() {
-        return ini_file_get_value(ini, "SSID");
+        return data.ssid;
     }
 
     const char* getPassword() {
-        return ini_file_get_value(ini, "password");
+        return data.password;
     }
 
-    uint8_t getChannel() {
-        return atoi(ini_file_get_value(ini, "channel"));
+    const char* getChannel() {
+        return data.channel;
     }
 
-    void setSSID(char* ssid) {
-        ini_file_set_value(ini, "SSID", ssid);
+    void set(const char* name, const char* value) {
+        if (strcmp(name, "ssid") == 0) {
+            setSSID(value);
+        } else if (strcmp(name, "password") == 0) {
+            setPassword(value);
+        } else if (strcmp(name, "channel") == 0) {
+            setChannel(value);
+        }
     }
 
-    void setPassword(char* password) {
-        ini_file_set_value(ini, "password", password);
+    void setSSID(const char* ssid) {
+        if (ssid && (strlen(ssid) <= 32)) {
+            size_t ssid_len = strlen(ssid);
+
+            for (uint8_t i = 0; i<33; ++i) {
+                if (i < ssid_len) data.ssid[i] = ssid[i];
+                else data.ssid[i] = '\0';
+            }
+        }
     }
 
-    void setChannel(char* channel) {
-        ini_file_set_value(ini, "channel", channel);
+    void setPassword(const char* password) {
+        if (password && (strlen(password) >= 8) && (strlen(password) <= 64)) {
+            size_t password_len = strlen(password);
+
+            for (uint8_t i = 0; i<65; ++i) {
+                if (i < password_len) data.password[i] = password[i];
+                else data.password[i] = '\0';
+            }
+        }
+    }
+
+    void setChannel(const char* channel) {
+        if (channel && ((strcmp(channel, "auto") == 0) || ((atoi(channel) >= 1) && (atoi(channel) <= 14)))) {
+            size_t channel_len = strlen(channel);
+
+            for (uint8_t i = 0; i<5; ++i) {
+                if (i < channel_len) data.channel[i] = channel[i];
+                else data.channel[i] = '\0';
+            }
+        }
     }
 }
