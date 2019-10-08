@@ -184,7 +184,7 @@ namespace duckparser {
             }
 
             // REPEAT (-> repeat last command n times)
-            else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE)) {
+            else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "REPLAY", CASE_SENSETIVE)) {
                 repeatNum = toInt(line_str, line_str_len) + 1;
             }
 
