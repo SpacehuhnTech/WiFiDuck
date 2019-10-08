@@ -19,8 +19,9 @@
 
 #include "webfiles.h"
 
-void reply(AsyncWebServerRequest* request, const char* type, const uint8_t* data, size_t len) {
-    AsyncWebServerResponse* response = request->beginResponse_P(200, type, data, len);
+void reply(AsyncWebServerRequest* request, int code, const char* type, const uint8_t* data, size_t len) {
+    AsyncWebServerResponse* response =
+        request->beginResponse_P(code, type, data, len);
 
     response->addHeader("Content-Encoding", "gzip");
     request->send(response);
@@ -87,40 +88,14 @@ namespace webserver {
 
         // Webserver
         server.on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/html", index_html, sizeof(index_html));
-        });
-
-        server.on("/index.html", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/html", index_html, sizeof(index_html));
-        });
-        server.on("/credits.html", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/html", credits_html, sizeof(credits_html));
-        });
-        server.on("/settings.html", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/html", settings_html, sizeof(settings_html));
-        });
-        server.on("/terminal.html", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/html", terminal_html, sizeof(terminal_html));
-        });
-        server.on("/index.js", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "application/javascript", index_js, sizeof(index_js));
-        });
-        server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "application/javascript", script_js, sizeof(script_js));
-        });
-        server.on("/settings.js", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "application/javascript", settings_js, sizeof(settings_js));
-        });
-        server.on("/terminal.js", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "application/javascript", terminal_js, sizeof(terminal_js));
-        });
-        server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest* request) {
-            reply(request, "text/css", style_css, sizeof(style_css));
+            request->redirect("/index.html");
         });
 
         server.onNotFound([](AsyncWebServerRequest* request) {
-            request->send(404, "text/plain", "Not found");
+            request->redirect("/error404.html");
         });
+
+        WEBSERVER_CALLBACK;
 
         // Websocket
         ws.onEvent(wsEvent);
