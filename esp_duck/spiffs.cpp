@@ -146,6 +146,7 @@ namespace spiffs {
     void streamOpen(String fileName) {
         streamClose();
         streamFile = open(fileName);
+        if (!streamFile) debugln("ERROR: No stream file open");
     }
 
     void streamWrite(const char* buf, size_t len) {
@@ -200,6 +201,6 @@ namespace spiffs {
     }
 
     bool streaming() {
-        return streamFile && streamFile.available();
+        return streamFile;
     }
 }
