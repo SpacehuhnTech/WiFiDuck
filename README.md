@@ -3,7 +3,7 @@
 <p align="center"><img alt="WiFi Duck Logo" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/logo.png" width="150"></p>
 
 <p align="center">
-<b>Keytroke injection attack platform</b>
+<b>Keystroke injection attack platform</b>
 <br>
 <br>
   🐦 <a href="https://twitter.com/spacehuhn">Twitter</a>
@@ -49,7 +49,7 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
 
 ## About
 
-This open source project aims to provide a user friendly tool to learn about
+This open source project aims to provide a user-friendly tool to learn about
 keystroke injection attacks.  
 A microcontroller acts as a USB keyboard that is programmable over WiFi.  
 It's using the Ducky Script language that [Hak5](https://www.hak5.org/)
@@ -144,7 +144,7 @@ if you use a ESP-07 Module or ESP8285 based board).
 | Command | Description | Example |
 | ------- | ----------- | ------- |
 | `REM` | Comment | `REM Hello World!` |
-| `DEFAULTDELAY` or `DEFAULT_DELAY` | Time in ms betweet every command | `DEFAULTDELAY 200` |
+| `DEFAULTDELAY` or `DEFAULT_DELAY` | Time in ms between every command | `DEFAULTDELAY 200` |
 | `DELAY` | Delay in ms | `DELAY 1000` |
 | `STRING` | Types the following string | `STRING Hello World!` |
 | `REPEAT` or `REPLAY` | Repeats the last command n times | `REPEAT 3` |
@@ -217,7 +217,7 @@ under Tools in the Arduino IDE.
 
 ### Edit Web Files
 
-If you like to modify the web interface, you can!  
+If you would like to modify the web interface, you can!  
 The `web/` folder contains all `.html`, `.css`, `.js` files.  
 You can edit and test them locally as long as you're connected to the WiFi Duck
 network thanks to the websocket connection handled by JavaScript in the background.  
