@@ -75,6 +75,11 @@ namespace settings {
         return data.channel;
     }
 
+    int getChannelNum() {
+        if (strcmp(data.channel, "auto") != 0) return atoi(data.channel);
+        return 1;
+    }
+
     void set(const char* name, const char* value) {
         if (strcmp(name, "ssid") == 0) {
             setSSID(value);
@@ -108,7 +113,7 @@ namespace settings {
     }
 
     void setChannel(const char* channel) {
-        if (channel && ((strcmp(channel, "auto") == 0) || ((atoi(channel) >= 1) && (atoi(channel) <= 14)))) {
+        if (channel && ((strcmp(channel, "auto") == 0) || ((atoi(channel) >= 1) && (atoi(channel) <= 13)))) {
             size_t channel_len = strlen(channel);
 
             for (uint8_t i = 0; i<5; ++i) {

@@ -21,6 +21,8 @@ namespace settings {
     const char* getPassword();
     const char* getChannel();
 
+    int getChannelNum();
+
     void set(const char* name, const char* value);
 
     void setSSID(const char* ssid);
