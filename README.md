@@ -264,7 +264,7 @@ Now you just need to [flash](#flash-software) the ESP8266 again.
 
 ### Translate Keyboard Layout
 
-Currently supported keyboard layouts are:  
+Currently the supported keyboard layouts are:  
 - [DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
 - [GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
 - [US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
@@ -276,7 +276,7 @@ This stuff is hard to explain in writing and requires a lot of manual work and t
 
 1. Copy one of the existing layouts files, like [locale_us.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h).  
 Preferably one that is close to your keyboard layout, it will save you time!  
-2. Rename the file and it's variables to your language code.
+2. Rename the file and its variables to your language code.
 For example:  
 `locale_xx.h` -> `locale_de.h`,  
 `ascii_xx` -> `ascii_de`,  
@@ -285,26 +285,26 @@ For example:
 `utf8_xx` -> `utf8_de`.  
 3. Modify the ASCII array.  
 The ASCII array has a fixed size. Each row describes a key.
-First a modifier key like `KEY_MOD_LSHIFT` then a character key.
+First a modifier key like `KEY_MOD_LSHIFT`, then a character key.
 Some ASCII characters can't be typed or don't require a modifier,
 that's where you must place `KEY_NONE`.
 Check [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h) for the available keys.  
 If multiple modifiers are required, you must use a bitwise OR to connect them: `KEY_MOD_RALT | KEY_MOD_LSHIFT`.  
-For example in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.  
+For example, in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.  
 This is because German keyboards use QWERTZ instead of the QWERTY layout
 and since the letter is uppercase, shift must be pressed as well.   
 Thankfully you don't have to trial and error everything, the Hak5 Community
-translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
+translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example, `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
 4. Modify or create the extended ASCII array.  
 The extended ASCII array doesn't have a fixed size and is only as long as you make it.
-First the character code. For example [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
+First the character code. For example, [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
 It doesn't use a modifier and sits where the apostrophe key is on a US keyboard:
 `0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.  
 5. Modify or create the UTF-8 array.  
 The UTF-8 array is variable in length, too.  
 The first 4 bytes are the character code.  
-For example [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
-Because the letter is uppercase, we need press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
+For example, [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
+Because the letter is uppercase, we need to press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
 6. Edit the locale_t structure.  
 If you renamed all variables accordingly, there's nothing left to do.  
 7. Go to [duckparser.cpp](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/duckparser.cpp#L163) at `// LOCALE (-> change keyboard layout)` you can see a bunch of else if statements.
@@ -335,7 +335,7 @@ LOCALE DE
 STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
 ENTER
 ```
-9. Add a link your layout to this README and please feel free to improve this tutorial to help future translators!
+9. Add a link to your layout to this README and please feel free to improve this tutorial to help future translators!
 10. [Create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request)
 
 ## License
