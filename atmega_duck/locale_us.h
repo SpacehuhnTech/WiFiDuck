@@ -192,7 +192,7 @@ const uint8_t ascii_us[] PROGMEM = {
 };
 
 static locale_t locale_us {
-    (uint8_t*)&ascii_us, 128,
+    (uint8_t*)ascii_us, 128,
     NULL, 0,
     NULL, 0
 };

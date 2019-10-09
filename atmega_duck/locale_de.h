@@ -219,7 +219,7 @@ const uint8_t utf8_de[] PROGMEM = {
 };
 
 static locale_t locale_de {
-    (uint8_t*)&ascii_de, sizeof(ascii_de) / 2,
+    (uint8_t*)ascii_de, sizeof(ascii_de) / 2,
     (uint8_t*)extended_ascii_de,  sizeof(extended_ascii_de) / 3,
     (uint8_t*)utf8_de, sizeof(utf8_de) / 6
 };
