@@ -216,6 +216,8 @@ window.addEventListener("load", function() {
     if (!content.endsWith("\n")) content = content + "\n";
 
     ws_send_write(getEditorFileName(), content);
+
+    E("editorinfo").innerHTML = "saved";
   };
 
   E("editorDelete").onclick = function() {
@@ -235,6 +237,10 @@ window.addEventListener("load", function() {
   E("editorRun").onclick = function() {
     ws_send_run(getEditorFileName());
   };
+
+  E("editor").onkeyup = function() {
+    E("editorinfo").innerHTML = "unsaved changes";
+  }
 
   ws_init();
 }, false);
