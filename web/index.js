@@ -212,7 +212,10 @@ window.addEventListener("load", function() {
   };
 
   E("editorSave").onclick = function() {
-    ws_send_write(getEditorFileName(), getEditorContent());
+    var content = getEditorContent();
+    if (!content.endsWith("\n")) content = content + "\n";
+
+    ws_send_write(getEditorFileName(), content);
   };
 
   E("editorDelete").onclick = function() {
