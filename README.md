@@ -1,9 +1,11 @@
 # WiFiDuck
 
-<p align="center"><img alt="WiFi Duck Logo" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/logo.png" width="150"></p>
+<p align="center"><img alt="WiFi Duck Logo" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/logo.png" width="200"></p>
 
 <p align="center">
 <b>Keytroke injection attack platform</b>
+<br>
+A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiFi Ducky</a> project
 <br>
 <br>
   🐦 <a href="https://twitter.com/spacehuhn">Twitter</a>
@@ -27,15 +29,12 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
   - [Atmega32u4](#atmega32u4)
   - [ESP8266/ESP8285](#esp8266esp8285)
 - [Usage](#usage)
+  - [CLI](#cli)
   - [Ducky Script](#ducky-script)
-    - [Functions](#functions)
-    - [Standard Keys](#standard-keys)
-    - [Modifier Keys](#modifier-keys)
-    - [Other Keys](#other-keys)
-    - [Examples](#examples)
   - [FAQ](#faq)
 - [Development](#development)
   - [Edit Web Files](#edit-web-files)
+  - [Translate Keyboard Layout](#translate-keyboard-layout)
 - [License](#license)
 
 ## Disclaimer
@@ -137,6 +136,41 @@ if you use a ESP-07 Module or ESP8285 based board).
 4. Click on Settings in the top right corner
 5. Change the SSID and password
 
+### CLI
+
+The command line interface or CLI is accessible using a serial connection to the ESP82xx (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+
+#### General
+
+| Command | Description | Example |
+| ------- | ----------- | ------- |
+| help | Returns all available commands | `help` |
+| ram | Returns available memory in bytes | `ram` |
+| settings | Returns list of settings | `settings` |
+| set -n/ame <value> -v/alue <value> | Sets value of a specific setting | `set ssid "why fight duck"` |
+| reset | Resets all settings to their default values | `reset` |
+| status | Returns status of i2c connection with Atmega32u4 | `status` |
+| run <...> | Starts executing a Ducky script | `run example.txt` |
+| stop <...> | Stops executing a Ducky script | `stop example.txt` |
+
+#### SPIFFS File Management
+
+| Command | Description | Example |
+| ------- | ----------- | ------- |
+| mem | Returns available, used and free memory of SPIFFS in bytes | `mem` |
+| format | Formats SPIFFS | `format` |
+| ls <...> | Returns list of files | `ls /` |
+| create <...> | Creates file | `create example.duck` |
+| remove <...> | Deletes file | `remove example.duck` |
+| cat <...> | Returns content of file | `cat example.duck` |
+| rename -fileA,a <value> -fileB,b <value> | Renames file | `rename example.duck example.txt` |
+| write -f/ile <value> -c/ontent <value> | Writes (appends) data to file | `write example.txt "Hello World!"` |
+| stream <...> | Opens file stream | `stream example.txt` |
+| close | Closes file stream | `close` |
+| read | Read and return the result from file stream | `read` |
+
+If a stream is open, everything you type (except messages containing exactly `close` or `read`) will be written to the file until you type `close`!  
+
 ### Ducky Script
 
 #### Functions
@@ -209,7 +243,7 @@ STRING Hello World!
 
 #### I forgot the password
 
-Flash the ESP8266 again,
+Flash the ESP82xx again,
 but make sure that you select `Erase Flash: Sketch + WiFi Settings`
 under Tools in the Arduino IDE.  
 
@@ -227,6 +261,82 @@ repository folder.
 It gzips all files inside `web/`, converts them into a hex array
 and saves it in `esp_duck/webfiles.h`.  
 Now you just need to [flash](#flash-software) the ESP8266 again.  
+
+### Translate Keyboard Layout
+
+Currently supported keyboard layouts are:  
+- [DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
+- [GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
+- [US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
+
+All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
+To translate a keyboard layout, you have to match each character on
+your keyboard to the one(s) of a US keyboard.  
+This stuff is hard to explain in writing and requires a lot of manual work and testing.  
+
+1. Copy one of the existing layouts files, like [locale_us.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h).  
+Preferably one that is close to your keyboard layout, it will save you time!  
+2. Rename the file and it's variables to your language code.
+For example:  
+`locale_xx.h` -> `locale_de.h`,  
+`ascii_xx` -> `ascii_de`,  
+`locale_xx` -> `locale_de`,  
+`extended_ascii_xx` -> `extended_ascii_de`,  
+`utf8_xx` -> `utf8_de`.  
+3. Modify the ASCII array.  
+The ASCII array has a fixed size. Each row describes a key.
+First a modifier key like `KEY_MOD_LSHIFT` then a character key.
+Some ASCII characters can't be typed or don't require a modifier,
+that's where you must place `KEY_NONE`.
+Check [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h) for the available keys.  
+If multiple modifiers are required, you must use a bitwise OR to connect them: `KEY_MOD_RALT | KEY_MOD_LSHIFT`.  
+For example in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.  
+This is because German keyboards use QWERTZ instead of the QWERTY layout
+and since the letter is uppercase, shift must be pressed as well.   
+Thankfully you don't have to trial and error everything, the Hak5 Community
+translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
+4. Modify or create the extended ASCII array.  
+The extended ASCII array doesn't have a fixed size and is only as long as you make it.
+First the character code. For example [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
+It doesn't use a modifier and sits where the apostrophe key is on a US keyboard:
+`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.  
+5. Modify or create the UTF-8 array.  
+The UTF-8 array is variable in length, too.  
+The first 4 bytes are the character code.  
+For example [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
+Because the letter is uppercase, we need press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
+6. Edit the locale_t structure.  
+If you renamed all variables accordingly, there's nothing left to do.  
+7. Go to [duckparser.cpp](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/duckparser.cpp#L163) at `// LOCALE (-> change keyboard layout)` you can see a bunch of else if statements.
+You need to copy one for your layout.  
+
+Before adding GB layout:  
+```c
+if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
+    keyboard::setLocale(&locale_us);
+} else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
+    keyboard::setLocale(&locale_de);
+}
+```
+
+After adding GB layout:
+```c
+if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
+    keyboard::setLocale(&locale_us);
+} else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
+    keyboard::setLocale(&locale_de);
+} else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
+   keyboard::setLocale(&locale_gb);
+}
+```
+8. Test your layout with a Ducky Script that contains all characters of your keyboard. For example:  
+```
+LOCALE DE
+STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
+ENTER
+```
+9. Add a link your layout to this README and please feel free to improve this tutorial to help future translators!
+10. [Create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request)
 
 ## License
 
