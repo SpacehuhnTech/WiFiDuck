@@ -10,12 +10,12 @@
 
 namespace duckscript {
     void runTest();
-    void run(const String& fileName);
+    void run(String fileName);
 
     void nextLine();
     void repeat();
     void stop();
-    void stop(const String& fileName);
+    void stop(String fileName);
 
     bool isRunning();
     String currentScript();

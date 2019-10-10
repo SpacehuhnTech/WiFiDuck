@@ -13,11 +13,9 @@ namespace spiffs {
     File streamFile;
 
     // ===== PRIVATE ===== //
-    String fixPath(const String& path) {
-        if (path.startsWith("/")) {
-            return path;
-        } else {
-            return "/" + path;
+    void fixPath(String& path) {
+        if (!path.startsWith("/")) {
+            path = "/" + path;
         }
     }
 
@@ -66,8 +64,9 @@ namespace spiffs {
     }
 
     size_t size(String fileName) {
-        String path { fixPath(fileName) };
-        File   f { SPIFFS.open(path.c_str(), "r") };
+        fixPath(fileName);
+
+        File f { SPIFFS.open(fileName, "r") };
 
         return f.size();
     }
@@ -77,29 +76,30 @@ namespace spiffs {
     }
 
     File open(String fileName) {
-        String path { fixPath(fileName) };
+        fixPath(fileName);
 
-        return SPIFFS.open(path.c_str(), "a+");
+        return SPIFFS.open(fileName, "a+");
     }
 
     void create(String fileName) {
-        String path { fixPath(fileName) };
-        File   f { SPIFFS.open(path.c_str(), "a+") };
+        fixPath(fileName);
+
+        File f { SPIFFS.open(fileName, "a+") };
 
         f.close();
     }
 
     void remove(String fileName) {
-        String path { fixPath(fileName) };
+        fixPath(fileName);
 
-        SPIFFS.remove(path.c_str());
+        SPIFFS.remove(fileName);
     }
 
     void rename(String oldName, String newName) {
-        String oldPath { fixPath(oldName) };
-        String newPath { fixPath(newName) };
+        fixPath(oldName);
+        fixPath(newName);
 
-        SPIFFS.rename(oldPath.c_str(), newPath.c_str());
+        SPIFFS.rename(oldName, newName);
     }
 
     void write(String fileName, const char* str) {
@@ -129,9 +129,9 @@ namespace spiffs {
     String listDir(String dirName) {
         String res;
 
-        String path { fixPath(dirName) };
+        fixPath(dirName);
 
-        Dir dir { SPIFFS.openDir(path.c_str()) };
+        Dir dir { SPIFFS.openDir(dirName) };
 
         while (dir.next()) {
             res += dir.fileName();

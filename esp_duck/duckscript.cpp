@@ -27,7 +27,7 @@ namespace duckscript {
     bool running { false };
 
     // ===== PUBLIC ===== //
-    void run(const String& fileName) {
+    void run(String fileName) {
         debugf("Run file %s\n", fileName.c_str());
         f       = spiffs::open(fileName);
         running = true;
@@ -93,8 +93,8 @@ namespace duckscript {
         }
     }
 
-    void stop(const String& fileName) {
-        if (running && f && ((strlen(fileName.c_str()) == 0) || (strcmp(f.name(), fileName.c_str()) == 0))) {
+    void stop(String fileName) {
+        if (running && f && (fileName == currentScript())) {
             f.close();
             running = false;
             debugln("Stopped script");
