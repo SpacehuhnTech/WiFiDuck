@@ -28,6 +28,7 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
 
 - [Disclaimer](#disclaimer)
 - [About](#about)
+- [Changes](#changes)
 - [Hardware](#hardware)
   - [Connections](#connections)
 - [Flash Software](#flash-software)
@@ -65,6 +66,17 @@ A keyboard is trusted by most operating systems by default,
 which enables for a variety of attacks.  
 Humans might not type very fast, but an automated device like this can.  
 It can open a terminal and mess with your computer in a matter of a milliseconds!  
+
+## Changes
+
+Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predecessor:
+* Support for multiple keyboard layouts, adjustable within the script
+* No size limit per script (other than the physical limit)
+* No line length limit for the `STRING` command
+* Faster typing speed
+* Added RGB (Neopixel LED)
+* Reworked web interface
+* Replaced serial with i2c connection, to make debugging and flashing easy
 
 ## Hardware
 
@@ -143,7 +155,7 @@ if you use a ESP-07 Module or ESP8285 based board).
 If you like to support this project,
 Travis Lin sells a custom made board that ships preflashed!  
 
-![DSTIKE WiFi Duck](img/dstikeboard.jpg)  
+<img alt="DSTIKE WiFi Duck" src="img/dstikeboard.jpg" width="300px">  
 
 It features a 8bit DIP-switch, making it easy for you to flash both the ESP8266
 and the Atmega32u4:  
@@ -151,9 +163,9 @@ and the Atmega32u4:
 
 | Mode | DIP-switch | Image |
 | --- | --- | --- |
-| Normal Work Mode (Default Operating Mode) | 10101101 | ![dstike wifi duck work mode](img/dstike_normal.jpg) |
-| Atmega32u4 (Arduino Pro Micro) Flash Mode | 10101010 | ![dstike wifi duck atmega mode](img/dstike_atmega.jpg) |
-| ESP8266 (NodeMCU 1.0) Flash Mode | 01011101 | ![dstike wifi duck esp8266 mode](img/dstike_esp8266.jpg) |
+| Normal Work Mode (Default Operating Mode) | 10101101 | <img alt="dstike wifi duck work mode" src="img/dstike_normal.jpg" height="50px"> |
+| Atmega32u4 (Arduino Pro Micro) Flash Mode | 10101010 | <img alt="dstike wifi duck atmega mode" src="img/dstike_atmega.jpg" height="50px"> |
+| ESP8266 (NodeMCU 1.0) Flash Mode | 01011101 | <img alt="dstike wifi duck esp8266 mode" src="img/dstike_esp8266.jpg" height="50px"> |
 
 
 You can purchase one here:  
