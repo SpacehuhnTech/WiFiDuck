@@ -1,6 +1,8 @@
 # WiFiDuck
 
-<p align="center"><img alt="WiFi Duck Logo" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/logo.png" width="200"></p>
+<p align="center">
+<img alt="WiFi Duck Logo" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/logo.png" width="200">
+</p>
 
 <p align="center">
 <b>Keystroke injection attack platform</b>
@@ -18,6 +20,10 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
 </b>!
 </p>
 
+<p align="center">
+<img alt="running example script" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/showcase.gif">
+</p>
+
 ## Overview
 
 - [Disclaimer](#disclaimer)
@@ -28,6 +34,7 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
   - [Requirements](#requirements)
   - [Atmega32u4](#atmega32u4)
   - [ESP8266/ESP8285](#esp8266esp8285)
+  - [DSTIKE WiFi Duck](#dstike-wifi-duck)
 - [Usage](#usage)
   - [CLI](#cli)
   - [Ducky Script](#ducky-script)
@@ -122,11 +129,38 @@ If you need more information, here is a
 
 1. Open `esp_duck/esp_duck.ino` with the Arduino IDE  
 2. Under `Tools->Board` select `NodeMCU 1.0 (ESP-12E Module)`
-(or whatever corresponds best to your ESP8266/ESP8285 based board)  
+(or whatever corresponds best to your ESP8266/ESP8285 based board).  
+**Be sure to use the latest ESP8266 Arduino Core, see [requirements](#requirements)!**  
 3. Under `Tools->Flash Size` select `4M (3M SPIFFS)` (or `1M (512K SPIFFS)`
 if you use a ESP-07 Module or ESP8285 based board).  
 4. Plug the board in and select its port under `Tools->Port`  
 5. Press the Upload button  
+
+![Selecting the right board settings](img/selectboard.gif)  
+
+### DSTIKE WiFi Duck
+
+If you like to support this project,
+Travis Lin sells a custom made board that ships preflashed!  
+
+![DSTIKE WiFi Duck](img/dstikeboard.jpg)  
+
+It features a 8bit DIP-switch, making it easy for you to flash both the ESP8266
+and the Atmega32u4:  
+
+
+| Mode | DIP-switch | Image |
+| --- | --- | --- |
+| Normal Work Mode (Default Operating Mode) | 10101101 | ![dstike wifi duck work mode](img/dstike_normal.jpg) |
+| Atmega32u4 (Arduino Pro Micro) Flash Mode | 10101010 | ![dstike wifi duck atmega mode](img/dstike_atmega.jpg) |
+| ESP8266 (NodeMCU 1.0) Flash Mode | 01011101 | ![dstike wifi duck esp8266 mode](img/dstike_esp8266.jpg) |
+
+
+You can purchase one here:  
+- [tindie](https://www.tindie.com/stores/lspoplove/)
+- [DSTIKE](https://dstike.com/)
+- [AliExpress](https://www.aliexpress.com/item/4000256143274.html)
+- [taobao](https://shop135375846.world.taobao.com/)
 
 ## Usage
 
