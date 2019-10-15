@@ -1,7 +1,7 @@
 ---
 name: Question
 about: General questions related to the repository
-title: "[Question]"
+title: "[Question] "
 labels: question
 assignees: ''
 

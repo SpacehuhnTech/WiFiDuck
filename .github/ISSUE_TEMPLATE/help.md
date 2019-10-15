@@ -1,7 +1,7 @@
 ---
 name: Help
 about: Setup or usage problems
-title: "[Help]"
+title: "[Help] "
 labels: help wanted
 assignees: ''
 
