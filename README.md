@@ -287,6 +287,10 @@ STRING Hello World!
 
 ### FAQ
 
+If you have a question, you can check out the [issue section](../../issues).  
+Use the search function to look up similar questions, be sure to check both open and closed issues!  
+Also watch this [video](https://www.youtube.com/watch?v=53zkBvL4ZB4) by LiveOverflow on "How (not) to ask a technical question".  
+
 #### I forgot the password
 
 Flash the ESP82xx again,
