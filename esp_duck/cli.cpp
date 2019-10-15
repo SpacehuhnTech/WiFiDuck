@@ -1,68 +1,106 @@
-/*
-   Copyright (c) 2019 Stefan Kremser
-   This software is licensed under the MIT License. See the license file for details.
-   Source: github.com/spacehuhn/WiFiDuck
+/*!
+   \file cli.cpp
+   \brief Command line interface source
+   \author Stefan Kremser
+   \copyright MIT License
  */
 
 #include "cli.h"
 
+// SimpleCLI library
+#include <SimpleCLI.h>
+
+// Get RAM (heap) usage
+extern "C" {
+#include "user_interface.h"
+}
+
+// Import modules used for different commands
 #include "spiffs.h"
 #include "duckscript.h"
 #include "settings.h"
 #include "i2c.h"
 
-
-#include <SimpleCLI.h>
-extern "C" {
-#include "user_interface.h"
-}
-
 namespace cli {
     // ===== PRIVATE ===== //
-    SimpleCLI cli;
+    SimpleCLI cli;           // !< Instance of SimpleCLI library
 
-    PrintFunction printfunc;
+    PrintFunction printfunc; // !< Function used to print output
 
-    // Internal print functions
-    void print(const char* s) {
-        if (printfunc) printfunc(s);
-    }
-
-    void println(const char* s) {
-        print(s);
-        print("\n");
+    /*!
+     * \brief Internal print function
+     *
+     * Outputs a c-string using the currently set printfunc.
+     * Helps to keep code readable.
+     * It's only defined in the scope of this file!
+     *
+     * \param s String to printed
+     */
+    inline void print(const String& s) {
+        if (printfunc) printfunc(s.c_str());
     }
 
     // ===== PUBLIC ===== //
     void begin() {
+        /**
+         * \brief Set error callback.
+         *
+         * Prints 'ERROR: <error-message>'
+         * And 'Did you mean "<command-help>"?'
+         * if the command name matched, but the arguments didn't
+         */
         cli.setOnError([](cmd_error* e) {
             CommandError cmdError(e); // Create wrapper object
 
-            print("ERROR: ");
-            println(cmdError.toString().c_str());
+            String res = "ERROR: " + cmdError.toString() + "\n";
 
             if (cmdError.hasCommand()) {
-                print("Did you mean \"");
-                print(cmdError.getCommand().toString().c_str());
-                println("\"?");
+                res += "Did you mean \"";
+                res += cmdError.getCommand().toString();
+                res += "\"?\n";
             }
+
+            print(res);
         });
 
+        /**
+         * \brief Create help Command
+         *
+         * Prints all available commands with their arguments
+         */
         cli.addCommand("help", [](cmd* c) {
-            println(cli.toString().c_str());
+            print(cli.toString());
         });
 
+        /**
+         * \brief Create ram command
+         *
+         * Prints number of free bytes in the RAM
+         */
         cli.addCommand("ram", [](cmd* c) {
-            String freeRam { system_get_free_heap_size() };
-            String response = freeRam + " bytes available\n";
-            print(response.c_str());
+            size_t freeRam = system_get_free_heap_size();
+            String res     = String(freeRam) + " bytes available\n";
+            print(res);
         });
 
+        /**
+         * \brief Create settings command
+         *
+         * Prints all settings with their values
+         */
         cli.addCommand("settings", [](cmd* c) {
             settings::load();
-            print(settings::toString().c_str());
+            print(settings::toString());
         });
 
+        /**
+         * \brief Create set command
+         *
+         * Updates the value of a setting
+         *
+         * \param name name of the setting
+         * \param vale new value for the setting
+         */
         Command cmdSet {
             cli.addCommand("set", [](cmd* c) {
                 Command  cmd { c };
@@ -77,22 +115,35 @@ namespace cli {
 
                 String response = "> set \"" + name + "\" to \"" + value + "\"\n";
 
-                print(response.c_str());
+                print(response);
             })
         };
         cmdSet.addPosArg("n/ame");
         cmdSet.addPosArg("v/alue");
 
+        /**
+         * \brief Create reset command
+         *
+         * Resets all settings and prints out the defaul values
+         */
         cli.addCommand("reset", [](cmd* c) {
             settings::reset();
-            print(settings::toString().c_str());
+            print(settings::toString());
         });
 
+        /**
+         * \brief Create status command
+         *
+         * Prints status of i2c connection to atmega32u4:
+         * running <script>
+         * connected
+         * i2c connection problem
+         */
         cli.addCommand("status", [](cmd* c) {
             if (i2c::connected()) {
                 if (duckscript::isRunning()) {
-                    String s { String("running ") + duckscript::currentScript() };
-                    print(s.c_str());
+                    String s = "running " + duckscript::currentScript();
+                    print(s);
                 } else {
                     print("connected");
                 }
@@ -101,13 +152,25 @@ namespace cli {
             }
         });
 
+        /**
+         * \brief Create ls command
+         *
+         * Prints a list of files inside of a given directory
+         *
+         * \param * Path to directory
+         */
         cli.addSingleArgCmd("ls", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
 
-            println(spiffs::listDir(arg.getValue()).c_str());
+            print(spiffs::listDir(arg.getValue()));
         });
 
+        /**
+         * \brief Create mem command
+         *
+         * Prints memory usage of SPIFFS
+         */
         cli.addCommand("mem", [](cmd* c) {
             String s { NULL };
             s.reserve(64);
@@ -119,9 +182,16 @@ namespace cli {
             s += String(spiffs::freeBytes());
             s += " byte free\n";
 
-            print(s.c_str());
+            print(s);
         });
 
+        /**
+         * \brief Create cat command
+         *
+         * Prints out a file from the SPIFFS
+         *
+         * \param * Path to file
+         */
         cli.addSingleArgCmd("cat", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -142,9 +212,16 @@ namespace cli {
                 }
                 print(buffer);
             }
-            println("");
+            print("\n");
         });
 
+        /**
+         * \brief Create run command
+         *
+         * Starts executing a ducky script
+         *
+         * \param * Path to script in SPIFFS
+         */
         cli.addSingleArgCmd("run", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -152,9 +229,17 @@ namespace cli {
             duckscript::run(arg.getValue());
 
             String response = "> started \"" + arg.getValue() + "\"\n";
-            print(response.c_str());
+            print(response);
         });
 
+        /**
+         * \brief Create stop command
+         *
+         * Stops executing a script
+         *
+         * \param * Path to specific ducky script to stop
+         *          If no path is given, stop whatever script is active
+         */
         cli.addSingleArgCmd("stop", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -162,9 +247,16 @@ namespace cli {
             duckscript::stop(arg.getValue());
 
             String response = "> stopped \"" + arg.getValue() + "\"\n";
-            print(response.c_str());
+            print(response);
         });
 
+        /**
+         * \brief Create create command
+         *
+         * Creates a file in the SPIFFS
+         *
+         * \param * Path with filename
+         */
         cli.addSingleArgCmd("create", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -172,9 +264,16 @@ namespace cli {
             spiffs::create(arg.getValue());
 
             String response = "> created file \"" + arg.getValue() + "\"\n";
-            print(response.c_str());
+            print(response);
         });
 
+        /**
+         * \brief Create remove command
+         *
+         * Removes file in SPIFFS
+         *
+         * \param * Path to file
+         */
         cli.addSingleArgCmd("remove", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -182,9 +281,17 @@ namespace cli {
             spiffs::remove(arg.getValue());
 
             String response = "> removed file \"" + arg.getValue() + "\"\n";
-            print(response.c_str());
+            print(response);
         });
 
+        /**
+         * \brief Create rename command
+         *
+         * Renames a file in SPIFFS
+         *
+         * \param fileA Old path with filename
+         * \param fileB New path with filename
+         */
         Command cmdRename {
             cli.addCommand("rename", [](cmd* c) {
                 Command  cmd { c };
@@ -198,12 +305,20 @@ namespace cli {
                 spiffs::rename(fileA, fileB);
 
                 String response = "> renamed \"" + fileA + "\" to \"" + fileB + "\"\n";
-                print(response.c_str());
+                print(response);
             })
         };
         cmdRename.addPosArg("fileA,a");
         cmdRename.addPosArg("fileB,b");
 
+        /**
+         * \brief Create write command
+         *
+         * Appends string to a file in SPIFFS
+         *
+         * \param file    Path to file
+         * \param content String to write
+         */
         Command cmdWrite {
             cli.addCommand("write", [](cmd* c) {
                 Command  cmd { c };
@@ -217,17 +332,31 @@ namespace cli {
                 spiffs::write(fileName, (uint8_t*)content.c_str(), content.length());
 
                 String response = "> wrote to file \"" + fileName + "\"\n";
-                print(response.c_str());
+                print(response);
             })
         };
         cmdWrite.addPosArg("f/ile");
         cmdWrite.addPosArg("c/ontent");
 
+        /**
+         * \brief Create format command
+         *
+         * Formats SPIFFS
+         */
         cli.addCommand("format", [](cmd* c) {
             spiffs::format();
-            println("Formatted SPIFFS");
+            print("Formatted SPIFFS\n");
         });
 
+        /**
+         * \brief Create stream command
+         *
+         * Opens stream to a file in SPIFFS.
+         * Whatever is parsed to the CLI is written into the strem.
+         * Only close and read are commands will be executed.
+         *
+         * \param * Path to file
+         */
         cli.addSingleArgCmd("stream", [](cmd* c) {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
@@ -235,15 +364,24 @@ namespace cli {
             spiffs::streamOpen(arg.getValue());
 
             String response = "> opened stream \"" + arg.getValue() + "\"\n";
-            print(response.c_str());
+            print(response);
         });
 
+        /**
+         * \brief Create close command
+         *
+         * Closes file stream
+         */
         cli.addCommand("close", [](cmd* c) {
             spiffs::streamClose();
             print("> closed stream\n");
         });
 
-        // Command cmdRead {
+        /**
+         * \brief Create read command
+         *
+         * Reads from file stream (1024 characters)
+         */
         cli.addCommand("read", [](cmd* c) {
             size_t len = 1024;
 
@@ -260,8 +398,8 @@ namespace cli {
         cli::printfunc = printfunc;
 
         if (echo) {
-            print("# ");
-            println(input);
+            String s = "# " + String(input) + "\n";
+            print(s);
         }
 
         cli.parse(input);

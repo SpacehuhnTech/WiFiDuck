@@ -47,18 +47,18 @@ namespace settings {
         eeprom::saveObject(SETTINGS_ADDRES, data);
     }
 
-    std::string toString() {
-        std::string s;
+    String toString() {
+        String s;
 
-        s.append("ssid=");
-        s.append(getSSID());
-        s.append("\n");
-        s.append("password=");
-        s.append(getPassword());
-        s.append("\n");
-        s.append("channel=");
-        s.append(getChannel());
-        s.append("\n");
+        s += "ssid=";
+        s += getSSID();
+        s += "\n";
+        s += "password=";
+        s += getPassword();
+        s += "\n";
+        s += "channel=";
+        s += getChannel();
+        s += "\n";
 
         return s;
     }

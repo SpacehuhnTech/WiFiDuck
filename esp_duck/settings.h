@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <string>
+#include <Arduino.h> // String
 
 namespace settings {
     void begin();
@@ -15,7 +15,7 @@ namespace settings {
     void reset();
     void save();
 
-    std::string toString();
+    String toString();
 
     const char* getSSID();
     const char* getPassword();
