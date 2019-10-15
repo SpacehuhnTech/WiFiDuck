@@ -169,8 +169,8 @@ and the Atmega32u4:
 
 
 You can purchase one here:  
-- [tindie](https://www.tindie.com/stores/lspoplove/)
-- [DSTIKE](https://dstike.com/)
+- [tindie](https://www.tindie.com/products/lspoplove/dstike-wifi-duck/)
+- [DSTIKE](https://dstike.com/products/dstike-wifi-duck)
 - [AliExpress](https://www.aliexpress.com/item/4000256143274.html)
 - [taobao](https://shop135375846.world.taobao.com/)
 
