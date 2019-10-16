@@ -34,4 +34,4 @@ If applicable, add screenshots to help explain your problem.
 What have you already tried and didn't work out.
 
 **Additional context**
-Provide as much information as possible, etter too much than too little!
+Provide as much information as possible, better too much than too little!
