@@ -1,6 +1,6 @@
 ---
 name: 4. Bug report
-about: I found a reproducable bug in the code
+about: I found a reproducible bug in the code
 title: "[Bug] "
 labels: bug
 assignees: ''
