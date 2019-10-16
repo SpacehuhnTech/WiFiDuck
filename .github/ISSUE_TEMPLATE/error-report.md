@@ -1,14 +1,14 @@
 ---
-name: Bug
-about: Report a bug
-title: "[Bug] "
-labels: bug
+name: Error report
+about: I encountered a problem and need help to solve it
+title: "[Help] "
+labels: help wanted
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Describe the error**
+A clear and concise description of what the problem is.
 
 **To Reproduce**
 Steps to reproduce the behavior:

@@ -1,12 +1,10 @@
 ---
 name: Question
-about: General questions related to the repository
+about: I have a question about this project
 title: "[Question] "
 labels: question
 assignees: ''
 
 ---
 
-> Please search for existing (open and closed) issues to avoid duplicates.  
-Please put error messages and code ```inside these 3 quotes/grave accents```
-(Delete this text or your issue will be closed)
+> Please search for existing (open and closed) issues to avoid duplicates.
