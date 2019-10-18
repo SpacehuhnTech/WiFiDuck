@@ -15,6 +15,8 @@
 #define RESPONSE_PROCESSING 0x01
 #define RESPONSE_REPEAT 0x02
 
+#define MIN_DELAY 5
+
 namespace i2c {
     // ===== PRIVATE ===== //
     buffer_t buffer;
@@ -24,15 +26,20 @@ namespace i2c {
         debugln("I2C REQUEST");
 
         if (buffer.len > 0) {
-            if (duckparser::getDelayTime() > 255) Wire.write(255);
-            else Wire.write(duckparser::getDelayTime() | RESPONSE_PROCESSING);
+            unsigned int delayTime = duckparser::getDelayTime();
+            if (delayTime > 255) {
+                Wire.write(255);
+            } else {
+                Wire.write((uint8_t)delayTime | RESPONSE_PROCESSING | MIN_DELAY);
+            }
             startParser = true;
+            debug(".");
         } else if (duckparser::getRepeats() > 0) {
             Wire.write(RESPONSE_REPEAT);
-            debugln("I2C REPEAT");
+            debugln("\nI2C REPEAT");
         } else {
             Wire.write(RESPONSE_OK);
-            debugln("Done");
+            debugln("\nDone");
         }
     }
 
