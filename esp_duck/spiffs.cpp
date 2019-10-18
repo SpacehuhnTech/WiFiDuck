@@ -140,6 +140,10 @@ namespace spiffs {
             res += '\n';
         }
 
+        if (res.length() == 0) {
+            res += "\n";
+        }
+
         return res;
     }
 
