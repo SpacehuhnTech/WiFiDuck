@@ -22,8 +22,9 @@ function getEditorContent() {
 
 // ===== WebSocket Actions ===== //
 function check_status() {
-  ws_update_status();
-  if (!current_status.includes("running")) {
+  if (current_status.includes("running")) {
+    ws_update_status();
+  } else {
     clearInterval(status_interval);
   }
 }
@@ -42,7 +43,7 @@ function ws_send_format() {
 function ws_send_run(fileName) {
   ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
   ws_update_status();
-  status_interval = setInterval(check_status, 200);
+  if (!status_interval) status_interval = setInterval(check_status, 200);
 }
 
 function ws_send_stop(fileName) {
