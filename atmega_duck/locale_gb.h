@@ -217,7 +217,7 @@ const uint8_t utf8_gb[] PROGMEM = {
     0xe2, 0x82, 0xac, 0x00, KEY_MOD_RALT,                  KEY_4      // €
 };
 
-static locale_t locale_gb {
+static hid_locale_t locale_gb {
     (uint8_t*)ascii_gb, 128,
     (uint8_t*)extended_ascii_gb, sizeof(extended_ascii_gb) / 3,
     (uint8_t*)utf8_gb, sizeof(utf8_gb) / 6,

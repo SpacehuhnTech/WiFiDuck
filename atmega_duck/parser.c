@@ -7,6 +7,7 @@
 #include "parser.h"
 
 #include <stdlib.h> // malloc
+#include <string.h> // strlen
 
 
 // My own implementation, because the default one in ctype.h make problems on older ESP8266 SDKs

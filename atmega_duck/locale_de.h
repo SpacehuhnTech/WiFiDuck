@@ -218,7 +218,7 @@ const uint8_t utf8_de[] PROGMEM = {
     0xc2, 0xb3, 0x00, 0x00, KEY_MOD_RALT,   KEY_3           // ³
 };
 
-static locale_t locale_de {
+static hid_locale_t locale_de {
     (uint8_t*)ascii_de, sizeof(ascii_de) / 2,
     (uint8_t*)extended_ascii_de,  sizeof(extended_ascii_de) / 3,
     (uint8_t*)utf8_de, sizeof(utf8_de) / 6

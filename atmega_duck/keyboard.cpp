@@ -8,8 +8,8 @@
 
 namespace keyboard {
     // ====== PRIVATE ====== //
-    locale_t* locale      { &locale_us };
-    report    prev_report { report { KEY_NONE, KEY_NONE, { KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE } } };
+    hid_locale_t* locale      { &locale_us };
+    report prev_report = report { KEY_NONE, KEY_NONE, { KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE } };
 
     const uint8_t keyboardDescriptor[] PROGMEM {
         //  Keyboard
@@ -69,12 +69,12 @@ namespace keyboard {
         HID().AppendDescriptor(&node);
     }
 
-    void setLocale(locale_t* locale) {
+    void setLocale(hid_locale_t* locale) {
         keyboard::locale = locale;
     }
 
     void send(report* k) {
-        HID().SendReport(2, k, sizeof(report));
+        HID().SendReport(2, (uint8_t*)k, sizeof(report));
     }
 
     void release() {

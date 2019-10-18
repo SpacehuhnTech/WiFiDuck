@@ -125,7 +125,7 @@ namespace duckparser {
 
     // ====== PUBLIC ===== //
 
-    void parse(char* str, size_t len) {
+    void parse(const char* str, size_t len) {
         interpretTime = millis();
 
         // Split str into a list of lines

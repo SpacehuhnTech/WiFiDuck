@@ -191,7 +191,7 @@ const uint8_t ascii_us[] PROGMEM = {
     KEY_NONE,       KEY_NONE        // DEL
 };
 
-static locale_t locale_us {
+static hid_locale_t locale_us {
     (uint8_t*)ascii_us, 128,
     NULL, 0,
     NULL, 0

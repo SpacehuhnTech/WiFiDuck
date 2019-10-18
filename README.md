@@ -370,7 +370,7 @@ The UTF-8 array is variable in length, too.
 The first 4 bytes are the character code.  
 For example, [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
 Because the letter is uppercase, we need to press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
-6. Edit the locale_t structure.  
+6. Edit the hid_locale_t structure.  
 If you renamed all variables accordingly, there's nothing left to do.  
 7. Go to [duckparser.cpp](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/duckparser.cpp#L163) at `// LOCALE (-> change keyboard layout)` you can see a bunch of else if statements.
 You need to copy one for your layout.  

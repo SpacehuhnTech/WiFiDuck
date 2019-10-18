@@ -6,7 +6,7 @@
 
 #pragma once
 
-typedef struct locale_t {
+typedef struct hid_locale_t {
     uint8_t* ascii;
     uint8_t  ascii_len;
 
@@ -15,4 +15,4 @@ typedef struct locale_t {
 
     uint8_t* utf8;
     size_t   utf8_len;
-} locale_t;
+} hid_locale_t;
