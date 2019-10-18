@@ -70,18 +70,12 @@ namespace webserver {
                 msg[len] = 0;
                 debugf("%s\n", msg);
 
-                if (spiffs::streaming() && (strcmp(msg, "close") != 0) && (strcmp(msg, "read") != 0)) {
-                    spiffs::streamWrite(msg, len);
-                    debugln("Written data to file");
-                    client->text("> Written data to file");
-                } else {
-                    currentClient = client;
-                    cli::parse(msg, [](const char* str) {
-                        webserver::send(str);
-                        Serial.print(str);
-                    }, false);
-                    currentClient = nullptr;
-                }
+                currentClient = client;
+                cli::parse(msg, [](const char* str) {
+                    webserver::send(str);
+                    Serial.print(str);
+                }, false);
+                currentClient = nullptr;
             }
         }
     }

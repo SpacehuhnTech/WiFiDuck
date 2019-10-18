@@ -397,11 +397,18 @@ namespace cli {
     void parse(const char* input, PrintFunction printfunc, bool echo) {
         cli::printfunc = printfunc;
 
-        if (echo) {
-            String s = "# " + String(input) + "\n";
-            print(s);
-        }
+        if (spiffs::streaming() &&
+            (strcmp(input, "close") != 0) &&
+            (strcmp(input, "read") != 0)) {
+            spiffs::streamWrite(input, strlen(input));
+            print("> Written data to file");
+        } else {
+            if (echo) {
+                String s = "# " + String(input) + "\n";
+                print(s);
+            }
 
-        cli.parse(input);
+            cli.parse(input);
+        }
     }
 }
