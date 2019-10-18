@@ -33,7 +33,7 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
   - [Connections](#connections)
 - [Flash Software](#flash-software)
   - [Requirements](#requirements)
-  - [Atmega32u4](#atmega32u4)
+  - [Atmega32u4](#atmega32u4atsamd21)
   - [ESP8266/ESP8285](#esp8266esp8285)
   - [DSTIKE WiFi Duck](#dstike-wifi-duck)
 - [Usage](#usage)
@@ -82,7 +82,7 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 ## Hardware
 
 This tool requires following hardware:  
-* An Atmega32u4 based board (for example: Arduino Leonardo or Arduino Pro Micro)  
+* An Atmega32u4 or Atsamd21 based board (for example: Arduino Leonardo, Arduino Pro Micro or Adafruit Trinked m0)  
 * An ESP8266 or ESP8285 (for example NodeMCU or Lolin/Wemos d1 mini)  
 * [Optional] A single Neopixel LED (WS2812b)  
 
@@ -99,7 +99,7 @@ you'll obviously need soldering equipment and a bit of experience using it.
 
 Here's a map of the pins that need to be connected.  
 
-| ESP82xx | Atmega32u4 |
+| ESP8266 | Atmega32u4 |
 | ------- | ---------- |
 | `GPIO 5` or `D1` | `SCL` or `D3` |
 | `GPIO 4` or `D2` | `SDA` or `D2` |
@@ -130,11 +130,13 @@ Download the repository, unzip it and move it inside the libraries folder.
 If you need more information, here is a
 [tutorial](https://www.arduino.cc/en/Guide/Libraries) with more information.  
 
-### Atmega32u4
+### Atmega32u4/Atsamd21
 
 1. Open `atmegaduck/atmega_duck.ino` with the Arduino IDE  
-2. Under `Tools->Board` select `Arduino Leonardo`
-(if you use a 3.3V Atmega32u4 select `LilyPad Arduino USB`)  
+2. Under `Tools->Board` select your board, for example `Adafruit Trinket m0`.  
+Or you select
+  - `Arduino Leonardo` if you use a 5V Atmega32u4 (used on DSTIKE board too)
+  - `LilyPad Arduino USB` if you use a 3.3V Atmega32u4
 3. Plug the board in and select its port under `Tools->Port`  
 4. Press the Upload button  
 
@@ -185,7 +187,7 @@ You can purchase one here:
 
 ### CLI
 
-The command line interface or CLI is accessible using a serial connection to the ESP82xx (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+The command line interface or CLI is accessible using a serial connection to the ESP8266 (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
 
 #### General
 
@@ -289,7 +291,7 @@ STRING Hello World!
 ### Debug
 
 To properly debug, you need to have both the Atmega32u4
-and the ESP82xx connected via USB to your computer.  
+and the ESP8266 connected via USB to your computer.  
 
 That can be tricky when you only have a all in one board, so it might be useful
 you built one yourself. You don't need to solder it, for example you can use an
@@ -298,7 +300,7 @@ Arduino Leonardo and a NodeMCU and connect them with jumper cables.
 Now open 2 instances of Arduino (so they run as separate processes!),
 select the COM port and open the serial monitor for each device.
 You might need to reset the Atmega32u4 to see serial output.
-If that causes problems with the i2c connection, try to reset the ESP82xx too.  
+If that causes problems with the i2c connection, try to reset the ESP8266 too.  
 
 ### FAQ
 
@@ -308,7 +310,7 @@ Also watch this [video](https://www.youtube.com/watch?v=53zkBvL4ZB4) by LiveOver
 
 #### I forgot the password
 
-Flash the ESP82xx again,
+Flash the ESP8266 again,
 but make sure that you select `Erase Flash: Sketch + WiFi Settings`
 under Tools in the Arduino IDE.  
 
