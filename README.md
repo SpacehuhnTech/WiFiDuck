@@ -33,7 +33,7 @@ Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-sti
   - [Connections](#connections)
 - [Flash Software](#flash-software)
   - [Requirements](#requirements)
-  - [Atmega32u4](#atmega32u4atsamd21)
+  - [Atmega32u4/Atsamd21](#atmega32u4atsamd21)
   - [ESP8266/ESP8285](#esp8266esp8285)
   - [DSTIKE WiFi Duck](#dstike-wifi-duck)
 - [Usage](#usage)
@@ -134,9 +134,8 @@ If you need more information, here is a
 
 1. Open `atmegaduck/atmega_duck.ino` with the Arduino IDE  
 2. Under `Tools->Board` select your board, for example `Adafruit Trinket m0`.  
-Or you select
-  - `Arduino Leonardo` if you use a 5V Atmega32u4 (used on DSTIKE board too)
-  - `LilyPad Arduino USB` if you use a 3.3V Atmega32u4
+You can also select `Arduino Leonardo` if you use a 5V Atmega32u4 (used on DSTIKE board too)
+or `LilyPad Arduino USB` if you use a 3.3V Atmega32u4
 3. Plug the board in and select its port under `Tools->Port`  
 4. Press the Upload button  
 
