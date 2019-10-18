@@ -107,6 +107,7 @@ namespace spiffs {
 
         if (f) {
             f.write(str);
+            f.write("\n");
             f.close();
             debugln("Wrote file");
         } else {
