@@ -21,7 +21,9 @@ namespace spiffs {
 
     // ===== PUBLIC ====== //
     void begin() {
+        debug("Initializing SPIFFS...");
         SPIFFS.begin();
+        debugln("OK");
 
         String FILE_NAME = "/startup_spiffs_test";
 
