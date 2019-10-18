@@ -5,7 +5,21 @@
  */
 
 var file_list = ""; // file list string used for ls command
-var status_interval;
+var status_interval = undefined;
+
+function start_status_interval() {
+  if (!status_interval) {
+    ws_update_status();
+    status_interval = setInterval(check_status, 200);
+  }
+}
+
+function stop_status_interval() {
+  if (status_interval) {
+    clearInterval(status_interval);
+    status_interval = undefined;
+  }
+}
 
 // ===== Value Getters ===== //
 function getNewFileName() {
@@ -25,7 +39,7 @@ function check_status() {
   if (current_status.includes("running")) {
     ws_update_status();
   } else {
-    clearInterval(status_interval);
+    stop_status_interval();
   }
 }
 
@@ -42,8 +56,7 @@ function ws_send_format() {
 
 function ws_send_run(fileName) {
   ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
-  ws_update_status();
-  if (!status_interval) status_interval = setInterval(check_status, 200);
+  start_status_interval();
 }
 
 function ws_send_stop(fileName) {
@@ -53,7 +66,7 @@ function ws_send_stop(fileName) {
     cmd += " \"" + fixFileName(fileName) + "\"";
   }
 
-  if (status_interval) clearInterval(status_interval);
+  stop_status_interval();
 
   ws_send(cmd, log_ws, true);
   ws_update_status();
