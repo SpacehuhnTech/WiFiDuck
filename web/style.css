@@ -376,7 +376,7 @@ input[type="text"] {
 }
 
 input[type="file"] {
-  display: none;
+  padding: 1em 0;
 }
 
 /* ==== GRID SYSTEM ==== */

@@ -7,8 +7,11 @@
 #include "webserver.h"
 
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+
 
 #include "config.h"
 #include "debug.h"
@@ -29,16 +32,19 @@ void reply(AsyncWebServerRequest* request, int code, const char* type, const uin
 
 namespace webserver {
     // ===== PRIVATE ===== //
-    AsyncWebServer server(80);
-    AsyncWebSocket ws("/ws");
+    AsyncWebServer   server(80);
+    AsyncWebSocket   ws("/ws");
+    AsyncEventSource events("/events");
+
+    const char* host_name = "wifiduck";
 
     AsyncWebSocketClient* currentClient { nullptr };
+
+    bool reboot = false;
 
     void wsEvent(AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg, uint8_t* data, size_t len) {
         if (type == WS_EVT_CONNECT) {
             debugf("WS Client connected %u\n", client->id());
-
-            // client->printf("%u", client->id());
         }
 
         else if (type == WS_EVT_DISCONNECT) {
@@ -83,6 +89,8 @@ namespace webserver {
     // ===== PUBLIC ===== //
     void begin() {
         // Access Point
+        WiFi.hostname(host_name);
+        // WiFi.mode(WIFI_AP_STA);
         WiFi.softAP(settings::getSSID(), settings::getPassword(), settings::getChannelNum());
         debugf("Started Access Point \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
 
@@ -97,6 +105,66 @@ namespace webserver {
 
         WEBSERVER_CALLBACK;
 
+        // Arduino OTA Update
+        ArduinoOTA.onStart([]() {
+            events.send("Update Start", "ota");
+        });
+        ArduinoOTA.onEnd([]() {
+            events.send("Update End", "ota");
+        });
+        ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+            char p[32];
+            sprintf(p, "Progress: %u%%\n", (progress/(total/100)));
+            events.send(p, "ota");
+        });
+        ArduinoOTA.onError([](ota_error_t error) {
+            if (error == OTA_AUTH_ERROR) events.send("Auth Failed", "ota");
+            else if (error == OTA_BEGIN_ERROR) events.send("Begin Failed", "ota");
+            else if (error == OTA_CONNECT_ERROR) events.send("Connect Failed", "ota");
+            else if (error == OTA_RECEIVE_ERROR) events.send("Recieve Failed", "ota");
+            else if (error == OTA_END_ERROR) events.send("End Failed", "ota");
+        });
+        ArduinoOTA.setHostname(host_name);
+        ArduinoOTA.begin();
+
+        events.onConnect([](AsyncEventSourceClient* client) {
+            client->send("hello!", NULL, millis(), 1000);
+        });
+        server.addHandler(&events);
+
+        // Web OTA
+        server.on("/update", HTTP_POST, [](AsyncWebServerRequest* request) {
+            reboot = !Update.hasError();
+
+            AsyncWebServerResponse* response;
+            response = request->beginResponse(200, "text/plain", reboot ? "OK" : "FAIL");
+            response->addHeader("Connection", "close");
+
+            request->send(response);
+        }, [](AsyncWebServerRequest* request, String filename, size_t index, uint8_t* data, size_t len, bool final) {
+            if (!index) {
+                Serial.printf("Update Start: %s\n", filename.c_str());
+                Update.runAsync(true);
+                if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000)) {
+                    Update.printError(Serial);
+                }
+            }
+            if (!Update.hasError()) {
+                if (Update.write(data, len) != len) {
+                    Update.printError(Serial);
+                }
+            }
+            if (final) {
+                if (Update.end(true)) {
+                    Serial.printf("Update Success: %uB\n", index+len);
+                } else {
+                    Update.printError(Serial);
+                }
+            }
+        });
+
+        MDNS.addService("http", "tcp", 80);
+
         // Websocket
         ws.onEvent(wsEvent);
         server.addHandler(&ws);
@@ -104,6 +172,11 @@ namespace webserver {
         // Start Server
         server.begin();
         debugln("Started Webserver");
+    }
+
+    void update() {
+        ArduinoOTA.handle();
+        if (reboot) ESP.restart();
     }
 
     void send(const char* str) {

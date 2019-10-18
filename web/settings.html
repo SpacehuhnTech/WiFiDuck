@@ -58,6 +58,19 @@
 
         <p>Restart the device to apply new settings.</p>
 
+        <h2>Update</h2>
+
+        <p>
+          Go to <a href="https://github.com/spacehuhn/WiFiDuck/releases" target="_blank">wifiduck.com/releases</a>
+          to check for updates.<br>
+          Select a .bin file and press upload to flash the device.<br>
+        </p>
+
+        <form method='POST' action='/update' enctype='multipart/form-data'>
+          <input type='file' name='update'>
+          <input type='submit' class="warn" value='Upload'>
+        </form>
+
         <footer>
           <a href="settings.html">Settings</a> |
           <a href="terminal.html">Terminal</a> |

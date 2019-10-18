@@ -34,11 +34,12 @@ void setup() {
 
     webserver::begin();
 
-    debugln("\nESP Duck Started");
+    debugln("\nESP Duck Started!");
 }
 
 void loop() {
     i2c::update();
+    webserver::update();
 
     if (Serial.available()) {
         String input = Serial.readStringUntil('\n');
