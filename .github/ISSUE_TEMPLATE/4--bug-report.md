@@ -1,6 +1,6 @@
 ---
-name: Bug
-about: Report a bug
+name: 4. Bug report
+about: I found a reproducible bug in the code
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -31,3 +31,4 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+If you don't use this template, your issue might be closed and tagged invalid!

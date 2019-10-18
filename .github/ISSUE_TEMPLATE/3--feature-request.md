@@ -1,6 +1,6 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: 3. Feature request
+about: I have an idea to improve this project
 title: "[Feature] "
 labels: enhancement
 assignees: ''
@@ -18,3 +18,4 @@ A clear and concise description of any alternative solutions or features you've 
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
+If you don't use this template, your issue might be closed and tagged invalid!
