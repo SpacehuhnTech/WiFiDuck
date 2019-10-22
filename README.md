@@ -14,10 +14,6 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
 | 📺 <a href="https://www.youtube.com/spacehuhn">YouTube</a>
 | 🌍 <a href="https://spacehuhn.io">spacehuhn.io</a>
 <br>
-<br>
-Support this project and become a patron on <a href="https://patreon.com/spacehuhn">patreon.com/spacehuhn</a>.<br>
-Also available: <a href="https://www.tindie.com/products/Spacehuhn/spacehuhn-stickers/">Stickers</a>
-</b>!
 </p>
 
 <p align="center">
