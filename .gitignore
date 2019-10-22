@@ -33,3 +33,6 @@
 
 # Save on Command Plugin
 save-commands.json
+
+# Compiled binaries
+*.bin
