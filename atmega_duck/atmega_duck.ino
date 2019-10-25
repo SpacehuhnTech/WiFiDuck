@@ -36,6 +36,6 @@ void loop() {
 
         duckparser::parse(buffer.data, buffer.len);
 
-        i2c::finished();
+        i2c::sendACK();
     }
 }

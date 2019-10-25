@@ -1,5 +1,5 @@
 /*!
-   \file cli.cpp
+   \file esp_duck/cli.cpp
    \brief Command line interface source
    \author Stefan Kremser
    \copyright MIT License

@@ -1,5 +1,5 @@
 /*!
-   \file cli.h
+   \file esp_duck/cli.h
    \brief Command line interface header
    \author Stefan Kremser
    \copyright MIT License
