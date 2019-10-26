@@ -8,11 +8,11 @@
 
 #include <Arduino.h>
 
-#ifdef ENABLE_DEBUG
+#if defined(ENABLE_DEBUG) && DEBUG_PORT != SERIAL_PORT
 
-#define debug(...) Serial.print(__VA_ARGS__)
-#define debugln(...) Serial.println(__VA_ARGS__)
-#define debugf(...) Serial.printf(__VA_ARGS__)
+#define debug(...) DEBUG_PORT.print(__VA_ARGS__)
+#define debugln(...) DEBUG_PORT.println(__VA_ARGS__)
+#define debugf(...) DEBUG_PORT.printf(__VA_ARGS__)
 
 #else /* ifdef ENABLE_DEBUG */
 

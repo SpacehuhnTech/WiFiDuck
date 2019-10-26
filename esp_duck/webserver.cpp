@@ -17,7 +17,6 @@
 #include "debug.h"
 #include "cli.h"
 #include "spiffs.h"
-#include "i2c.h"
 #include "settings.h"
 
 #include "webfiles.h"

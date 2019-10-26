@@ -7,7 +7,7 @@
 #include "config.h"
 #include "debug.h"
 
-#include "i2c.h"
+#include "com.h"
 #include "duckscript.h"
 #include "webserver.h"
 #include "spiffs.h"
@@ -20,11 +20,10 @@ void setup() {
     Serial.setTimeout(200);
 #endif // ifdef DEBUG
 
-    i2c::begin();
-    i2c::setOnOK(duckscript::nextLine);
-    // i2c::setOnProcessing();
-    i2c::setOnError(duckscript::stop);
-    i2c::setOnRepeat(duckscript::repeat);
+    com::begin();
+    com::onDone(duckscript::nextLine);
+    com::onError(duckscript::stop);
+    com::onRepeat(duckscript::repeat);
 
     spiffs::begin();
 
@@ -38,7 +37,7 @@ void setup() {
 }
 
 void loop() {
-    i2c::update();
+    com::update();
     webserver::update();
 
     if (Serial.available()) {
