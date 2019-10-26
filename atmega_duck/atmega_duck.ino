@@ -9,7 +9,7 @@
 
 #include "keyboard.h"
 #include "led.h"
-#include "i2c.h"
+#include "com.h"
 #include "duckparser.h"
 
 // ===== SETUP ====== //
@@ -20,15 +20,15 @@ void setup() {
 
     keyboard::begin();
     led::begin();
-    i2c::begin();
+    com::begin();
 
     debugln("Started!");
 }
 
 // ===== LOOOP ===== //
 void loop() {
-    if (i2c::hasData()) {
-        const buffer_t& buffer = i2c::getBuffer();
+    if (com::hasData()) {
+        const buffer_t& buffer = com::getBuffer();
 
         debug("Interpreting: ");
 
@@ -36,6 +36,6 @@ void loop() {
 
         duckparser::parse(buffer.data, buffer.len);
 
-        i2c::sendACK();
+        com::sendDone();
     }
 }

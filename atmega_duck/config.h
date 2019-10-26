@@ -8,10 +8,17 @@
 
 // DEBUG Settings
 #define ENABLE_DEBUG
+#define DEBUG_PORT Serial
 #define DEBUG_BAUD 115200
 
-// I2C Settings
+// Communication Settings
+#define ENABLE_SERIAL
+#define ENABLE_I2C
+
 #define I2C_ADDR 0x31
+
+#define SERIAL_COM Serial1
+#define SERIAL_BAUD 9600
 
 #define BUFFER_SIZE 512
 #define PACKET_SIZE 32
