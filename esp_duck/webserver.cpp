@@ -71,7 +71,7 @@ namespace webserver {
                 currentClient = client;
                 cli::parse(msg, [](const char* str) {
                     webserver::send(str);
-                    debug(str);
+                    debugf("%s\n", str);
                 }, false);
                 currentClient = nullptr;
             }

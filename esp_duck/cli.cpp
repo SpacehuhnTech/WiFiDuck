@@ -148,7 +148,7 @@ namespace cli {
                     print("connected");
                 }
             } else {
-                print("Com. connection problem");
+                print("Internal connection problem");
             }
         });
 

@@ -95,15 +95,15 @@ namespace com {
         if (hasData()) {
             uint8_t delayTime = min(duckparser::getDelayTime(), 255);
             uint8_t response  = delayTime | RES_PROCESSING | MIN_DELAY;
-            stream.print(response);
+            stream.write((uint8_t)response);
             debug("Responding PROCESSING ");
             debug(response);
             debugln("ms");
         } else if (duckparser::getRepeats()) {
-            stream.print(RES_REPEAT);
+            stream.write((uint8_t)RES_REPEAT);
             debugln("Responding REPEAT");
         } else {
-            stream.print(RES_OK);
+            stream.write((uint8_t)RES_OK);
             debugln("Responding OK");
         }
     }
@@ -159,12 +159,10 @@ namespace com {
         buffer.len   = 0;
         start_parser = false;
 
+        debugln("Sending OK");
+
 #ifdef ENABLE_SERIAL
         if (serial_active) respond(SERIAL_COM);
 #endif // ifdef ENABLE_SERIAL
-
-#ifdef ENABLE_I2C
-        if (i2c_active) respond(Wire);
-#endif // ifdef ENABLE_I2C
     }
 }

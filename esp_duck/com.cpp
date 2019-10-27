@@ -35,7 +35,7 @@ namespace com {
     com_callback callback_error  = NULL;
 
     // ! Last received response code
-    uint8_t response = 0x99;
+    uint8_t response = 0x01;
 
     // ! Flag to indicate a changed response code
     bool response_change = false;
@@ -76,6 +76,8 @@ namespace com {
 #ifdef ENABLE_I2C
     // ! Internal function to end transmission of a packet
     void i2c_request() {
+        debug("i2c request...");
+
         request_time = millis();
 
         Wire.requestFrom(I2C_ADDR, 1);
@@ -87,18 +89,20 @@ namespace com {
         } else {
             i2c_connection = false;
             response       = RES_ERROR;
-            debugln("Request error :(");
+            debugln("ERROR");
         }
 
-        response_change = (prev_response != response);
+        response_change = true;
     }
 
     // ! Internal function to check for response on i2c connection
     void update_i2c() {
-        if ((response & 0x01) &&
-            (response != RES_ERROR) &&
-            (millis() - request_time > response)) {
-            i2c_request();
+        if (i2c_connection) {
+            if ((response & RES_PROCESSING == RES_PROCESSING) &&
+                (response != RES_ERROR) &&
+                (millis() - request_time > response)) {
+                i2c_request();
+            }
         }
     }
 
@@ -151,12 +155,11 @@ namespace com {
 
         start_time = millis();
 
-        while (!response_change && millis() - start_time < 1000) {
+        while (!i2c_connection && millis() - start_time < 1000) {
             update_i2c();
-            delay(10);
+            i2c_connection = (response == RES_OK);
         }
 
-        i2c_connection = (response == RES_OK);
         debugln(i2c_connection ? "OK" : "ERROR");
 #endif // ifdef ENABLE_I2C
     }
@@ -229,6 +232,10 @@ namespace com {
         transmitData(REQ_EOT);
         ++sent;
         endTransmission();
+
+#ifdef ENABLE_I2C
+        if (i2c_connection) i2c_request();
+#endif // ifdef ENABLE_I2C
 
         // ! Return number of characters sent, minus 2 due to the signals
         return sent-2;
