@@ -73,14 +73,22 @@ namespace duckparser {
         else if (compare(str, len, "CTRL", CASE_SENSETIVE) || compare(str, len, "CONTROL", CASE_SENSETIVE)) keyboard::pressModifier(KEY_MOD_LCTRL);
         else if (compare(str, len, "SHIFT", CASE_SENSETIVE)) keyboard::pressModifier(KEY_MOD_LSHIFT);
         else if (compare(str, len, "ALT", CASE_SENSETIVE)) keyboard::pressModifier(KEY_MOD_LALT);
-        else if (compare(str, len, "WINDOWS", CASE_SENSETIVE) || compare(str, len, "GUI", CASE_SENSETIVE)) keyboard::pressModifier(KEY_MOD_LMETA);
+        else if (compare(str, len, "WINDOWS", CASE_SENSETIVE) || compare(str, len, "GUI", CASE_SENSETIVE)) {
+            debugln("Pressing windows");
+            keyboard::pressModifier(KEY_MOD_LMETA);
+        }
 
         // Utf8 character
-        else keyboard::press(str);
+        else {
+            debugln("Not found :(");
+            // keyboard::press(str);
+        }
+        debugln("OK");
     }
 
     void release() {
         keyboard::release();
+        debugln("Released");
     }
 
     unsigned int toInt(const char* str, size_t len) {
@@ -126,6 +134,10 @@ namespace duckparser {
     // ====== PUBLIC ===== //
 
     void parse(const char* str, size_t len) {
+        debug("Parsing ");
+        debug(str);
+        debugln();
+
         interpretTime = millis();
 
         // Split str into a list of lines
@@ -147,6 +159,7 @@ namespace duckparser {
             // REM (= Comment -> do nothing)
             if (inComment || compare(cmd->str, cmd->len, "REM", CASE_SENSETIVE)) {
                 inComment = !line_end;
+                debugln("Comment -> do nothing");
             }
 
             // STRING (-> type each character)
@@ -158,6 +171,8 @@ namespace duckparser {
                 }
 
                 inString = !line_end;
+
+                debugln("String -> type each character");
             }
 
             // LOCALE (-> change keyboard layout)
@@ -171,21 +186,27 @@ namespace duckparser {
                 } else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
                     keyboard::setLocale(&locale_gb);
                 }
+
+                debugln("Change keyboard layout");
             }
 
             // DELAY (-> sleep for x ms)
             else if (compare(cmd->str, cmd->len, "DELAY", CASE_SENSETIVE)) {
                 sleep(toInt(line_str, line_str_len));
+
+                debugln("Go to sleep");
             }
 
             // DEFAULTDELAY/DEFAULT_DELAY (set default delay per command)
             else if (compare(cmd->str, cmd->len, "DEFAULTDELAY", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "DEFAULT_DELAY", CASE_SENSETIVE)) {
                 defaultDelay = toInt(line_str, line_str_len);
+                debugln("Set default delay");
             }
 
             // REPEAT (-> repeat last command n times)
             else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "REPLAY", CASE_SENSETIVE)) {
                 repeatNum = toInt(line_str, line_str_len) + 1;
+                debugln("Repeat last command");
             }
 
             // KEYCODE
@@ -210,6 +231,7 @@ namespace duckparser {
                     keyboard::send(&k);
                     keyboard::release();
                 }
+                debugln("keycode");
             }
 
             // LED
@@ -228,10 +250,13 @@ namespace duckparser {
                 }
 
                 led::setColor(c[0], c[1], c[2]);
+                debugln("LED");
             }
 
             // Otherwise go through words and look for keys to press
             else {
+                debugln("Not sure go through the words...");
+
                 word_node* w = wl->first;
 
                 while (w) {

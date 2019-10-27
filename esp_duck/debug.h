@@ -8,7 +8,7 @@
 
 #include <Arduino.h>
 
-#if defined(ENABLE_DEBUG) && DEBUG_PORT != SERIAL_PORT
+#ifdef ENABLE_DEBUG
 
 #define debug(...) DEBUG_PORT.print(__VA_ARGS__)
 #define debugln(...) DEBUG_PORT.println(__VA_ARGS__)

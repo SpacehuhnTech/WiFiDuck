@@ -13,7 +13,8 @@
 #include "duckparser.h"
 
 // ! Communication request codes
-#define REQ_EOT 0x04
+#define REQ_SOT 0x01 // !< Start of transmission
+#define REQ_EOT 0x04 // !< End of transmission
 
 // ! Communication response codes
 #define RES_OK 0x00
@@ -26,16 +27,12 @@
 
 namespace com {
     // ===== PRIVATE ===== //
-    buffer_t buffer;               // !< Communication buffer Instance
-    bool     start_parser = false; // !< Flag to start parsing input
+    buffer_t buffer; // !< Communication buffer Instance
 
-#ifdef ENABLE_SERIAL
-    bool i2c_active = false;
-#endif // ifdef ENABLE_SERIAL
-
-#ifdef ENABLE_I2C
-    bool serial_active = false;
-#endif // ifdef ENABLE_I2C
+    bool start_parser         = false;
+    bool i2c_active           = false;
+    bool serial_active        = false;
+    bool ongoing_transmission = false;
 
     /*!
      * \brief Internal function to buffer received data
@@ -44,22 +41,44 @@ namespace com {
      * Returns wheter or not data was received.
      */
     bool receive(Stream& stream) {
-        unsigned int len = stream.available();
+        if (stream.available()) {
+            debug("RECEIVE ");
 
-        if (len) {
-            debug("RECEIVE...");
-
-            if (buffer.len + len <= BUFFER_SIZE) {
-                debugln("OK");
-                stream.readBytes(&buffer.data[buffer.len], len);
-                buffer.len  += len;
-                start_parser = (buffer.data[buffer.len - 1] == REQ_EOT);
-            } else {
-                debugln("BUFFER FULL!!!");
-                start_parser = true;
+            // ! Skip bytes
+            while (stream.available() && !ongoing_transmission) {
+                if (stream.read() == REQ_SOT) {
+                    ongoing_transmission = true;
+                    debug("SOT ");
+                }
             }
 
-            return true;
+            if (stream.available()) {
+                debug("'");
+
+                while (stream.available() && ongoing_transmission) {
+                    char c = stream.read();
+
+                    if (c == REQ_EOT) {
+                        start_parser         = true;
+                        ongoing_transmission = false;
+                    } else {
+                        debug(c);
+                        buffer.data[buffer.len] = c;
+                        ++buffer.len;
+                    }
+
+                    if (buffer.len == BUFFER_SIZE) {
+                        start_parser         = true;
+                        ongoing_transmission = false;
+                    }
+                }
+                debug("' ");
+            }
+
+            if (!ongoing_transmission && !start_parser) debug("DROPPED");
+            debugln();
+
+            return start_parser;
         }
 
         return false;
@@ -74,16 +93,18 @@ namespace com {
      */
     void respond(Stream& stream) {
         if (hasData()) {
-            uint8_t delayTime = max(duckparser::getDelayTime(), 255);
+            uint8_t delayTime = min(duckparser::getDelayTime(), 255);
             uint8_t response  = delayTime | RES_PROCESSING | MIN_DELAY;
             stream.print(response);
-            debug(".");
+            debug("Responding PROCESSING ");
+            debug(response);
+            debugln("ms");
         } else if (duckparser::getRepeats()) {
             stream.print(RES_REPEAT);
-            debugln("\nREPEAT");
+            debugln("Responding REPEAT");
         } else {
             stream.print(RES_OK);
-            debugln("\nDone");
+            debugln("Responding OK");
         }
     }
 
@@ -105,10 +126,12 @@ namespace com {
     // ===== PUBLIC ===== //
     void begin() {
 #ifdef ENABLE_SERIAL
+        debugln("ENABLED SERIAL");
         SERIAL_COM.begin(SERIAL_BAUD);
 #endif // ifdef ENABLE_SERIAL
 
 #ifdef ENABLE_I2C
+        debugln("ENABLED I2C");
         Wire.begin(I2C_ADDR);         // !< Begin i2c slave on given address
         Wire.onRequest(requestEvent); // !< Set request event handler
         Wire.onReceive(receiveEvent); // !< Set receive event handler
@@ -118,6 +141,7 @@ namespace com {
     void update() {
 #ifdef ENABLE_SERIAL
         if (receive(SERIAL_COM)) {
+            serial_active = true;
             respond(SERIAL_COM);
         }
 #endif // ifdef ENABLE_SERIAL

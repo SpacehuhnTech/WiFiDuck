@@ -40,10 +40,12 @@ void loop() {
     com::update();
     webserver::update();
 
+#ifdef ENABLE_DEBUG
     if (Serial.available()) {
         String input = Serial.readStringUntil('\n');
         cli::parse(input.c_str(), [](const char* str) {
             Serial.print(str);
         });
     }
+#endif // ifdef ENABLE_DEBUG
 }

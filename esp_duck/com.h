@@ -23,6 +23,7 @@ namespace com {
     void update();
 
     /*! Transmits string */
+    unsigned int send(char str);
     unsigned int send(const char* str);
     unsigned int send(const char* str, unsigned int len);
 

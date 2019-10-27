@@ -7,9 +7,9 @@
 #pragma once
 
 // DEBUG Settings
-#define ENABLE_DEBUG
-#define DEBUG_PORT Serial
-#define DEBUG_BAUD 115200
+// #define ENABLE_DEBUG
+// #define DEBUG_PORT Serial
+// #define DEBUG_BAUD 115200
 
 // Communication Settings
 #define ENABLE_SERIAL

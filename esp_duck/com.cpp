@@ -14,7 +14,8 @@
 #include "debug.h"
 
 // ! Communication request codes
-#define REQ_EOT 0x04
+#define REQ_SOT 0x01 // !< Start of transmission
+#define REQ_EOT 0x04 // !< End of transmission
 
 // ! Communication response codes
 #define RES_OK 0x00
@@ -34,7 +35,7 @@ namespace com {
     com_callback callback_error  = NULL;
 
     // ! Last received response code
-    uint8_t response = 0x00;
+    uint8_t response = 0x99;
 
     // ! Flag to indicate a changed response code
     bool response_change = false;
@@ -125,16 +126,15 @@ namespace com {
         serial_connection = true;
         send("LED 0 0 25\n");
 
-        debug("Connecting via i2c...");
+        debug("Connecting via serial...");
 
         start_time = millis();
 
-        while (!response_change && millis() - start_time < 1000) {
+        while (!serial_connection && millis() - start_time < 1000) {
             update_serial();
-            delay(10);
+            serial_connection = (response == RES_OK);
         }
 
-        serial_connection = (response == RES_OK);
         debugln(serial_connection ? "OK" : "ERROR");
 #endif // ifdef ENABLE_SERIAL
 
@@ -192,47 +192,46 @@ namespace com {
         }
     }
 
+    unsigned int send(char str) {
+        return send(&str, 1);
+    }
+
     unsigned int send(const char* str) {
         return send(str, strlen(str));
     }
 
-    unsigned int send(const char* str, unsigned int len) {
-        // ! Add one to length for the end-of-transmittion (eot) signal
-        ++len;
-
+    unsigned int send(const char* str, size_t len) {
         // ! Truncate string to fit into buffer
         if (len > BUFFER_SIZE) len = BUFFER_SIZE;
 
-        // ! Calculate number of packets
-        unsigned int transmissions =
-            (len / PACKET_SIZE) + (len % PACKET_SIZE > 0);
+        size_t sent = 0;
+        size_t i    = 0;
 
-        // ! Index counters
-        size_t str_i         { 0 };
-        size_t transmission_i { 0 };
-        size_t packet_i       { 0 };
+        beginTransmission();
+        transmitData(REQ_SOT);
+        ++sent;
 
-        // ! For each transmission ("packet")
-        for (transmission_i = 0; transmission_i < transmissions; ++transmission_i) {
-            beginTransmission();
+        while (i < len) {
+            char b = str[i];
 
-            // ! For each byte in packet
-            for (packet_i = 0; packet_i < PACKET_SIZE && str_i < len; ++packet_i) {
-                char b = str_i == len-1 ? REQ_EOT : str[str_i];
+            debug(b);
+            transmitData(b);
 
-                // ! Print byte and send it
-                debug(b);
-                transmitData(b);
+            ++i;
+            ++sent;
 
-                // ! Increment index of data
-                ++str_i;
+            if (sent % PACKET_SIZE == 0) {
+                endTransmission();
+                beginTransmission();
             }
-
-            endTransmission();
         }
 
-        // ! Return number of characters sent, minus 1 due to the EOT signal
-        return --str_i;
+        transmitData(REQ_EOT);
+        ++sent;
+        endTransmission();
+
+        // ! Return number of characters sent, minus 2 due to the signals
+        return sent-2;
     }
 
     void onDone(com_callback c) {
