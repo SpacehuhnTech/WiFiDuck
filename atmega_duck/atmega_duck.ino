@@ -12,40 +12,32 @@
 #include "com.h"
 #include "duckparser.h"
 
-const char* test_str = "GUI\n";
-
 // ===== SETUP ====== //
 void setup() {
+    keyboard::begin();
+
 #ifdef ENABLE_DEBUG
     DEBUG_PORT.begin(DEBUG_BAUD);
-
-    while (!DEBUG_PORT) {}
 #endif // ifdef ENABLE_DEBUG
 
-    keyboard::begin();
     led::begin();
-    // com::begin();
+    com::begin();
 
     debugln("Started!");
 }
 
 // ===== LOOOP ===== //
 void loop() {
-    debugln(test_str);
-    duckparser::parse(test_str, strlen(test_str));
-    delay(1000);
+    com::update();
+    if (com::hasData()) {
+        const buffer_t& buffer = com::getBuffer();
 
-    /*
-       com::update();
-       if (com::hasData()) {
-          const buffer_t& buffer = com::getBuffer();
+        debug("Interpreting: ");
 
-          debug("Interpreting: ");
+        for (size_t i = 0; i<buffer.len; i++) debug(buffer.data[i]);
 
-          for (size_t i = 0; i<buffer.len; i++) debug(buffer.data[i]);
+        duckparser::parse(buffer.data, buffer.len);
 
-          duckparser::parse(buffer.data, buffer.len);
-
-          com::sendDone();
-       }*/
+        com::sendDone();
+    }
 }
