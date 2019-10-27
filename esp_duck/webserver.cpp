@@ -12,12 +12,10 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
-
 #include "config.h"
 #include "debug.h"
 #include "cli.h"
 #include "spiffs.h"
-#include "i2c.h"
 #include "settings.h"
 
 #include "webfiles.h"
@@ -73,7 +71,7 @@ namespace webserver {
                 currentClient = client;
                 cli::parse(msg, [](const char* str) {
                     webserver::send(str);
-                    Serial.print(str);
+                    debugf("%s\n", str);
                 }, false);
                 currentClient = nullptr;
             }
@@ -137,7 +135,7 @@ namespace webserver {
             request->send(response);
         }, [](AsyncWebServerRequest* request, String filename, size_t index, uint8_t* data, size_t len, bool final) {
             if (!index) {
-                Serial.printf("Update Start: %s\n", filename.c_str());
+                debugf("Update Start: %s\n", filename.c_str());
                 Update.runAsync(true);
                 if (!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000)) {
                     Update.printError(Serial);
@@ -150,7 +148,7 @@ namespace webserver {
             }
             if (final) {
                 if (Update.end(true)) {
-                    Serial.printf("Update Success: %uB\n", index+len);
+                    debugf("Update Success: %uB\n", index+len);
                 } else {
                     Update.printError(Serial);
                 }

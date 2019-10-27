@@ -19,7 +19,7 @@ extern "C" {
 #include "spiffs.h"
 #include "duckscript.h"
 #include "settings.h"
-#include "i2c.h"
+#include "com.h"
 
 namespace cli {
     // ===== PRIVATE ===== //
@@ -140,7 +140,7 @@ namespace cli {
          * i2c connection problem
          */
         cli.addCommand("status", [](cmd* c) {
-            if (i2c::connected()) {
+            if (com::connected()) {
                 if (duckscript::isRunning()) {
                     String s = "running " + duckscript::currentScript();
                     print(s);
@@ -148,7 +148,7 @@ namespace cli {
                     print("connected");
                 }
             } else {
-                print("i2c connection problem");
+                print("Internal connection problem");
             }
         });
 

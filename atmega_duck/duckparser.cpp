@@ -7,7 +7,7 @@
 #include "duckparser.h"
 
 #include "config.h"
-#include "debug.h"
+// #include "debug.h"
 #include "keyboard.h"
 #include "led.h"
 
