@@ -15,10 +15,7 @@
 #include "cli.h"
 
 void setup() {
-#ifdef ENABLE_DEBUG
-    Serial.begin(DEBUG_BAUD);
-    Serial.setTimeout(200);
-#endif // ifdef DEBUG
+    debug_init();
 
     com::begin();
     com::onDone(duckscript::nextLine);
@@ -40,12 +37,5 @@ void loop() {
     com::update();
     webserver::update();
 
-#ifdef ENABLE_DEBUG
-    if (Serial.available()) {
-        String input = Serial.readStringUntil('\n');
-        cli::parse(input.c_str(), [](const char* str) {
-            Serial.print(str);
-        });
-    }
-#endif // ifdef ENABLE_DEBUG
+    debug_update();
 }

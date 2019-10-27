@@ -11,14 +11,15 @@
 #include "led.h"
 #include "com.h"
 #include "duckparser.h"
+#include "serial_bridge.h"
 
 // ===== SETUP ====== //
 void setup() {
+    serial_bridge::begin();
+
     keyboard::begin();
 
-#ifdef ENABLE_DEBUG
-    DEBUG_PORT.begin(DEBUG_BAUD);
-#endif // ifdef ENABLE_DEBUG
+    debug_init();
 
     led::begin();
     com::begin();

@@ -10,11 +10,15 @@
 
 #ifdef ENABLE_DEBUG
 
+#define debug_init() DEBUG_PORT.begin(DEBUG_BAUD);
+
 #define debug(...) DEBUG_PORT.print(__VA_ARGS__)
 #define debugln(...) DEBUG_PORT.println(__VA_ARGS__)
 #define debugf(...) DEBUG_PORT.printf(__VA_ARGS__)
 
 #else /* ifdef ENABLE_DEBUG */
+
+#define debug_init() 0
 
 #define debug(...) 0
 #define debugln(...) 0
