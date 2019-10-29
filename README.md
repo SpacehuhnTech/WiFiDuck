@@ -227,7 +227,8 @@ If a stream is open, everything you type (except messages containing exactly `cl
 | `STRING` | Types the following string | `STRING Hello World!` |
 | `REPEAT` or `REPLAY` | Repeats the last command n times | `REPEAT 3` |
 | `LOCALE` | Sets the keyboard layout. Currently supported: `DE`, `GB`, `US` | `LOCALE DE` |
-| `KEYCODE` | Type specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal | `KEYCODE 0x02 0x04` |
+| `KEYCODE` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal | `KEYCODE 0x02 0x04` |
+| `LED` | Changes the color of the LED in decimal RGB values (0-255) | `LED 40 20 10` |
 
 #### Standard Keys
 
