@@ -52,12 +52,12 @@ namespace cli {
         cli.setOnError([](cmd_error* e) {
             CommandError cmdError(e); // Create wrapper object
 
-            String res = "ERROR: " + cmdError.toString() + "\n";
+            String res = "ERROR: " + cmdError.toString();
 
             if (cmdError.hasCommand()) {
-                res += "Did you mean \"";
+                res += "\nDid you mean \"";
                 res += cmdError.getCommand().toString();
-                res += "\"?\n";
+                res += "\"?";
             }
 
             print(res);
@@ -79,7 +79,7 @@ namespace cli {
          */
         cli.addCommand("ram", [](cmd* c) {
             size_t freeRam = system_get_free_heap_size();
-            String res     = String(freeRam) + " bytes available\n";
+            String res     = String(freeRam) + " bytes available";
             print(res);
         });
 
@@ -113,7 +113,7 @@ namespace cli {
 
                 settings::set(name.c_str(), value.c_str());
 
-                String response = "> set \"" + name + "\" to \"" + value + "\"\n";
+                String response = "> set \"" + name + "\" to \"" + value + "\"";
 
                 print(response);
             })
@@ -163,7 +163,8 @@ namespace cli {
             Command  cmd { c };
             Argument arg { cmd.getArg(0) };
 
-            print(spiffs::listDir(arg.getValue()));
+            String res = spiffs::listDir(arg.getValue());
+            print(res);
         });
 
         /**
@@ -180,7 +181,7 @@ namespace cli {
             s += String(spiffs::usedBytes());
             s += " byte used\n";
             s += String(spiffs::freeBytes());
-            s += " byte free\n";
+            s += " byte free";
 
             print(s);
         });
@@ -212,7 +213,6 @@ namespace cli {
                 }
                 print(buffer);
             }
-            print("\n");
         });
 
         /**
@@ -228,7 +228,7 @@ namespace cli {
 
             duckscript::run(arg.getValue());
 
-            String response = "> started \"" + arg.getValue() + "\"\n";
+            String response = "> started \"" + arg.getValue() + "\"";
             print(response);
         });
 
@@ -246,7 +246,7 @@ namespace cli {
 
             duckscript::stop(arg.getValue());
 
-            String response = "> stopped \"" + arg.getValue() + "\"\n";
+            String response = "> stopped \"" + arg.getValue() + "\"";
             print(response);
         });
 
@@ -263,7 +263,7 @@ namespace cli {
 
             spiffs::create(arg.getValue());
 
-            String response = "> created file \"" + arg.getValue() + "\"\n";
+            String response = "> created file \"" + arg.getValue() + "\"";
             print(response);
         });
 
@@ -280,7 +280,7 @@ namespace cli {
 
             spiffs::remove(arg.getValue());
 
-            String response = "> removed file \"" + arg.getValue() + "\"\n";
+            String response = "> removed file \"" + arg.getValue() + "\"";
             print(response);
         });
 
@@ -304,7 +304,7 @@ namespace cli {
 
                 spiffs::rename(fileA, fileB);
 
-                String response = "> renamed \"" + fileA + "\" to \"" + fileB + "\"\n";
+                String response = "> renamed \"" + fileA + "\" to \"" + fileB + "\"";
                 print(response);
             })
         };
@@ -331,7 +331,7 @@ namespace cli {
 
                 spiffs::write(fileName, (uint8_t*)content.c_str(), content.length());
 
-                String response = "> wrote to file \"" + fileName + "\"\n";
+                String response = "> wrote to file \"" + fileName + "\"";
                 print(response);
             })
         };
@@ -345,7 +345,7 @@ namespace cli {
          */
         cli.addCommand("format", [](cmd* c) {
             spiffs::format();
-            print("Formatted SPIFFS\n");
+            print("Formatted SPIFFS");
         });
 
         /**
@@ -363,7 +363,7 @@ namespace cli {
 
             spiffs::streamOpen(arg.getValue());
 
-            String response = "> opened stream \"" + arg.getValue() + "\"\n";
+            String response = "> opened stream \"" + arg.getValue() + "\"";
             print(response);
         });
 
@@ -374,7 +374,7 @@ namespace cli {
          */
         cli.addCommand("close", [](cmd* c) {
             spiffs::streamClose();
-            print("> closed stream\n");
+            print("> closed stream");
         });
 
         /**
@@ -398,13 +398,13 @@ namespace cli {
         cli::printfunc = printfunc;
 
         if (spiffs::streaming() &&
-            (strcmp(input, "close") != 0) &&
-            (strcmp(input, "read") != 0)) {
+            (strcmp(input, "close\n") != 0) &&
+            (strcmp(input, "read\n") != 0)) {
             spiffs::streamWrite(input, strlen(input));
             print("> Written data to file");
         } else {
             if (echo) {
-                String s = "# " + String(input) + "\n";
+                String s = "# " + String(input);
                 print(s);
             }
 

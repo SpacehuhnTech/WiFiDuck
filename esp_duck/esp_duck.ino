@@ -17,18 +17,15 @@
 void setup() {
     debug_init();
 
+    spiffs::begin();
+    settings::begin();
+    cli::begin();
+    webserver::begin();
+
     com::begin();
     com::onDone(duckscript::nextLine);
     com::onError(duckscript::stop);
     com::onRepeat(duckscript::repeat);
-
-    spiffs::begin();
-
-    settings::begin();
-
-    cli::begin();
-
-    webserver::begin();
 
     debugln("\nESP Duck Started!");
 }

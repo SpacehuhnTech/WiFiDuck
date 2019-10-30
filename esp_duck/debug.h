@@ -21,7 +21,7 @@
     if (Serial.available()) {\
         String input = Serial.readStringUntil('\n');\
         cli::parse(input.c_str(), [] (const char* str) {\
-            Serial.print(str);\
+            Serial.println(str);\
         });\
     }
 

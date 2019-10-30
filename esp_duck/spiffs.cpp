@@ -134,7 +134,7 @@ namespace spiffs {
 
         fixPath(dirName);
 
-        Dir dir { SPIFFS.openDir(dirName) };
+        Dir dir = SPIFFS.openDir(dirName);
 
         while (dir.next()) {
             res += dir.fileName();

@@ -51,12 +51,13 @@ namespace duckscript {
 
         while (f.available() && !eol && buf_i < BUFFER_SIZE) {
             uint8_t b = f.read();
-            eol          = (b == '\n');
-            buf[buf_i++] = b;
-            debug(char(b));
+            eol        = (b == '\n');
+            buf[buf_i] = b;
+            ++buf_i;
+            // debug(char(b));
         }
 
-        debugln();
+        if (!eol) debugln();
 
         com::send(buf, buf_i);
 

@@ -61,12 +61,10 @@ namespace webserver {
             AwsFrameInfo* info = (AwsFrameInfo*)arg;
 
             if (info->opcode == WS_TEXT) {
-                debugf("Message from %u [%llu byte]\n", client->id(), info->len);
-
                 char* msg = (char*)data;
-
                 msg[len] = 0;
-                debugf("%s\n", msg);
+
+                debugf("Message from %u [%llu byte]=%s", client->id(), info->len, msg);
 
                 currentClient = client;
                 cli::parse(msg, [](const char* str) {
