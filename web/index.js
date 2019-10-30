@@ -93,7 +93,7 @@ function ws_send_stream(fileName) {
   E("editorFile").value = fileName;
   E("editor").value = "";
 
-  ws_send("stream \"" + fileName + "\"\n", log_ws);
+  ws_send("stream \"" + fileName + "\"", log_ws);
 
   ws_send_read();
 }
@@ -101,7 +101,7 @@ function ws_send_stream(fileName) {
 function ws_send_ls() {
   file_list = "";
 
-  ws_send("ls\n", function(csv) {
+  ws_send("ls", function(csv) {
     file_list += csv;
 
     var lines = file_list.split(/\n/);
@@ -164,7 +164,8 @@ function ws_send_create(fileName) {
   E("editorFile").value = fileName;
   E("editor").value = "";
 
-  ws_send("create \"" + fileName + "\"\n", log_ws);
+  ws_send("create \"" + fileName + "\"", log_ws);
+  ws_send_ls();
 }
 
 function ws_send_write(fileName, content) {

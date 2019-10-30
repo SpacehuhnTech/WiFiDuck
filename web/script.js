@@ -85,6 +85,8 @@ function ws_msg_queue_update() {
 }
 
 function ws_send(message, callback, force = false) {
+  if (!message.endsWith('\n')) message += '\n';
+
   var obj = {
     "message": message,
     "callback": callback
