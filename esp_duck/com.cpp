@@ -86,20 +86,21 @@ namespace com {
 
         if (Wire.available()) {
             response = Wire.read();
+            debugln(response);
         } else {
             i2c_connection = false;
             response       = RES_ERROR;
             debugln("ERROR");
         }
 
-        response_change = true;
+        response_change = prev_response != response;
     }
 
     // ! Internal function to check for response on i2c connection
     void update_i2c() {
         if (i2c_connection) {
-            if ((response & RES_PROCESSING == RES_PROCESSING) &&
-                (response != RES_ERROR) &&
+            if ((response != RES_ERROR) &&
+                (response & RES_PROCESSING == RES_PROCESSING) &&
                 (millis() - request_time > response)) {
                 i2c_request();
             }
@@ -134,12 +135,12 @@ namespace com {
 
         start_time = millis();
 
-        while (!serial_connection && millis() - start_time < 1000) {
-            update_serial();
-            serial_connection = (response == RES_OK);
+        while (response != RES_OK && millis() - start_time < 1000) {
+            update();
         }
+        serial_connection = (response == RES_OK);
 
-        debugln(serial_connection ? "OK" : "ERROR");
+        // debugln(serial_connection ? "OK" : "ERROR");
 #endif // ifdef ENABLE_SERIAL
 
 #ifdef ENABLE_I2C
@@ -155,12 +156,21 @@ namespace com {
 
         start_time = millis();
 
-        while (!i2c_connection && millis() - start_time < 1000) {
-            update_i2c();
-            i2c_connection = (response == RES_OK);
-        }
+        i2c_request();
 
-        debugln(i2c_connection ? "OK" : "ERROR");
+        while (response != RES_OK && millis() - start_time < 1000) {
+            update();
+        }
+        i2c_connection = (response == RES_OK);
+
+        while (!i2c_connection && millis() - start_time < 1000) {
+            update();
+        }
+        i2c_connection = (response == RES_OK);
+
+        // debugf("i2c_connection=%d,response=%u\n", i2c_connection, response);
+
+        // debugln(i2c_connection ? "OK" : "ERROR");
 #endif // ifdef ENABLE_I2C
     }
 
@@ -213,6 +223,8 @@ namespace com {
         beginTransmission();
         transmitData(REQ_SOT);
         ++sent;
+
+        debug("Sending=");
 
         while (i < len) {
             char b = str[i];

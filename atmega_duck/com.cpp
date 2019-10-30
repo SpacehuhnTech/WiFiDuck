@@ -21,10 +21,6 @@
 #define RES_PROCESSING 0x01
 #define RES_REPEAT 0x02
 
-// ! Minimum delay after request,
-// ! for the master to send another request
-#define MIN_DELAY 5
-
 namespace com {
     // ===== PRIVATE ===== //
     buffer_t buffer; // !< Communication buffer Instance
@@ -42,13 +38,13 @@ namespace com {
      */
     bool receive(Stream& stream) {
         if (stream.available()) {
-            debug("RECEIVE ");
+            debug("RECEIVED ");
 
             // ! Skip bytes
             while (stream.available() && !ongoing_transmission) {
                 if (stream.read() == REQ_SOT) {
                     ongoing_transmission = true;
-                    debug("SOT ");
+                    debug("[SOT] ");
                 }
             }
 
@@ -62,7 +58,9 @@ namespace com {
                         start_parser         = true;
                         ongoing_transmission = false;
                     } else {
-                        debug(c);
+                        if (c == '\n') debug("\\n");
+                        else if (c == '\r') debug("\\r");
+                        else debug(c);
                         buffer.data[buffer.len] = c;
                         ++buffer.len;
                     }
@@ -75,8 +73,9 @@ namespace com {
                 debug("' ");
             }
 
-            if (!ongoing_transmission && !start_parser) debug("DROPPED");
-            debugln();
+            if (!ongoing_transmission && !start_parser) debugln("DROPPED");
+            else if (start_parser) debugln("[EOT]");
+            else debugln();
 
             return start_parser;
         }
@@ -92,20 +91,25 @@ namespace com {
      * If everything was processed and the buffer is empty, it replies with OK.
      */
     void respond(Stream& stream) {
+        uint8_t response;
+
         if (hasData()) {
-            uint8_t delayTime = min(duckparser::getDelayTime(), 255);
-            uint8_t response  = delayTime | RES_PROCESSING | MIN_DELAY;
-            stream.write((uint8_t)response);
-            debug("Responding PROCESSING ");
-            debug(response);
-            debugln("ms");
+            uint8_t delayTime = (uint8_t)min(duckparser::getDelayTime(), 255);
+            response = delayTime | (uint8_t)RES_PROCESSING;
+            debug("Responding PROCESSING");
         } else if (duckparser::getRepeats()) {
-            stream.write((uint8_t)RES_REPEAT);
-            debugln("Responding REPEAT");
+            response = (uint8_t)RES_REPEAT;
+            debug("Responding REPEAT");
         } else {
-            stream.write((uint8_t)RES_OK);
-            debugln("Responding OK");
+            response = (uint8_t)RES_OK;
+            debug("Responding OK");
         }
+
+        debug(" [");
+        debug(response);
+        debugln("]");
+
+        stream.write(response);
     }
 
     /*!
@@ -158,8 +162,6 @@ namespace com {
     void sendDone() {
         buffer.len   = 0;
         start_parser = false;
-
-        debugln("Sending OK");
 
 #ifdef ENABLE_SERIAL
         if (serial_active) respond(SERIAL_COM);
