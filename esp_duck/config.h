@@ -25,7 +25,10 @@
 #define BUFFER_SIZE 512
 #define PACKET_SIZE 32
 
-/*! EEPROM Settings */
+#define MSG_CONNECTED "LED 0 0 25\n"
+#define MSG_STARTED "LED 0 25 0\n"
+
+/*! ======EEPROM Settings ===== */
 #define EEPROM_SIZE       4095
 #define EEPROM_BOOT_ADDR  3210
 #define BOOT_MAGIC_NUM    1234567890

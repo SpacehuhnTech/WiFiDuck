@@ -17,17 +17,27 @@
 void setup() {
     debug_init();
 
+    com::begin();
+
     spiffs::begin();
     settings::begin();
     cli::begin();
     webserver::begin();
 
-    com::begin();
     com::onDone(duckscript::nextLine);
     com::onError(duckscript::stop);
     com::onRepeat(duckscript::repeat);
 
-    debugln("\nESP Duck Started!");
+    if (spiffs::freeBytes() > 0) com::send(MSG_STARTED);
+
+    delay(10);
+    com::update();
+
+    debugln("\n[~~~ WiFi Duck v1.0 Started! ~~~]");
+    debugln("    __");
+    debugln("___( o)>");
+    debugln("\\ <_. )");
+    debugln(" `---'   hjw\n");
 }
 
 void loop() {

@@ -129,7 +129,7 @@ namespace com {
         SERIAL_PORT.begin(SERIAL_BAUD);
 
         serial_connection = true;
-        send("LED 0 0 25\n");
+        send(MSG_CONNECTED);
 
         debug("Connecting via serial...");
 
@@ -150,7 +150,7 @@ namespace com {
         Wire.begin(I2C_SDA, I2C_SCL);
         Wire.setClock(I2C_CLOCK_SPEED);
         i2c_connection = true;
-        send("LED 0 0 25\n");
+        send(MSG_CONNECTED);
 
         debug("Connecting via i2c...");
 
