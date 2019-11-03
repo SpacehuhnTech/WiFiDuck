@@ -173,7 +173,7 @@ namespace cli {
          * Prints memory usage of SPIFFS
          */
         cli.addCommand("mem", [](cmd* c) {
-            String s { NULL };
+            String s = "";
             s.reserve(64);
 
             s += String(spiffs::size());

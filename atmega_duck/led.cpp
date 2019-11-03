@@ -14,7 +14,7 @@ namespace led {
 
     void begin() {
 #ifdef NEOPIXEL
-        led = new NeoPixel(NEOPIXEL_NUM, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
+        led = new NeoPixel(NEOPIXEL_NUM, LED_PIN, NEO_GRB + NEO_KHZ800);
         led->begin();
         led->show();
 #endif // ifdef ENABLE_NEOPIXEL

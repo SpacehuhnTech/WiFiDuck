@@ -6,20 +6,20 @@
 
 #pragma once
 
-/*! DEBUG Settings */
-#define ENABLE_DEBUG
-#define DEBUG_PORT Serial
-#define DEBUG_BAUD 115200
+/*! ===== DEBUG Settings ===== */
+// #define ENABLE_DEBUG
+// #define DEBUG_PORT Serial
+// #define DEBUG_BAUD 115200
 
-/*! Communication Settings */
+/*! ===== Communication Settings ===== */
 // #define ENABLE_SERIAL
 #define SERIAL_PORT Serial
 #define SERIAL_BAUD 9600
 
-#define ENABLE_I2C
+// #define ENABLE_I2C
 #define I2C_ADDR 0x31
-#define I2C_SDA 4
-#define I2C_SCL 5
+// #define I2C_SDA 4
+// #define I2C_SCL 5
 #define I2C_CLOCK_SPEED 50000L
 
 #define BUFFER_SIZE 512
@@ -33,17 +33,32 @@
 #define EEPROM_BOOT_ADDR  3210
 #define BOOT_MAGIC_NUM    1234567890
 
-/*! WiFi Settings */
+/*! ===== WiFi Settings ===== */
 #define WIFI_SSID "wifiduck"
 #define WIFI_PASSWORD "wifiduck"
 #define WIFI_CHANNEL "1"
 
-/*! Connection Settings */
-#define NUMBER_CONNECTION_TRIES 1
-#define CONNECTION_DELAY 5000
+/*! ========== Safty checks ========== */
+#if !defined(ENABLE_I2C) || !defined(ENABLE_SERIAL)
+  #define ENABLE_I2C
+  #define I2C_SDA 4
+  #define I2C_SCL 5
+#endif /* if !defined(ENABLE_I2C) || !defined(ENABLE_SERIAL) */
 
-/*! Safty checks */
+#ifdef DUCKMCU && DUCKMCU!="ESP8266"
+#error You're compiling for the wrong board, mate!\
+    Select something with an ESP8266.
+#endif /* ifdef DUCKMCU && DUCKMCU!="ATMEGA32U4" */
+
 #if defined(ENABLE_DEBUG) && defined(ENABLE_SERIAL) && DEBUG_PORT == SERIAL_PORT
 #error Using same serial port for debugging and Communication!\
-    Comment out ENABLE_DEBUG or ENABLE_SERIAL in esp_duck/config.h!
+    Use I2C instead or disable debug.
 #endif /* if DEBUG_PORT == SERIAL_PORT */
+
+#if defined(ENABLE_I2C) && I2C_SDA==I2C_SCL
+#error SDA pin equals to SCL pin
+#endif /* if !defined(ENABLE_I2C) && !defined(ENABLE_I2C) */
+
+#if defined(ENABLE_I2C) && defined(ENABLE_SERIAL) && (I2C_SDA==1 || I2C_SDA==3 || I2C_SCL==1 || I2C_SCL==3)
+#error I2C pins overlap with RX and TX pins. Disable serial debugging or change the I2C pins.
+#endif /* if !defined(ENABLE_I2C) && !defined(ENABLE_I2C) */
