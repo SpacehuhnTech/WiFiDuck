@@ -15,12 +15,10 @@
 
 // ===== SETUP ====== //
 void setup() {
-    serial_bridge::begin();
-
-    keyboard::begin();
-
     debug_init();
 
+    serial_bridge::begin();
+    keyboard::begin();
     led::begin();
     com::begin();
 
