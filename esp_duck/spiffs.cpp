@@ -156,7 +156,7 @@ namespace spiffs {
     }
 
     void streamWrite(const char* buf, size_t len) {
-        if (streamFile) streamFile.write(buf, len);
+        if (streamFile) streamFile.write((uint8_t*)buf, len);
         else debugln("ERROR: No stream file open");
     }
 
