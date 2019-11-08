@@ -36,3 +36,4 @@ save-commands.json
 
 # Compiled binaries
 *.bin
+*.zip
