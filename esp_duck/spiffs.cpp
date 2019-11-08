@@ -68,7 +68,7 @@ namespace spiffs {
     size_t size(String fileName) {
         fixPath(fileName);
 
-        File f { SPIFFS.open(fileName, "r") };
+        File f = SPIFFS.open(fileName, "r");
 
         return f.size();
     }
@@ -86,7 +86,7 @@ namespace spiffs {
     void create(String fileName) {
         fixPath(fileName);
 
-        File f { SPIFFS.open(fileName, "a+") };
+        File f = SPIFFS.open(fileName, "a+");
 
         f.close();
     }
@@ -105,11 +105,10 @@ namespace spiffs {
     }
 
     void write(String fileName, const char* str) {
-        File f { open(fileName) };
+        File f = open(fileName);
 
         if (f) {
-            f.write(str);
-            f.write("\n");
+            f.println(str);
             f.close();
             debugln("Wrote file");
         } else {
@@ -118,7 +117,7 @@ namespace spiffs {
     }
 
     void write(String fileName, const uint8_t* buf, size_t len) {
-        File f { open(fileName) };
+        File f = open(fileName);
 
         if (f) {
             f.write(buf, len);
