@@ -45,7 +45,7 @@
   #define I2C_SCL 5
 #endif /* if !defined(ENABLE_I2C) || !defined(ENABLE_SERIAL) */
 
-#if defined(DUCKMCU) && (DUCKMCU!=ESP8266)
+#if defined(DUCKMCU) && !(DUCKMCU==ESP8266)
 #error You're compiling for the wrong board, mate!\
     Select something with an ESP8266.
 #endif /* ifdef DUCKMCU && DUCKMCU!="ATMEGA32U4" */
