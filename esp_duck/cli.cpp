@@ -251,6 +251,24 @@ namespace cli {
         });
 
         /**
+         * \brief Create startup command
+         *
+         * Sets a ducky script to run at startup
+         *
+         * \param * Path to script in SPIFFS
+         */
+        cli.addSingleArgCmd("startup", [](cmd* c) {
+            Command  cmd { c };
+            Argument arg { cmd.getArg(0) };
+
+            settings::setStartup(arg.getValue().c_str());
+            settings::save();
+
+            String response = "> startup \"" + arg.getValue() + "\"";
+            print(response);
+        });
+
+        /**
          * \brief Create create command
          *
          * Creates a file in the SPIFFS

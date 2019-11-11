@@ -22,6 +22,7 @@ namespace settings {
         char ssid[33];
         char password[65];
         char channel[5];
+        char startup[65];
     } settings_t;
 
     settings_t data;
@@ -41,6 +42,7 @@ namespace settings {
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setChannel(WIFI_CHANNEL);
+        setStartup("");
     }
 
     void save() {
@@ -58,6 +60,9 @@ namespace settings {
         s += "\n";
         s += "channel=";
         s += getChannel();
+        s += "\n";
+        s += "startup=";
+        s += getStartup();
         s += "\n";
 
         return s;
@@ -78,6 +83,10 @@ namespace settings {
     int getChannelNum() {
         if (strcmp(data.channel, "auto") != 0) return atoi(data.channel);
         return 1;
+    }
+
+    const char* getStartup() {
+        return data.startup;
     }
 
     void set(const char* name, const char* value) {
@@ -119,6 +128,17 @@ namespace settings {
             for (uint8_t i = 0; i<5; ++i) {
                 if (i < channel_len) data.channel[i] = channel[i];
                 else data.channel[i] = '\0';
+            }
+        }
+    }
+
+    void setStartup(const char* startup) {
+        if (startup && (strlen(startup) <= 64)) {
+            size_t startup_len = strlen(startup);
+
+            for (uint8_t i = 0; i<65; ++i) {
+                if (i < startup_len) data.startup[i] = startup[i];
+                else data.startup[i] = '\0';
             }
         }
     }

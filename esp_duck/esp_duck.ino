@@ -38,6 +38,8 @@ void setup() {
     debugln("___( o)>");
     debugln("\\ <_. )");
     debugln(" `---'   hjw\n");
+
+    com::startup();
 }
 
 void loop() {
