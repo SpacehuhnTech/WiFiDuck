@@ -6,10 +6,11 @@
 
 #include "settings.h"
 
+
 #include "spiffs.h"
-#include "debug.h"
-#include "config.h"
 #include "eeprom.h"
+#include "config.h"
+#include "debug.h"
 
 #define SETTINGS_ADDRES 1
 #define SETTINGS_MAGIC_NUM 1234567891
@@ -32,20 +33,23 @@ namespace settings {
         load();
     }
 
-    void load() {
-        eeprom::getObject(SETTINGS_ADDRES, data);
+    void load() {        
+        eeprom::getObject(SETTINGS_ADDRES, data);        
         if (data.magic_num != SETTINGS_MAGIC_NUM) reset();
     }
 
     void reset() {
+        debugln("Resetting Settings");
         data.magic_num = SETTINGS_MAGIC_NUM;
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setChannel(WIFI_CHANNEL);
         setStartup("");
+        save();
     }
 
     void save() {
+        debugln("Saving Settings");
         eeprom::saveObject(SETTINGS_ADDRES, data);
     }
 
@@ -86,7 +90,7 @@ namespace settings {
     }
 
     const char* getStartup() {
-        return data.startup;
+      return data.startup;
     }
 
     void set(const char* name, const char* value) {

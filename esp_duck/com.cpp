@@ -14,7 +14,6 @@
 #include "debug.h"
 
 #include "duckscript.h"
-#include "com.h"
 #include "spiffs.h"
 #include "settings.h"
 
@@ -128,6 +127,7 @@ namespace com {
 
     // ===== PUBLIC ===== //
     void begin() {
+      debug("DASDADASDSDASDASD");
         unsigned long start_time = 0;
 
 #ifdef ENABLE_SERIAL
