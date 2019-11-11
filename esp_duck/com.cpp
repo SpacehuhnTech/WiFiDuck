@@ -127,7 +127,6 @@ namespace com {
 
     // ===== PUBLIC ===== //
     void begin() {
-      debug("DASDADASDSDASDASD");
         unsigned long start_time = 0;
 
 #ifdef ENABLE_SERIAL
@@ -210,12 +209,7 @@ namespace com {
         }
     }
 
-    void startup() {
-//        settings::load();
-//        settings::setStartup("/Grabify");
-////        settings::setStartup("");
-//        settings::save();
-        
+    void startup() {        
         if(strlen(settings::getStartup()) == 0)
           return;
         debugln("Startup Script");
