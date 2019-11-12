@@ -112,6 +112,7 @@ namespace cli {
                 String value { argValue.getValue() };
 
                 settings::set(name.c_str(), value.c_str());
+                settings::save();
 
                 String response = "> set \"" + name + "\" to \"" + value + "\"";
 
@@ -247,24 +248,6 @@ namespace cli {
             duckscript::stop(arg.getValue());
 
             String response = "> stopped \"" + arg.getValue() + "\"";
-            print(response);
-        });
-
-        /**
-         * \brief Create startup command
-         *
-         * Sets a ducky script to run at startup
-         *
-         * \param * Path to script in SPIFFS
-         */
-        cli.addSingleArgCmd("startup", [](cmd* c) {
-            Command  cmd { c };
-            Argument arg { cmd.getArg(0) };
-
-            settings::setStartup(arg.getValue().c_str());
-            settings::save();
-
-            String response = "> startup \"" + arg.getValue() + "\"";
             print(response);
         });
 

@@ -29,13 +29,13 @@ function ws_connected() {
 window.addEventListener("load", function() {
 
   E("edit_ssid").onclick = function() {
-    ws_send("set ssid " + prompt("SSID (1-32 chars)", E("ssid").innerHTML), function(msg) {
+    ws_send("set ssid \"" + prompt("SSID (1-32 chars)", E("ssid").innerHTML) + "\"", function(msg) {
       load_settings();
     });
   };
 
   E("edit_password").onclick = function() {
-    ws_send("set password " + prompt("Password (8-64 chars)", E("password").innerHTML), function(msg) {
+    ws_send("set password \"" + prompt("Password (8-64 chars)", E("password").innerHTML) + "\"", function(msg) {
       load_settings();
     });
   };
@@ -47,7 +47,7 @@ window.addEventListener("load", function() {
   };  
   
   E("remove_startup").onclick = function() {
-    ws_send("startup \"\"", function(msg) {
+    ws_send("set startup \"\"", function(msg) {
       load_settings();
     });
   };

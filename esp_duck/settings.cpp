@@ -100,6 +100,8 @@ namespace settings {
             setPassword(value);
         } else if (strcmp(name, "channel") == 0) {
             setChannel(value);
+        } else if (strcmp(name, "startup") == 0) {
+            setStartup(value);
         }
     }
 

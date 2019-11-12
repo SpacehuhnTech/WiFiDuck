@@ -60,7 +60,7 @@ function ws_send_run(fileName) {
 }
 
 function ws_send_startup(fileName) {
-  ws_send("startup \"" + fixFileName(fileName) + "\"", log_ws);
+  ws_send("set startup \"" + fixFileName(fileName) + "\"", log_ws);
   start_status_interval();
 }
 
