@@ -10,7 +10,6 @@
 #include "com.h"
 #include "duckscript.h"
 #include "webserver.h"
-#include "eeprom.h"
 #include "spiffs.h"
 #include "settings.h"
 #include "cli.h"
@@ -20,7 +19,6 @@ void setup() {
 
     com::begin();
 
-    eeprom::begin()
     spiffs::begin();
     settings::begin();
     cli::begin();
