@@ -112,7 +112,7 @@ namespace cli {
                 String value { argValue.getValue() };
 
                 settings::set(name.c_str(), value.c_str());
-				        settings::save();
+                settings::save();
 
                 String response = "> set \"" + name + "\" to \"" + value + "\"";
 
