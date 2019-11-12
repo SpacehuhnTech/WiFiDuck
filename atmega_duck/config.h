@@ -41,8 +41,7 @@
 
 /*! ========== Safety Checks ========= */
 #if defined(DUCKMCU) && !(DUCKMCU==ATMEGA32U4)
-#error You're compiling for the wrong board, mate!\
-    Select something with an ATmega32u4 or SAMD21.
+#error You are compiling for the wrong board, mate! Select something with an ATmega32u4 or SAMD21.
 #endif /* ifdef DUCKMCU && DUCKMCU!="ATMEGA32U4" */
 
 #if !defined(ENABLE_I2C) && !defined(ENABLE_SERIAL)
