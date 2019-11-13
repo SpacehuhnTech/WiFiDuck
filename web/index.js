@@ -59,6 +59,11 @@ function ws_send_run(fileName) {
   start_status_interval();
 }
 
+function ws_send_startup(fileName) {
+  ws_send("set startup \"" + fixFileName(fileName) + "\"", log_ws);
+  start_status_interval();
+}
+
 function ws_send_stop(fileName) {
   var cmd = "stop";
 
@@ -125,7 +130,8 @@ function ws_send_ls() {
         tableHTML += "<td>" + fileSize + "</td>\n";
         tableHTML += "<td>\n";
         tableHTML += "<button class=\"primary\" onclick=\"ws_send_stream('" + fileName + "')\">edit</button>\n";
-        tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button></td>\n";
+        tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button>\n";
+        tableHTML += "<button class=\"warn\" onclick=\"ws_send_startup('" + fileName + "')\">Startup</button></td>\n";
         tableHTML += "</tr>\n";
       }
     }

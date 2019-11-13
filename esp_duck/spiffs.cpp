@@ -104,11 +104,14 @@ namespace spiffs {
         SPIFFS.rename(oldName, newName);
     }
 
-    void write(String fileName, const char* str) {
+    void write(String fileName, const char* str, bool newLine) {
         File f = open(fileName);
 
         if (f) {
-            f.println(str);
+            if(newLine)
+              f.println(str);
+            else
+              f.print(str);
             f.close();
             debugln("Wrote file");
         } else {

@@ -10,6 +10,7 @@
 #include "com.h"
 #include "duckscript.h"
 #include "webserver.h"
+#include "eeprom.h"
 #include "spiffs.h"
 #include "settings.h"
 #include "cli.h"
@@ -19,6 +20,7 @@ void setup() {
 
     com::begin();
 
+    eeprom::begin();
     spiffs::begin();
     settings::begin();
     cli::begin();
@@ -38,6 +40,8 @@ void setup() {
     debugln("___( o)>");
     debugln("\\ <_. )");
     debugln(" `---'   hjw\n");
+
+    com::startup();
 }
 
 void loop() {
