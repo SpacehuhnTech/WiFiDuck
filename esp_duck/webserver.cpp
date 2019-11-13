@@ -20,9 +20,16 @@
 
 #include "webfiles.h"
 
+String processor(const String& var)
+{
+  if(var == "CURRENT_VERSION")
+    return CURRENT_VERSION;
+  return String();
+}
+
 void reply(AsyncWebServerRequest* request, int code, const char* type, const uint8_t* data, size_t len) {
     AsyncWebServerResponse* response =
-        request->beginResponse_P(code, type, data, len);
+        request->beginResponse_P(code, type, (char*) data, processor);
 
     response->addHeader("Content-Encoding", "gzip");
     request->send(response);
