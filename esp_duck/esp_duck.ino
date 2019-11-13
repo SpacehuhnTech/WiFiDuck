@@ -10,6 +10,7 @@
 #include "com.h"
 #include "duckscript.h"
 #include "webserver.h"
+#include "eeprom.h"
 #include "spiffs.h"
 #include "settings.h"
 #include "cli.h"
@@ -19,6 +20,7 @@ void setup() {
 
     com::begin();
 
+    eeprom::begin();
     spiffs::begin();
     settings::begin();
     cli::begin();
@@ -33,11 +35,15 @@ void setup() {
     delay(10);
     com::update();
 
-    debugln("\n[~~~ WiFi Duck v1.0 Started! ~~~]");
+    debug("\n[~~~ WiFi Duck v");
+    debug(CURRENT_VERSION);
+    debugln(" Started! ~~~]");
     debugln("    __");
     debugln("___( o)>");
     debugln("\\ <_. )");
     debugln(" `---'   hjw\n");
+
+    com::startup();
 }
 
 void loop() {

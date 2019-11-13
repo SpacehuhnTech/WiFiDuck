@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include "version.h"
 
 /*! ===== DEBUG Settings ===== */
 // #define ENABLE_DEBUG
@@ -39,15 +40,14 @@
 #define WIFI_CHANNEL "1"
 
 /*! ========== Safty checks ========== */
-#if !defined(ENABLE_I2C) || !defined(ENABLE_SERIAL)
+#if !defined(ENABLE_I2C) && !defined(ENABLE_SERIAL)
   #define ENABLE_I2C
   #define I2C_SDA 4
   #define I2C_SCL 5
 #endif /* if !defined(ENABLE_I2C) || !defined(ENABLE_SERIAL) */
 
-#if defined(DUCKMCU) && !(DUCKMCU==ESP8266)
-#error You're compiling for the wrong board, mate!\
-    Select something with an ESP8266.
+#if !defined(ESP8266)
+#error You are compiling for the wrong board, mate! Select something with an ESP8266.
 #endif /* ifdef DUCKMCU && DUCKMCU!="ATMEGA32U4" */
 
 #if defined(ENABLE_DEBUG) && defined(ENABLE_SERIAL) && DEBUG_PORT == SERIAL_PORT

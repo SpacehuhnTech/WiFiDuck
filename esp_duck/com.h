@@ -22,6 +22,8 @@ namespace com {
     /*! Updates the communication module */
     void update();
 
+    void startup();
+
     /*! Transmits string */
     unsigned int send(char str);
     unsigned int send(const char* str);

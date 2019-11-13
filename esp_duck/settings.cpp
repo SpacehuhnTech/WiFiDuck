@@ -6,10 +6,11 @@
 
 #include "settings.h"
 
+
 #include "spiffs.h"
-#include "debug.h"
-#include "config.h"
 #include "eeprom.h"
+#include "config.h"
+#include "debug.h"
 
 #define SETTINGS_ADDRES 1
 #define SETTINGS_MAGIC_NUM 1234567891
@@ -22,28 +23,34 @@ namespace settings {
         char ssid[33];
         char password[65];
         char channel[5];
+        char startup[65];
     } settings_t;
 
     settings_t data;
 
     // ===== PUBLIC ====== //
     void begin() {
+        eeprom::begin();
         load();
     }
 
-    void load() {
-        eeprom::getObject(SETTINGS_ADDRES, data);
+    void load() {        
+        eeprom::getObject(SETTINGS_ADDRES, data);        
         if (data.magic_num != SETTINGS_MAGIC_NUM) reset();
     }
 
     void reset() {
+        debugln("Resetting Settings");
         data.magic_num = SETTINGS_MAGIC_NUM;
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setChannel(WIFI_CHANNEL);
+        setStartup("");
+        save();
     }
 
     void save() {
+        debugln("Saving Settings");
         eeprom::saveObject(SETTINGS_ADDRES, data);
     }
 
@@ -58,6 +65,9 @@ namespace settings {
         s += "\n";
         s += "channel=";
         s += getChannel();
+        s += "\n";
+        s += "startup=";
+        s += getStartup();
         s += "\n";
 
         return s;
@@ -80,6 +90,10 @@ namespace settings {
         return 1;
     }
 
+    const char* getStartup() {
+      return data.startup;
+    }
+
     void set(const char* name, const char* value) {
         if (strcmp(name, "ssid") == 0) {
             setSSID(value);
@@ -87,6 +101,8 @@ namespace settings {
             setPassword(value);
         } else if (strcmp(name, "channel") == 0) {
             setChannel(value);
+        } else if (strcmp(name, "startup") == 0) {
+            setStartup(value);
         }
     }
 
@@ -119,6 +135,17 @@ namespace settings {
             for (uint8_t i = 0; i<5; ++i) {
                 if (i < channel_len) data.channel[i] = channel[i];
                 else data.channel[i] = '\0';
+            }
+        }
+    }
+
+    void setStartup(const char* startup) {
+        if (startup && (strlen(startup) <= 64)) {
+            size_t startup_len = strlen(startup);
+
+            for (uint8_t i = 0; i<65; ++i) {
+                if (i < startup_len) data.startup[i] = startup[i];
+                else data.startup[i] = '\0';
             }
         }
     }

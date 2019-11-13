@@ -11,10 +11,12 @@ function load_settings() {
     var ssid = lines[0].split("=")[1];
     var password = lines[1].split("=")[1];
     var channel = lines[2].split("=")[1];
+	var startup = lines[3].split("=")[1];
 
     E("ssid").innerHTML = ssid;
     E("password").innerHTML = password;
     E("channel").innerHTML = channel;
+	E("startup").innerHTML = startup;
   });
 }
 
@@ -27,19 +29,25 @@ function ws_connected() {
 window.addEventListener("load", function() {
 
   E("edit_ssid").onclick = function() {
-    ws_send("set ssid " + prompt("SSID (1-32 chars)", E("ssid").innerHTML), function(msg) {
+    ws_send("set ssid \"" + prompt("SSID (1-32 chars)", E("ssid").innerHTML) + "\"", function(msg) {
       load_settings();
     });
   };
 
   E("edit_password").onclick = function() {
-    ws_send("set password " + prompt("Password (8-64 chars)", E("password").innerHTML), function(msg) {
+    ws_send("set password \"" + prompt("Password (8-64 chars)", E("password").innerHTML) + "\"", function(msg) {
       load_settings();
     });
   };
 
   E("edit_channel").onclick = function() {
     ws_send("set channel " + prompt("Channel (1-14)", E("channel").innerHTML), function(msg) {
+      load_settings();
+    });
+  };  
+  
+  E("remove_startup").onclick = function() {
+    ws_send("set startup \"\"", function(msg) {
       load_settings();
     });
   };
