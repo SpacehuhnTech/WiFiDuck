@@ -20,6 +20,7 @@ namespace settings {
     const char* getSSID();
     const char* getPassword();
     const char* getChannel();
+    const char* getStartup();
 
     int getChannelNum();
 
@@ -28,4 +29,5 @@ namespace settings {
     void setSSID(const char* ssid);
     void setPassword(const char* password);
     void setChannel(const char* channel);
+    void setStartup(const char* startup);
 }
