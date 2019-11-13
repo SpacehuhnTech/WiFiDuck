@@ -145,3 +145,12 @@ function ws_init() {
   if (ws_queue_interval) clearInterval(ws_queue_interval);
   ws_queue_interval = setInterval(ws_msg_queue_update, 1);
 }
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+window.onload = function() {
+  document.getElementById("version").innerHTML = getCookie("CURRENT_VERSION");
+};

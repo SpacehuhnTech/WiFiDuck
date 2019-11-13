@@ -30,6 +30,7 @@ namespace settings {
 
     // ===== PUBLIC ====== //
     void begin() {
+        eeprom::begin();
         load();
     }
 
