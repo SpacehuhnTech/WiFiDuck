@@ -58,9 +58,7 @@ namespace com {
                         start_parser         = true;
                         ongoing_transmission = false;
                     } else {
-                        if (c == '\n') debug("\\n");
-                        else if (c == '\r') debug("\\r");
-                        else debug(c);
+                        debug(c);
                         buffer.data[buffer.len] = c;
                         ++buffer.len;
                     }
