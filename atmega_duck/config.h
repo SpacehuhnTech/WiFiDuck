@@ -30,9 +30,9 @@
 #define PACKET_SIZE 32
 
 /*! ===== LED Settings ===== */
-// #define ENABLE_LED
-// #define LED_PIN 7
-// #define NEOPIXEL
+ #define ENABLE_LED
+ #define LED_PIN 7
+ #define NEOPIXEL
 #define NEOPIXEL_NUM 1
 
 /*! ===== Parser Settings ===== */
