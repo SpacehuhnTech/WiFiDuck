@@ -62,3 +62,6 @@
 #if defined(ENABLE_I2C) && defined(ENABLE_SERIAL) && (I2C_SDA==1 || I2C_SDA==3 || I2C_SCL==1 || I2C_SCL==3)
 #error I2C pins overlap with RX and TX pins. Disable serial debugging or change the I2C pins.
 #endif /* if !defined(ENABLE_I2C) && !defined(ENABLE_I2C) */
+
+/*! ========== Auto Verstion (Do not change) ========== */
+#define CURRENT_VERSION 1.0.0.1

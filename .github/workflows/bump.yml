@@ -1,0 +1,17 @@
+name: Increment Version
+on: [push]
+
+jobs:
+  Version-check:
+    runs-on: ubuntu-latest
+    name: Bump-N-Tag Version
+    steps:
+    - uses: actions/checkout@master
+    - name: Increment version
+      id: version   
+      uses: jLynx/Bump-N-Tag-Version@master
+      with:
+        file_name: 'esp_duck/config.h'
+        tag_version: "false"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
