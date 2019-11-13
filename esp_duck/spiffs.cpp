@@ -183,7 +183,7 @@ namespace spiffs {
     size_t streamReadUntil(char* buf, char delimiter, size_t max_len) {
         if (streamFile) {
             size_t i;
-            char   c;
+            char   c = 'x';
 
             for (i = 0; i<max_len; ++i) {
                 if ((c == delimiter) || !streamFile.available() || (i == max_len-1)) {
