@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include "version.h"
 
 /*! ===== DEBUG Settings ===== */
 // #define ENABLE_DEBUG
