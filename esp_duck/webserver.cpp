@@ -25,7 +25,7 @@ void reply(AsyncWebServerRequest* request, int code, const char* type, const uin
         request->beginResponse_P(code, type, data, len);
 
     response->addHeader("Content-Encoding", "gzip");
-    response->addHeader("Set-Cookie", "CURRENT_VERSION=" + String(CURRENT_VERSION));
+    response->addHeader("Set-Cookie", "VERSION=" + String(VERSION));
     request->send(response);
 }
 

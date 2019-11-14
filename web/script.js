@@ -152,5 +152,5 @@ function getCookie(name) {
   if (parts.length == 2) return parts.pop().split(";").shift();
 }
 window.onload = function() {
-  document.getElementById("version").innerHTML = getCookie("CURRENT_VERSION");
+  document.getElementById("version").innerHTML = getCookie("VERSION");
 }; 

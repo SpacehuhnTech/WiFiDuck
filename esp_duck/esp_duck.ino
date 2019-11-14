@@ -34,7 +34,7 @@ void setup() {
     com::update();
 
     debug("\n[~~~ WiFi Duck v");
-    debug(CURRENT_VERSION);
+    debug(VERSION);
     debugln(" Started! ~~~]");
     debugln("    __");
     debugln("___( o)>");
