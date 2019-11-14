@@ -52,7 +52,7 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
 
 **This is a tool.**  
 **It's neither good nor bad.**  
-**Use it to do good, to study and to test.**  
+**Use it to do good, to study, and to test.**  
 **Never use it to do harm or create damage!**  
 
 **The continuation of this project counts on you!**  
@@ -65,7 +65,7 @@ automate tasks or execute software to gain full access. All in the matter of sec
 This is all possible because keyboards are trusted devices,
 you plug it in and can start typing right away!  
 A human might not type very fast,
-but an automated device like this press of hundreds of keys per second.  
+but an automated device like this presses of hundreds of keys per second.  
 
 This open source project aims to provide a user-friendly tool to learn about such
 keystroke injection attacks.  
@@ -76,7 +76,7 @@ it's easy to get started right away!
 
 You can simply plug it in, connect to its Wi-Fi network and manage all scripts
 from within the web interface.
-You don't need to install an App, you don't need to login and you don't need to compile or flash anything.
+You don't need to install an app; you don't need to log in, and you don't need to compile or flash anything.
 Your scripts are saved on the device itself, so you don't need a micro SD card either.  
 
 ## Changes
@@ -166,7 +166,7 @@ You can update the ESP8266 over the air and flash the Atmega32u4 via Arduino,
 all while enclosed in its neat little case.  
 
 If you wish to develop your own software or help improve this one,
-the 8bit DIP-switch makes it easy for you to access the Atmega32u4 or ESP8266 independently.  
+the 8-bit DIP-switch makes it easy for you to access the Atmega32u4 or ESP8266 independently.  
 
 To flash it see [Flash Software](#flash-software).
 Or select `Arduino Leonardo` for the Atmega32u4
@@ -182,8 +182,8 @@ and `NodeMCU 1.0 (ESP-12E Module)` for the ESP8266.
 
 ### Preparations
 
-1. Download and install [Arduino IDE](https://www.arduino.cc/en/main/software).
-2. Start Arduino IDE, go to `File` > `Preferences`.
+1. Download and install the [Arduino IDE](https://www.arduino.cc/en/main/software).
+2. Start the Arduino IDE, go to `File` > `Preferences`.
 3. At *Additional Board Manager ULRs* enter `https://raw.githubusercontent.com/spacehuhn/hardware/master/wifiduck/package_wifiduck_index.json`. You can add multiple URLs, separating them with commas.
 4. Go to `Tools` > `Board` > `Board Manager`, search for `wifi duck` and install `WiFi Duck AVR Boards` and `WiFi Duck ESP8266 Boards`.
 5. [Download](https://github.com/spacehuhn/WiFiDuck/archive/master.zip) and extract this repository or [git clone](https://github.com/spacehuhn/WiFiDuck.git) it.
@@ -195,9 +195,9 @@ Here are links to drivers of the 2 most used UART chips on ESP8266 development b
 
 ### Flash Atmega32u4
 
-1. Open `atmegaduck/atmega_duck.ino` with Arduino IDE.
-2. Under `Tools` > `Board` in the `WiFi Duck AVR` section, select your board.
-For example `Sparkfun Pro Micro`.
+1. Open `atmegaduck/atmega_duck.ino` with the Arduino IDE.
+2. Under `Tools` > `Board` in the `WiFi Duck AVR` section, select your board;
+for example, `Sparkfun Pro Micro`.
 3. Connect the Atmega32u4 board via USB and select its port under `Tools` > `Port`.
 4. [Optional] Under `Tools` you can enable the LED and set its pin.
 You can also change the USB ID to make it appear as a certain type of keyboard.
@@ -205,7 +205,7 @@ You can also change the USB ID to make it appear as a certain type of keyboard.
 
 ### Flash ESP8266
 
-1. Open `esp_duck/esp_duck.ino` with Arduino IDE.
+1. Open `esp_duck/esp_duck.ino` with the Arduino IDE.
 2. Under `Tools` > `Board` in the `WiFi Duck ESP8266` section, select your board.
 For example `NodeMCU 1.0 (ESP-12E Module)`.
 3. Connect the ESP8266 board via USB and select its port under `Tools` > `Port`.
@@ -216,12 +216,12 @@ and you just want to update it, you don't have to connect it via USB.
 You can update it over the air! Simply connect to the Wi-Fi network its hosting
 (default SSID and password is `wifiduck`).  
 In Arduino under `Tools` > `Port` you should now see a network port.
-Select it and press Upload.  
+Select it and press `Upload`.  
 
 ### Unbrick Atmega32u4
 
 If you flashed your Atmega32u4 board with the wrong bootloader,
-it no longer appears in the port selection after you connected it.  
+it will no longer appear in the port selection after you connect it.  
 To solve this, you need to:
 
 1. Connect the reset pin `RST` to ground `GND`.
@@ -229,7 +229,7 @@ Preferably with a jumper wires, because you need to be able to disconnect it qui
 2. Open a sketch, `atmegaduck/atmega_duck.ino` or an empty sketch.  
 **Make sure to have the correct board selected under `Tools` > `Board`!**
 3. Connect the board with the wire still connected.
-4. Press Upload and as soon as you see `Compiling...` turn to `Uploading...`, disconnect the wire.  
+4. Press `Upload` and as soon as you see `Compiling...` turn to `Uploading...`, disconnect the wire.  
 
 Now it should flash the sketch and the correct bootloader.  
 
@@ -238,7 +238,7 @@ Now it should flash the sketch and the correct bootloader.
 1. Plug it in.
 2. Connect to the WiFi network `wifiduck` with the password `wifiduck`.
 3. Open a browser and visit `192.168.4.1`.
-4. Click on Settings in the top right corner.
+4. Click on `Settings` in the top right corner.
 5. Change the SSID and password.
 6. Go back to write, save and run your first Ducky Script!
 
