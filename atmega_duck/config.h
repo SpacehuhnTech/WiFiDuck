@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define VERSION "1.0.0"
+
 /* ===== Serial Bridge ===== */
 // #define BRIDGE_ENABLE
 // #define BRIDGE_PORT Serial1
