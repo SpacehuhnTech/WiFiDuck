@@ -14,8 +14,9 @@
 #include "debug.h"
 
 // ! Communication request codes
-#define REQ_SOT 0x01 // !< Start of transmission
-#define REQ_EOT 0x04 // !< End of transmission
+#define REQ_SOT 0x01     // !< Start of transmission
+#define REQ_VERSION 0x02 // !< Request current version
+#define REQ_EOT 0x04     // !< End of transmission
 
 // ! Communication response codes
 #define RES_OK 0x00
