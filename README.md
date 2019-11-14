@@ -18,7 +18,11 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
 
 <p align="center">
 <img alt="running example script" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/showcase.gif">
+<br>
+<br>
+<img alt="running example script" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/usage.png">
 </p>
+
 
 ## Overview
 
