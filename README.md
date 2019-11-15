@@ -157,8 +157,8 @@ If you like to add a Neopixel (WS2812b) LED:
 
 To make the DIY process easier, I designed a small PCB.  
 
-Pro Micro + Wemos d1 mini: https://easyeda.com/Spacehuhn/wifi-duck
-Pro Micro + NodeMCU: https://easyeda.com/Spacehuhn/diy-wifi-duck-pro-micro-nodemcu
+* Pro Micro + Wemos d1 mini: https://easyeda.com/Spacehuhn/wifi-duck
+* Pro Micro + NodeMCU: https://easyeda.com/Spacehuhn/diy-wifi-duck-pro-micro-nodemcu
 
 You solder a Pro Micro board on one side and a Wemos d1 mini
 or NodeMCU board (depending on the PCB) on the other side.  
