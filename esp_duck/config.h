@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define VERSION "1.0.0"
+
 /*! ===== DEBUG Settings ===== */
 // #define ENABLE_DEBUG
 // #define DEBUG_PORT Serial

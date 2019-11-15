@@ -22,7 +22,8 @@ void setup() {
     led::begin();
     com::begin();
 
-    debugln("Started!");
+    debug("Started! ");
+    debugln(VERSION);
 }
 
 // ===== LOOOP ===== //
