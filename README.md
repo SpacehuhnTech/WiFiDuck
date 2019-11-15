@@ -32,6 +32,7 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
 - [Hardware](#hardware)
   - [Supported Boards](#supported-boards)
   - [Connections](#connections)
+  - [PCB](#pcb)
   - [DSTIKE WiFi Duck](#dstike-wifi-duck)
 - [Flash Software](#flash-software)
   - [Preparations](#preparations)
@@ -94,7 +95,7 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 ## Hardware
 
 This tool requires following hardware:  
-* An Atmega32u4 based board (for example: Arduino Leonardo or Arduino Pro Micro)  
+* An Atmega32u4 based board (for example: Arduino Leonardo or Pro Micro)  
 * An ESP8266 or ESP8285 (for example NodeMCU or Wemos d1 mini)  
 * [Optional] A single Neopixel LED (WS2812b)  
 
@@ -148,7 +149,24 @@ If you like to add a Neopixel (WS2812b) LED:
 | `5V` alias `VCC` | `5V` alias `VCC` |
 | `GND` | `GND` |
 
-* The Data pin can be changed later on in the software, pin 7 is just an example.  
+\* The Data pin can be changed later on in the software, pin 7 is just an example.  
+
+![Example of a DIY build using a Wemos d1 mini, a Pro Micro and a Neopixel LED](img/diy_example.jpg)
+
+### PCB
+
+To make the DIY process easier, I designed a small PCB.  
+
+Pro Micro + Wemos d1 mini: https://easyeda.com/Spacehuhn/wifi-duck
+Pro Micro + NodeMCU: https://easyeda.com/Spacehuhn/diy-wifi-duck-pro-micro-nodemcu
+
+You solder a Pro Micro board on one side and a Wemos d1 mini
+or NodeMCU board (depending on the PCB) on the other side.  
+That's it.  
+You don't even have to solder all pins,
+just the ones mentioned in [Connections](#connections), excluding the LED.
+
+![Preview of Pro Micro + Wemos d1 mini PCB](img/pcbs.jpg)
 
 ### DSTIKE WiFi Duck
 
