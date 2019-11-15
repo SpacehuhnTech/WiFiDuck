@@ -41,12 +41,13 @@ namespace com {
         if (stream.available()) {
             debug("RECEIVED ");
 
-            if ((stream.available() == 1) && (stream.peek() == REQ_VERSION)) {
-                stream.read();
-                stream.print(VERSION);
-                return false;
-            }
-
+            /*
+                        if ((stream.available() == 1) && (stream.peek() == REQ_VERSION)) {
+                            stream.read();
+                            stream.print(VERSION);
+                            return false;
+                        }
+             */
             // ! Skip bytes
             while (stream.available() && !ongoing_transmission) {
                 if (stream.read() == REQ_SOT) {
