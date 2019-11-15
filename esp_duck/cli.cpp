@@ -20,6 +20,7 @@ extern "C" {
 #include "duckscript.h"
 #include "settings.h"
 #include "com.h"
+#include "config.h"
 
 namespace cli {
     // ===== PRIVATE ===== //
@@ -80,6 +81,16 @@ namespace cli {
         cli.addCommand("ram", [](cmd* c) {
             size_t freeRam = system_get_free_heap_size();
             String res     = String(freeRam) + " bytes available";
+            print(res);
+        });
+
+        /**
+         * \brief Create version command
+         *
+         * Prints the current version number
+         */
+        cli.addCommand("version", [](cmd* c) {
+            String res = "Version " + String(VERSION);
             print(res);
         });
 
