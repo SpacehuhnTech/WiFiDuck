@@ -167,6 +167,7 @@ You don't even have to solder all pins,
 just the ones mentioned in [Connections](#connections), excluding the LED.
 
 ![Preview of Pro Micro + Wemos d1 mini PCB](img/pcbs.jpg)
+![Soldered PCB](img/pcbs_soldered.jpg)
 
 ### DSTIKE WiFi Duck
 
