@@ -33,7 +33,7 @@
 // #define ENABLE_LED
 // #define LED_PIN 7
 // #define NEOPIXEL
-#define NEOPIXEL_NUM 1
+// #define NEOPIXEL_NUM 1
 
 /*! ===== Parser Settings ===== */
 #define CASE_SENSETIVE false
@@ -62,5 +62,9 @@
 #if defined(BRIDGE_ENABLE) && (LED_PIN==BRIDGE_RST || LED_PIN==BRIDGE_0 || LED_PIN==BRIDGE_SWITCH)
 #error LED pin overlaps with serial bridge pins, disable serial bridge or change the LED pin!
 #endif /* if defined(BRIDGE_ENABLE) && (LED_PIN==BRIDGE_RST || LED_PIN==BRIDGE_0) */
+
+#if defined(NEOPIXEL) && !defined(NEOPIXEL_NUM)
+#define NEOPIXEL_NUM 1
+#endif /* if defined(NEOPIXEL) && !defined(NEOPIXEL_NUM) */
 
 #endif /* if defined(NEOPIXEL) */
