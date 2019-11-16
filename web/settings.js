@@ -11,12 +11,12 @@ function load_settings() {
     var ssid = lines[0].split("=")[1];
     var password = lines[1].split("=")[1];
     var channel = lines[2].split("=")[1];
-	var startup = lines[3].split("=")[1];
+    var autorun = lines[3].split("=")[1];
 
     E("ssid").innerHTML = ssid;
     E("password").innerHTML = password;
     E("channel").innerHTML = channel;
-	E("startup").innerHTML = startup;
+    E("autorun").innerHTML = autorun;
   });
 }
 
@@ -45,9 +45,9 @@ window.addEventListener("load", function() {
       load_settings();
     });
   };
-  
-  E("remove_startup").onclick = function() {
-    ws_send("set startup \"\"", function(msg) {
+
+  E("disable_autorun").onclick = function() {
+    ws_send("set autorun \"\"", function(msg) {
       load_settings();
     });
   };

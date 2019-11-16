@@ -59,11 +59,6 @@ function ws_send_run(fileName) {
   start_status_interval();
 }
 
-function ws_send_startup(fileName) {
-  ws_send("set startup \"" + fixFileName(fileName) + "\"", log_ws);
-  start_status_interval();
-}
-
 function ws_send_stop(fileName) {
   var cmd = "stop";
 
@@ -131,7 +126,6 @@ function ws_send_ls() {
         tableHTML += "<td>\n";
         tableHTML += "<button class=\"primary\" onclick=\"ws_send_stream('" + fileName + "')\">edit</button>\n";
         tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button>\n";
-        tableHTML += "<button class=\"warn\" onclick=\"ws_send_startup('" + fileName + "')\">Startup</button></td>\n";
         tableHTML += "</tr>\n";
       }
     }
@@ -215,6 +209,10 @@ function ws_send_remove(fileName) {
   ws_send_mem_ls();
 }
 
+function ws_send_autorun(fileName) {
+  ws_send("set autorun \"" + fixFileName(fileName) + "\"", log_ws);
+}
+
 // ===== Startup ===== //
 window.addEventListener("load", function() {
 
@@ -261,6 +259,10 @@ window.addEventListener("load", function() {
 
   E("editor").onkeyup = function() {
     E("editorinfo").innerHTML = "unsaved changes";
+  }
+
+  E("editorAutorun").onclick = function() {
+    ws_send_autorun(getEditorFileName());
   }
 
   ws_init();

@@ -39,7 +39,7 @@ void setup() {
     debugln("\\ <_. )");
     debugln(" `---'   hjw\n");
 
-    com::startup();
+    duckscript::run(settings::getAutorun());
 }
 
 void loop() {

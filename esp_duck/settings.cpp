@@ -22,7 +22,7 @@ namespace settings {
         char ssid[33];
         char password[65];
         char channel[5];
-        char startup[65];
+        char autorun[65];
     } settings_t;
 
     settings_t data;
@@ -63,8 +63,8 @@ namespace settings {
         s += "channel=";
         s += getChannel();
         s += "\n";
-        s += "startup=";
-        s += getStartup();
+        s += "autorun=";
+        s += getAutorun();
         s += "\n";
 
         return s;
@@ -87,8 +87,8 @@ namespace settings {
         return 1;
     }
 
-    const char* getStartup() {
-      return data.startup;
+    const char* getAutorun() {
+        return data.autorun;
     }
 
     void set(const char* name, const char* value) {
@@ -98,8 +98,8 @@ namespace settings {
             setPassword(value);
         } else if (strcmp(name, "channel") == 0) {
             setChannel(value);
-        } else if (strcmp(name, "startup") == 0) {
-            setStartup(value);
+        } else if (strcmp(name, "autorun") == 0) {
+            setAutorun(value);
         }
     }
 
@@ -136,13 +136,13 @@ namespace settings {
         }
     }
 
-    void setStartup(const char* startup) {
-        if (startup && (strlen(startup) <= 64)) {
-            size_t startup_len = strlen(startup);
+    void setAutorun(const char* autorun) {
+        if (autorun && (strlen(autorun) <= 64)) {
+            size_t autorun_len = strlen(autorun);
 
             for (uint8_t i = 0; i<65; ++i) {
-                if (i < startup_len) data.startup[i] = startup[i];
-                else data.startup[i] = '\0';
+                if (i < autorun_len) data.autorun[i] = autorun[i];
+                else data.autorun[i] = '\0';
             }
         }
     }

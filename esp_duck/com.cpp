@@ -6,12 +6,11 @@
  */
 
 #include "com.h"
+
 #include <Wire.h> // Arduino i2c
+
 #include "config.h"
 #include "debug.h"
-#include "duckscript.h"
-#include "spiffs.h"
-#include "settings.h"
 
 // ! Communication request codes
 #define REQ_SOT 0x01 // !< Start of transmission
@@ -267,18 +266,5 @@ namespace com {
 
     bool connected() {
         return serial_connection || i2c_connection;
-    }
-
-    void startup() {        
-        if(strlen(settings::getStartup()) == 0)
-          return;
-        debugln("Startup Script");
-        if(spiffs::exists(settings::getStartup()))
-          duckscript::run(settings::getStartup());
-        else
-        {
-          debug("Could not find the file: ");
-          debugln(settings::getStartup());
-        }
     }
 }
