@@ -36,7 +36,7 @@ function get_editor_content() {
 
 // ! Update status until it's no longer "running"
 function check_status() {
-  if (current_status.includes("running"))
+  if (current_status.includes("running") || current_status.includes("saving"))
     ws_update_status();
   else
     stop_status_interval();
