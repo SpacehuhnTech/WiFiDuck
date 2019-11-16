@@ -89,7 +89,7 @@ function update_file_list() {
 
       tableHTML += "<tr>\n";
       tableHTML += "<th>File</th>\n";
-      tableHTML += "<th>Size</th>\n";
+      tableHTML += "<th>Byte</th>\n";
       tableHTML += "<th>Actions</th>\n";
       tableHTML += "</tr>\n";
       tableHTML += "</thead>\n";
