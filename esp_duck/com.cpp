@@ -10,7 +10,6 @@
 #include <Wire.h> // Arduino i2c
 
 #include "config.h"
-
 #include "debug.h"
 
 // ! Communication request codes

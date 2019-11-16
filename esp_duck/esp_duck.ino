@@ -40,6 +40,8 @@ void setup() {
     debugln("___( o)>");
     debugln("\\ <_. )");
     debugln(" `---'   hjw\n");
+
+    duckscript::run(settings::getAutorun());
 }
 
 void loop() {
