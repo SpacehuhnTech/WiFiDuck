@@ -131,6 +131,14 @@ footer {
   margin-bottom: 3em;
 }
 
+#editor-primary-buttons {
+  float: right;
+}
+
+#editor-primary-buttons p {
+  text-align: right;
+}
+
 /* ===== CHECKBOX ===== */
 /* Customize the label (the container) */
 .checkBoxContainer {
@@ -372,9 +380,9 @@ nav a:hover {
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;
   height: 38px;
-  padding: 0 20px;
+  padding: 0 18px;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 38px;
   letter-spacing: .1rem;
