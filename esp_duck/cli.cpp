@@ -258,7 +258,7 @@ namespace cli {
 
             duckscript::stop(arg.getValue());
 
-            String response = "> stopped \"" + arg.getValue() + "\"";
+            String response = "> stopped " + arg.getValue();
             print(response);
         });
 

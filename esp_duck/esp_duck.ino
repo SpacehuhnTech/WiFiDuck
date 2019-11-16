@@ -25,7 +25,7 @@ void setup() {
     webserver::begin();
 
     com::onDone(duckscript::nextLine);
-    com::onError(duckscript::stop);
+    com::onError(duckscript::stopAll);
     com::onRepeat(duckscript::repeat);
 
     if (spiffs::freeBytes() > 0) com::send(MSG_STARTED);
