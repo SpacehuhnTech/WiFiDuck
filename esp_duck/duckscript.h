@@ -14,7 +14,7 @@ namespace duckscript {
 
     void nextLine();
     void repeat();
-    void stop();
+    void stopAll();
     void stop(String fileName);
 
     bool isRunning();

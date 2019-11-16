@@ -48,19 +48,25 @@
         <h2>Editor <a class="reload" id="editorReload">&#x21bb;</a></h2>
 
         <label>Filename:</label>
-        <input type="text" class="smooth" value="/example" id="editorFile">
+        <input type="text" class="smooth" value="/" id="editorFile">
 
-        <textarea class="smooth" id="editor">REM Hello World!</textarea>
+        <textarea class="smooth" id="editor"></textarea>
 
-        <button class="danger" id="editorDelete">delete</button>
-        <button class="primary" id="editorDownload">download</button>
-        <button class="warn" id="editorStop">stop</button>
-        <button class="warn" id="editorRun">run</button>
-        <button class="success" id="editorSave">save</button>
-        <br>
-        <button class="primary" id="editorAutorun">Enable autorun</button>
+        <div id="editor-primary-buttons">
+          <p>
+            <button class="warn" id="editorRun">run</button>
+            <button class="success" id="editorSave">save</button>
+          </p>
+        </div>
 
         <p id="editorinfo">saved</p>
+
+        <button class="danger" id="editorDelete">delete</button>
+        <button class="warn" id="editorStop">stop</button>
+        <br>
+        <button class="primary" id="editorDownload">download</button>
+        <button class="primary" id="editorAutorun">Enable autorun</button>
+
 
         <br>
         <hr>

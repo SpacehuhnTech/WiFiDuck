@@ -68,11 +68,11 @@ input[type="text"] {
 
 code {
   background: #ccc;
-  padding: .3em;
+  padding: 3px;
   border-radius: 3px;
   word-break: keep-all !important;
   color: #000;
-  line-height: 1.8rem;
+  line-height: 24px;
 }
 
 .warn {
@@ -129,6 +129,14 @@ footer {
   text-align: center;
   margin-top: 3em;
   margin-bottom: 3em;
+}
+
+#editor-primary-buttons {
+  float: right;
+}
+
+#editor-primary-buttons p {
+  text-align: right;
 }
 
 /* ===== CHECKBOX ===== */
@@ -265,10 +273,6 @@ table {
   margin-bottom: 2em;
 }
 
-td {
-  min-width: 180px;
-}
-
 th {
   word-break: break-word;
 }
@@ -279,8 +283,11 @@ th, td {
   border-bottom: 1px solid #5d5d5d;
 }
 
-@media only screen and (max-width: 760px),
-(min-device-width: 768px) and (max-device-width: 1024px) {
+#ducky-functions-table td {
+  min-width: 180px;
+}
+
+@media only screen and (max-width: 768px), (min-device-width: 768px) and (max-device-width: 1024px) {
 
   /* Force table to not be like tables anymore */
   #ducky-functions-table table, #ducky-functions-table thead, #ducky-functions-table tbody, #ducky-functions-table th, #ducky-functions-table td, #ducky-functions-table tr {

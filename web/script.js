@@ -27,12 +27,13 @@ function download_txt(fileName, fileContent) {
 }
 
 function fixFileName(fileName) {
-  if (fileName.length > 0 && fileName[0] != '/') {
-    fileName = '/' + fileName;
+  if (fileName.length > 0) {
+    if (fileName[0] != '/') {
+      fileName = '/' + fileName;
+    }
+
+    fileName = fileName.replace(/ /g, '\-');
   }
-
-  fileName = fileName.replace(/ /g, '\-');
-
   return fileName;
 }
 
