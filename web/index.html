@@ -62,6 +62,183 @@
 
         <p id="editorinfo">saved</p>
 
+        <br>
+        <hr>
+        <br>
+
+        <h3>Ducky Script</h3>
+
+        <h4>Functions</h4>
+        <table id="ducky-functions-table">
+          <thead>
+            <tr>
+              <th scope="col">Command</th>
+              <th scope="col">Example</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>REM</code></td>
+              <td><code>REM Hello World!</code></td>
+              <td>Comment</td>
+            </tr>
+            <tr>
+              <td><code>DEFAULTDELAY</code> or <code>DEFAULT_DELAY</code></td>
+              <td><code>DEFAULTDELAY 200</code></td>
+              <td>Time in ms between every command</td>
+            </tr>
+            <tr>
+              <td><code>DELAY</code></td>
+              <td><code>DELAY 1000</code></td>
+              <td>Delay in ms</td>
+            </tr>
+            <tr>
+              <td><code>STRING</code></td>
+              <td><code>STRING Hello World!</code></td>
+              <td>Types the following string</td>
+            </tr>
+            <tr>
+              <td><code>REPEAT</code> or <code>REPLAY</code></td>
+              <td><code>REPEAT 3</code></td>
+              <td>Repeats the last command n times</td>
+            </tr>
+            <tr>
+              <td><code>LOCALE</code></td>
+              <td><code>LOCALE DE</code></td>
+              <td>Sets the keyboard layout. Currently supported: <code>DE</code>, <code>GB</code>, <code>US</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>KEYCODE</code></td>
+              <td><code>KEYCODE 0x02 0x04</code></td>
+              <td>Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal</td>
+            </tr>
+            <tr>
+              <td><code>LED</code></td>
+              <td><code>LED 40 20 10</code></td>
+              <td>Changes the color of the LED in decimal RGB values (0-255)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Standard Keys</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>a</code> - <code>z</code></td>
+            </tr>
+            <tr>
+              <td><code>A</code> - <code>Z</code></td>
+            </tr>
+            <tr>
+              <td><code>0</code> - <code>9</code></td>
+            </tr>
+            <tr>
+              <td><code>F1</code> - <code>F12</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Modifier Keys</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>CTRL</code> or <code>CONTROL</code></td>
+            </tr>
+            <tr>
+              <td><code>SHIFT</code></td>
+            </tr>
+            <tr>
+              <td><code>ALT</code></td>
+            </tr>
+            <tr>
+              <td><code>WINDOWS</code> or <code>GUI</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Other Keys</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Key</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ENTER</code></td>
+            </tr>
+            <tr>
+              <td><code>MENU</code> or <code>APP</code></td>
+            </tr>
+            <tr>
+              <td><code>DELETE</code></td>
+            </tr>
+            <tr>
+              <td><code>HOME</code></td>
+            </tr>
+            <tr>
+              <td><code>INSERT</code></td>
+            </tr>
+            <tr>
+              <td><code>PAGEUP</code></td>
+            </tr>
+            <tr>
+              <td><code>PAGEDOWN</code></td>
+            </tr>
+            <tr>
+              <td><code>UP</code> or <code>UPARROW</code></td>
+            </tr>
+            <tr>
+              <td><code>DOWN</code> or <code>DOWNARROW</code></td>
+            </tr>
+            <tr>
+              <td><code>LEFT</code> or <code>LEFTARROW</code></td>
+            </tr>
+            <tr>
+              <td><code>RIGHT</code> or <code>RIGHTARROW</code></td>
+            </tr>
+            <tr>
+              <td><code>TAB</code></td>
+            </tr>
+            <tr>
+              <td><code>END</code></td>
+            </tr>
+            <tr>
+              <td><code>ESC</code> or <code>ESCAPE</code></td>
+            </tr>
+            <tr>
+              <td><code>SPACE</code></td>
+            </tr>
+            <tr>
+              <td><code>PAUSE or BREAK</code></td>
+            </tr>
+            <tr>
+              <td><code>CAPSLOCK</code></td>
+            </tr>
+            <tr>
+              <td><code>NUMLOCK</code></td>
+            </tr>
+            <tr>
+              <td><code>PRINTSCREEN</code></td>
+            </tr>
+            <tr>
+              <td><code>SCROLLLOCK</code></td>
+            </tr>
+          </tbody>
+        </table>
+
         <footer>
           <a href="settings.html">Settings</a> |
           <a href="terminal.html">Terminal</a> |

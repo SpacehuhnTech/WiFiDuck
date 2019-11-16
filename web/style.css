@@ -66,6 +66,15 @@ input[type="text"] {
   border: none;
 }
 
+code {
+  background: #ccc;
+  padding: .3em;
+  border-radius: 3px;
+  word-break: keep-all !important;
+  color: #000;
+  line-height: 1.8rem;
+}
+
 .warn {
   color: #ffc107;
 }
@@ -257,7 +266,7 @@ table {
 }
 
 td {
-  word-break: break-all;
+  min-width: 180px;
 }
 
 th {
@@ -270,27 +279,63 @@ th, td {
   border-bottom: 1px solid #5d5d5d;
 }
 
-@media screen and (max-width: 820px) {
+@media only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px) {
 
-  #apTable .id,
-  #apTable .enc,
-  #apTable .mac,
-  #apTable .vendor,
-  #apTable .name,
-  #stTable .id,
-  #stTable .pkts,
-  #stTable .lastseen,
-  #stTable .mac,
-  #nTable .id,
-  #nTable .vendor,
-  #nTable .ap,
-  #nTable .mac,
-  #ssidTable .id {
-    display: none;
+  /* Force table to not be like tables anymore */
+  #ducky-functions-table table, #ducky-functions-table thead, #ducky-functions-table tbody, #ducky-functions-table th, #ducky-functions-table td, #ducky-functions-table tr {
+    display: block;
   }
 
-  .meter_background {
-    min-width: 45px;
+  /* Hide table headers (but not display: none;, for accessibility) */
+  #ducky-functions-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  #ducky-functions-table tr {
+    border: none;
+  }
+
+  #ducky-functions-table tr:nth-child(odd) {
+    background: #2f3136;
+    border-radius: 4px;
+  }
+
+  #ducky-functions-table td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    padding-left: 120px;
+    line-height: 1.8rem;
+  }
+
+  #ducky-functions-table td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 120px;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+
+  /*
+    Label the data
+    */
+  #ducky-functions-table td:nth-of-type(1):before {
+    content: "Command";
+  }
+
+  #ducky-functions-table td:nth-of-type(2):before {
+    content: "Example";
+  }
+
+  #ducky-functions-table td:nth-of-type(3):before {
+    content: "Description";
   }
 }
 
