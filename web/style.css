@@ -380,9 +380,9 @@ nav a:hover {
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;
   height: 38px;
-  padding: 0 18px;
+  padding: 0 20px;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 38px;
   letter-spacing: .1rem;
