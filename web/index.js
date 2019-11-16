@@ -129,7 +129,10 @@ function ws_send_ls() {
       var data = lines[i].split(" ");
       var fileName = data[0];
       var fileSize = data[1];
+
       if (fileName.length > 0) {
+        if (i == 0) ws_send_stream(fileName);
+
         tableHTML += "<tr>\n";
         tableHTML += "<td>" + fileName + "</td>\n";
         tableHTML += "<td>" + fileSize + "</td>\n";
