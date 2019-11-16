@@ -43,6 +43,10 @@ function saveFile() {
   E("editorinfo").innerHTML = "saved";
 }
 
+function append(str) {
+  E("editor").value += str;
+}
+
 // ===== WebSocket Actions ===== //
 function check_status() {
   if (current_status.includes("running")) {
@@ -272,6 +276,13 @@ window.addEventListener("load", function() {
   E("editorAutorun").onclick = function() {
     if (confirm("Run this script automatically on startup?\nYou can disable it in the settings."))
       ws_send_autorun(getEditorFileName());
+  }
+
+  var codes = document.querySelectorAll("code");
+  for (var i = 0; i < codes.length; i++) {
+    codes[i].addEventListener("click", function() {
+      append(this.innerHTML + " \n");
+    });
   }
 
   ws_init();
