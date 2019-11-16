@@ -8,6 +8,7 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
+#include <DNSServer.h>
 #include <ArduinoOTA.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
@@ -34,9 +35,9 @@ namespace webserver {
     AsyncWebSocket   ws("/ws");
     AsyncEventSource events("/events");
 
-    const char* host_name = "wifiduck";
-
     AsyncWebSocketClient* currentClient { nullptr };
+
+    DNSServer dnsServer;
 
     bool reboot = false;
 
@@ -79,7 +80,8 @@ namespace webserver {
     // ===== PUBLIC ===== //
     void begin() {
         // Access Point
-        WiFi.hostname(host_name);
+        WiFi.hostname(HOSTNAME);
+
         // WiFi.mode(WIFI_AP_STA);
         WiFi.softAP(settings::getSSID(), settings::getPassword(), settings::getChannelNum());
         debugf("Started Access Point \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
@@ -114,7 +116,7 @@ namespace webserver {
             else if (error == OTA_RECEIVE_ERROR) events.send("Recieve Failed", "ota");
             else if (error == OTA_END_ERROR) events.send("End Failed", "ota");
         });
-        ArduinoOTA.setHostname(host_name);
+        ArduinoOTA.setHostname(HOSTNAME);
         ArduinoOTA.begin();
 
         events.onConnect([](AsyncEventSourceClient* client) {
@@ -155,6 +157,8 @@ namespace webserver {
 
         MDNS.addService("http", "tcp", 80);
 
+        dnsServer.start(53, URL, IPAddress(192, 168, 4, 1));
+
         // Websocket
         ws.onEvent(wsEvent);
         server.addHandler(&ws);
@@ -167,6 +171,7 @@ namespace webserver {
     void update() {
         ArduinoOTA.handle();
         if (reboot) ESP.restart();
+        dnsServer.processNextRequest();
     }
 
     void send(const char* str) {

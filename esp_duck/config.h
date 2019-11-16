@@ -40,6 +40,9 @@
 #define WIFI_PASSWORD "wifiduck"
 #define WIFI_CHANNEL "1"
 
+#define HOSTNAME "wifiduck"
+#define URL "wifi.duck"
+
 /*! ========== Safty checks ========== */
 #if !defined(ENABLE_I2C) && !defined(ENABLE_SERIAL)
   #define ENABLE_I2C
