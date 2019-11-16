@@ -99,6 +99,9 @@ function update_file_list() {
         var fileSize = data[1];
 
         if (fileName.length > 0) {
+          if (i == 0 && E("editor").value.length == 0) {
+            read(fileName);
+          }
           tableHTML += "<tr>\n";
           tableHTML += "<td>" + fileName + "</td>\n";
           tableHTML += "<td>" + fileSize + "</td>\n";
