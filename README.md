@@ -263,6 +263,18 @@ Now it should flash the sketch and the correct bootloader.
 
 ### Ducky Script
 
+#### Basics
+
+Keys are separated by a single space.  
+Everything written in a single line gets pressed and released at the same time.    
+To write text, use the STRING function.  
+
+| Example | Explanation |
+| ------- | ----------- |
+| WINDOWS <br> r | Type the Windows key and then the r key |
+| WINDOWS r | Press the Windows key and the r key simultaneously |
+| STRING WINDOWS r | Write WINDOWS r |
+
 #### Functions
 
 | Command | Example | Description |
