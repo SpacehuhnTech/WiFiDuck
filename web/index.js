@@ -34,6 +34,15 @@ function getEditorContent() {
   return E("editor").value;
 }
 
+function saveFile() {
+  var content = getEditorContent();
+  if (!content.endsWith("\n")) content = content + "\n";
+
+  ws_send_write(getEditorFileName(), content);
+
+  E("editorinfo").innerHTML = "saved";
+}
+
 // ===== WebSocket Actions ===== //
 function check_status() {
   if (current_status.includes("running")) {
@@ -55,6 +64,7 @@ function ws_send_format() {
 }
 
 function ws_send_run(fileName) {
+  if (E("editorinfo").innerHTML != "saved") saveFile();
   ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
   start_status_interval();
 }
@@ -231,12 +241,7 @@ window.addEventListener("load", function() {
   };
 
   E("editorSave").onclick = function() {
-    var content = getEditorContent();
-    if (!content.endsWith("\n")) content = content + "\n";
-
-    ws_send_write(getEditorFileName(), content);
-
-    E("editorinfo").innerHTML = "saved";
+    saveFile();
   };
 
   E("editorDelete").onclick = function() {
