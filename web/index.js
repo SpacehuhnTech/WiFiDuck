@@ -270,7 +270,8 @@ window.addEventListener("load", function() {
   }
 
   E("editorAutorun").onclick = function() {
-    ws_send_autorun(getEditorFileName());
+    if (confirm("Run this script automatically on startup?\nYou can disable it in the settings."))
+      ws_send_autorun(getEditorFileName());
   }
 
   ws_init();
