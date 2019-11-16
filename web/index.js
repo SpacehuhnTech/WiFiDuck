@@ -4,158 +4,68 @@
    Source: github.com/spacehuhn/WiFiDuck
  */
 
-var file_list = ""; // file list string used for ls command
+
+// ========== Global Variables ========== //
+
+// ! List of files returned by "ls" command
+var file_list = "";
+
+// ! Variable to save interval for updating status continously
 var status_interval = undefined;
 
-function start_status_interval() {
-  if (!status_interval) {
-    ws_update_status();
-    status_interval = setInterval(check_status, 200);
-  }
-}
 
-function stop_status_interval() {
-  if (status_interval) {
-    clearInterval(status_interval);
-    status_interval = undefined;
-  }
-}
+// ========== Global Functions ========== //
 
 // ===== Value Getters ===== //
-function getNewFileName() {
+function get_new_filename() {
   return E("newFile").value;
 }
 
-function getEditorFileName() {
+function get_editor_filename() {
   return E("editorFile").value;
 }
 
-function getEditorContent() {
-  return E("editor").value;
+function get_editor_content() {
+  var content = E("editor").value;
+
+  if (!content.endsWith("\n"))
+    content = content + "\n";
+
+  return content;
 }
 
-function saveFile() {
-  var content = getEditorContent();
-  if (!content.endsWith("\n")) content = content + "\n";
-
-  ws_send_write(getEditorFileName(), content);
-
-  E("editorinfo").innerHTML = "saved";
+// ! Update status until it's no longer "running"
+function check_status() {
+  if (current_status.includes("running"))
+    ws_update_status();
+  else
+    stop_status_interval();
 }
 
+// ! Start interval that checks and updates the status continously
+function start_status_interval() {
+  if (status_interval) return; // !< Only continue if status_interval not set
+
+  ws_update_status(); // !< Get current status
+  status_interval = setInterval(check_status, 200); // !< Start interval
+}
+
+// ! Stop interval that checks and updates the status continously
+function stop_status_interval() {
+  if (!status_interval) return; // !< Only continue if status_interval was set
+
+  // ! Stop interval and unset variable
+  clearInterval(status_interval);
+  status_interval = undefined;
+}
+
+// ! Append string to script content
 function append(str) {
   E("editor").value += str;
 }
 
-// ===== WebSocket Actions ===== //
-function check_status() {
-  if (current_status.includes("running")) {
-    ws_update_status();
-  } else {
-    stop_status_interval();
-  }
-}
-
-function ws_connected() {
-  ws_send_mem_ls();
-}
-
-function ws_send_format() {
-  if (confirm("Format SPIFFS? This will delete all scripts!")) {
-    ws_send("format", log_ws);
-    alert("Formatting will take a minute. You have to reconnect afterwards.");
-  }
-}
-
-function ws_send_run(fileName) {
-  if (E("editorinfo").innerHTML != "saved") saveFile();
-  ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
-  start_status_interval();
-}
-
-function ws_send_stop(fileName) {
-  var cmd = "stop";
-
-  if (fileName) {
-    cmd += " \"" + fixFileName(fileName) + "\"";
-  }
-
-  stop_status_interval();
-
-  ws_send(cmd, log_ws, true);
-  ws_update_status();
-}
-
-function ws_send_read() {
-  ws_send("read", function(content) {
-    if (content != "> END") {
-      E("editor").value += content;
-      ws_send_read();
-      status("reading...");
-    } else {
-      ws_send("close", log_ws);
-      ws_update_status();
-    }
-  });
-}
-
-function ws_send_stream(fileName) {
-  ws_send_stop(fileName);
-
-  fileName = fixFileName(fileName);
-
-  E("editorFile").value = fileName;
-  E("editor").value = "";
-
-  ws_send("stream \"" + fileName + "\"", log_ws);
-
-  ws_send_read();
-}
-
-function ws_send_ls() {
-  file_list = "";
-
-  ws_send("ls", function(csv) {
-    file_list += csv;
-
-    var lines = file_list.split(/\n/);
-    var tableHTML = "<thead>\n";
-
-    tableHTML += "<tr>\n";
-    tableHTML += "<th>File</th>\n";
-    tableHTML += "<th>Size</th>\n";
-    tableHTML += "<th>Actions</th>\n";
-    tableHTML += "</tr>\n";
-    tableHTML += "</thead>\n";
-    tableHTML += "<tbody>\n";
-
-    for (var i = 0; i < lines.length; i++) {
-      var data = lines[i].split(" ");
-      var fileName = data[0];
-      var fileSize = data[1];
-      if (fileName.length > 0) {
-        tableHTML += "<tr>\n";
-        tableHTML += "<td>" + fileName + "</td>\n";
-        tableHTML += "<td>" + fileSize + "</td>\n";
-        tableHTML += "<td>\n";
-        tableHTML += "<button class=\"primary\" onclick=\"ws_send_stream('" + fileName + "')\">edit</button>\n";
-        tableHTML += "<button class=\"warn\" onclick=\"ws_send_run('" + fileName + "')\">run</button>\n";
-        tableHTML += "</tr>\n";
-      }
-    }
-
-    tableHTML += "<tr>\n";
-    tableHTML += "<td><input type=\"text\" class=\"smooth\" value=\"/\" id=\"newFile\"/></td>\n";
-    tableHTML += "<td>-</td>\n";
-    tableHTML += "<td><button class=\"success\" onclick=\"ws_send_create(getNewFileName())\">create</button></td>\n";
-    tableHTML += "</tr>\n";
-    tableHTML += "</tbody>\n";
-
-    E("scriptTable").innerHTML = tableHTML;
-  });
-}
-
-function ws_send_mem_ls() {
+// ! Updates file list and memory usage
+function update_file_list() {
   ws_send("mem", function(msg) {
     var lines = msg.split(/\n/);
     var byte = lines[0].split(" ")[0];
@@ -166,12 +76,107 @@ function ws_send_mem_ls() {
     var freepercent = Math.floor(free / percent);
 
     E("freeMemory").innerHTML = used + " byte used (" + freepercent + "% free)";
-    ws_send_ls();
+
+    file_list = "";
+
+    ws_send("ls", function(csv) {
+      file_list += csv;
+
+      var lines = file_list.split(/\n/);
+      var tableHTML = "<thead>\n";
+
+      tableHTML += "<tr>\n";
+      tableHTML += "<th>File</th>\n";
+      tableHTML += "<th>Size</th>\n";
+      tableHTML += "<th>Actions</th>\n";
+      tableHTML += "</tr>\n";
+      tableHTML += "</thead>\n";
+      tableHTML += "<tbody>\n";
+
+      for (var i = 0; i < lines.length; i++) {
+        var data = lines[i].split(" ");
+        var fileName = data[0];
+        var fileSize = data[1];
+
+        if (fileName.length > 0) {
+          tableHTML += "<tr>\n";
+          tableHTML += "<td>" + fileName + "</td>\n";
+          tableHTML += "<td>" + fileSize + "</td>\n";
+          tableHTML += "<td>\n";
+          tableHTML += "<button class=\"primary\" onclick=\"read('" + fileName + "')\">edit</button>\n";
+          tableHTML += "<button class=\"warn\" onclick=\"run('" + fileName + "')\">run</button>\n";
+          tableHTML += "</tr>\n";
+        }
+      }
+
+      tableHTML += "<tr>\n";
+      tableHTML += "<td><input type=\"text\" class=\"smooth\" value=\"/\" id=\"newFile\"/></td>\n";
+      tableHTML += "<td>-</td>\n";
+      tableHTML += "<td><button class=\"success\" onclick=\"create(get_new_filename())\">create</button></td>\n";
+      tableHTML += "</tr>\n";
+      tableHTML += "</tbody>\n";
+
+      E("scriptTable").innerHTML = tableHTML;
+    });
   });
 }
 
-function ws_send_create(fileName) {
-  ws_send_stop(fileName);
+// ! Format SPIFFS
+function format() {
+  if (confirm("Format SPIFFS? This will delete all scripts!")) {
+    ws_send("format", log_ws);
+    alert("Formatting will take a minute.\nYou have to reconnect afterwards.");
+  }
+}
+
+// ! Run script
+function run(fileName) {
+  ws_send("run \"" + fixFileName(fileName) + "\"", log_ws);
+  start_status_interval();
+}
+
+// ! Stop running script
+function stop(fileName) {
+  var cmd = "stop";
+
+  if (fileName) {
+    cmd += " \"" + fixFileName(fileName) + "\"";
+  }
+
+  ws_send(cmd, log_ws, true);
+}
+
+// ! Recursive read from stream
+function read_stream() {
+  ws_send("read", function(content) {
+    if (content != "> END") {
+      E("editor").value += content;
+      read_stream();
+      status("reading...");
+    } else {
+      ws_send("close", log_ws);
+      ws_update_status();
+    }
+  });
+}
+
+// ! Open stream to a file
+function read(fileName) {
+  stop(fileName);
+
+  fileName = fixFileName(fileName);
+
+  E("editorFile").value = fileName;
+  E("editor").value = "";
+
+  ws_send("stream \"" + fileName + "\"", log_ws);
+
+  read_stream(); // !< Read file contents (recursively)
+}
+
+// ! Create a new file
+function create(fileName) {
+  stop(fileName);
 
   fileName = fixFileName(fileName);
 
@@ -182,8 +187,20 @@ function ws_send_create(fileName) {
   ws_send_ls();
 }
 
-function ws_send_write(fileName, content) {
-  ws_send_stop(fileName);
+// ! Delete a file
+function remove(fileName) {
+  stop(fileName);
+  ws_send("remove \"" + fixFileName(fileName) + "\"", log_ws);
+  ws_send_mem_ls();
+}
+
+function autorun(fileName) {
+  ws_send("set autorun \"" + fixFileName(fileName) + "\"", log_ws);
+}
+
+// ! Write content to file
+function write(fileName, content) {
+  stop(fileName);
 
   fileName = fixFileName(fileName);
   content = content.replace(/"/g, '\\"');
@@ -199,6 +216,7 @@ function ws_send_write(fileName, content) {
   };
 
   var pktsize = 1024;
+
   for (var i = 0; i < Math.ceil(content.length / pktsize); i++) {
     var begin = i * pktsize;
     var end = begin + pktsize;
@@ -206,64 +224,56 @@ function ws_send_write(fileName, content) {
 
     ws_send(content.substring(begin, end), ws_send_log);
   }
+
   ws_send("close", log_ws);
 
   ws_send("remove \"" + fileName + "\"", log_ws);
   ws_send("rename \"/temporary_script\" \"" + fileName + "\"", log_ws);
 
-  ws_send_mem_ls();
   ws_update_status();
 }
 
-function ws_send_remove(fileName) {
-  ws_send_stop(fileName);
-
-  ws_send("remove \"" + fixFileName(fileName) + "\"", log_ws);
-
-  ws_send_mem_ls();
+// ! Save file that is currently open in the editor
+function save() {
+  write(get_editor_filename(), get_editor_content());
+  E("editorinfo").innerHTML = "saved";
 }
 
-function ws_send_autorun(fileName) {
-  ws_send("set autorun \"" + fixFileName(fileName) + "\"", log_ws);
+// ! Function that is called once the websocket connection was established
+function ws_connected() {
+  update_file_list();
 }
 
-// ===== Startup ===== //
+// ========== Startup ========== //
 window.addEventListener("load", function() {
-
-  E("scriptsReload").onclick = ws_send_mem_ls;
-
   E("reconnect").onclick = ws_init;
-
-  E("format").onclick = ws_send_format;
-
-  E("stop").onclick = function() {
-    ws_send_stop();
-  }
+  E("scriptsReload").onclick = update_file_list;
+  E("format").onclick = format;
+  E("stop").onclick = stop;
 
   E("editorReload").onclick = function() {
-    ws_send_stream(getEditorFileName());
+    read(get_editor_filename());
   };
 
-  E("editorSave").onclick = function() {
-    saveFile();
-  };
+  E("editorSave").onclick = save;
 
   E("editorDelete").onclick = function() {
-    if (confirm("Delete " + getEditorFileName() + "?")) {
-      ws_send_remove(getEditorFileName());
+    if (confirm("Delete " + get_editor_filename() + "?")) {
+      remove(get_editor_filename());
     }
   };
 
   E("editorDownload").onclick = function() {
-    download_txt(getEditorFileName(), getEditorContent());
+    download_txt(get_editor_filename(), get_editor_content());
   };
 
   E("editorStop").onclick = function() {
-    ws_send_stop(getEditorFileName());
+    stop(get_editor_filename());
   }
 
   E("editorRun").onclick = function() {
-    ws_send_run(getEditorFileName());
+    if (E("editorinfo").innerHTML != "saved") save();
+    run(get_editor_filename());
   };
 
   E("editor").onkeyup = function() {
@@ -272,9 +282,10 @@ window.addEventListener("load", function() {
 
   E("editorAutorun").onclick = function() {
     if (confirm("Run this script automatically on startup?\nYou can disable it in the settings."))
-      ws_send_autorun(getEditorFileName());
+      autorun(get_editor_filename());
   }
 
+  // ! Make all <code>s append to the editor when clicked
   var codes = document.querySelectorAll("code");
   for (var i = 0; i < codes.length; i++) {
     codes[i].addEventListener("click", function() {
