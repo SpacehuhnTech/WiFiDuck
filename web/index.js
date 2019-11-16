@@ -13,6 +13,8 @@ var file_list = "";
 // ! Variable to save interval for updating status continously
 var status_interval = undefined;
 
+// ! Unsaved content in the editor
+var unsaved_changed = false;
 
 // ========== Global Functions ========== //
 
@@ -138,15 +140,14 @@ function run(fileName) {
   start_status_interval();
 }
 
-// ! Stop running script
+// ! Stop running specific script
 function stop(fileName) {
-  var cmd = "stop";
+  ws_send("stop \"" + fixFileName(fileName) + "\"", log_ws, true);
+}
 
-  if (fileName) {
-    cmd += " \"" + fixFileName(fileName) + "\"";
-  }
-
-  ws_send(cmd, log_ws, true);
+// ! Stop running all scripts
+function stopAll() {
+  ws_send("stop", log_ws, true);
 }
 
 // ! Recursive read from stream
@@ -195,6 +196,7 @@ function remove(fileName) {
   stop(fileName);
   ws_send("remove \"" + fixFileName(fileName) + "\"", log_ws);
   update_file_list();
+  unsaved_changed = true;
 }
 
 function autorun(fileName) {
@@ -239,6 +241,7 @@ function write(fileName, content) {
 // ! Save file that is currently open in the editor
 function save() {
   write(get_editor_filename(), get_editor_content());
+  unsaved_changed = false;
   E("editorinfo").innerHTML = "saved";
 }
 
@@ -252,7 +255,7 @@ window.addEventListener("load", function() {
   E("reconnect").onclick = ws_init;
   E("scriptsReload").onclick = update_file_list;
   E("format").onclick = format;
-  E("stop").onclick = stop;
+  E("stop").onclick = stopAll;
 
   E("editorReload").onclick = function() {
     read(get_editor_filename());
@@ -275,11 +278,16 @@ window.addEventListener("load", function() {
   }
 
   E("editorRun").onclick = function() {
-    if (E("editorinfo").innerHTML != "saved") save();
+    if (unsaved_changed) {
+      save();
+      update_file_list();
+    }
+
     run(get_editor_filename());
   };
 
   E("editor").onkeyup = function() {
+    unsaved_changed = true;
     E("editorinfo").innerHTML = "unsaved changes";
   }
 
