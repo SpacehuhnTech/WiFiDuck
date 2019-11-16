@@ -187,14 +187,14 @@ function create(fileName) {
   E("editor").value = "";
 
   ws_send("create \"" + fileName + "\"", log_ws);
-  ws_send_ls();
+  update_file_list();
 }
 
 // ! Delete a file
 function remove(fileName) {
   stop(fileName);
   ws_send("remove \"" + fixFileName(fileName) + "\"", log_ws);
-  ws_send_mem_ls();
+  update_file_list();
 }
 
 function autorun(fileName) {
