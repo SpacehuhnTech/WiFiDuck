@@ -12,6 +12,9 @@
 
 #define debug_init() DEBUG_PORT.begin(DEBUG_BAUD);
 
+#define debugs(...) if (DEBUG_PORT) DEBUG_PORT.print(F(__VA_ARGS__))
+#define debugsln(...) if (DEBUG_PORT) DEBUG_PORT.println(F(__VA_ARGS__))
+
 #define debug(...) if (DEBUG_PORT) DEBUG_PORT.print(__VA_ARGS__)
 #define debugln(...) if (DEBUG_PORT) DEBUG_PORT.println(__VA_ARGS__)
 #define debugf(...) if (DEBUG_PORT) DEBUG_PORT.printf(__VA_ARGS__)

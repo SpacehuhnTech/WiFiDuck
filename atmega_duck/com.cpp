@@ -39,7 +39,7 @@ namespace com {
      */
     bool receive(Stream& stream) {
         if (stream.available()) {
-            debug("RECEIVED ");
+            debugs("RECEIVED ");
 
             /*
                         if ((stream.available() == 1) && (stream.peek() == REQ_VERSION)) {
@@ -52,12 +52,11 @@ namespace com {
             while (stream.available() && !ongoing_transmission) {
                 if (stream.read() == REQ_SOT) {
                     ongoing_transmission = true;
-                    debug("[SOT] ");
+                    debugs("[SOT] ");
                 }
             }
 
-            if (stream.available()) {
-                debug("'");
+            debugs("'");
 
                 while (stream.available() && ongoing_transmission) {
                     char c = stream.read();
@@ -66,7 +65,7 @@ namespace com {
                         start_parser         = true;
                         ongoing_transmission = false;
                     } else {
-                        debug(c);
+                    if ((c != '\n') && (c != '\r')) debug(c);
                         buffer.data[buffer.len] = c;
                         ++buffer.len;
                     }
@@ -76,7 +75,7 @@ namespace com {
                         ongoing_transmission = false;
                     }
                 }
-                debug("' ");
+            debugs("' ");
             }
 
             if (!ongoing_transmission && !start_parser) debugln("DROPPED");
@@ -102,18 +101,18 @@ namespace com {
         if (hasData()) {
             uint8_t delayTime = (uint8_t)min(duckparser::getDelayTime(), 255);
             response = delayTime | (uint8_t)RES_PROCESSING;
-            debug("Responding PROCESSING");
+            debugs("Responding PROCESSING");
         } else if (duckparser::getRepeats()) {
             response = (uint8_t)RES_REPEAT;
-            debug("Responding REPEAT");
+            debugs("Responding REPEAT");
         } else {
             response = (uint8_t)RES_OK;
-            debug("Responding OK");
+            debugs("Responding OK");
         }
 
-        debug(" [");
+        debugs(" [");
         debug(response);
-        debugln("]");
+        debugsln("]");
 
         stream.write(response);
     }
@@ -122,7 +121,7 @@ namespace com {
      * \brief Internal i2c request event handler
      */
     void requestEvent() {
-        debugln("I2C REQUEST");
+        debugsln("I2C REQUEST");
         respond(Wire);
     }
 
@@ -136,12 +135,12 @@ namespace com {
     // ===== PUBLIC ===== //
     void begin() {
 #ifdef ENABLE_SERIAL
-        debugln("ENABLED SERIAL");
+        debugsln("ENABLED SERIAL");
         SERIAL_COM.begin(SERIAL_BAUD);
 #endif // ifdef ENABLE_SERIAL
 
 #ifdef ENABLE_I2C
-        debugln("ENABLED I2C");
+        debugsln("ENABLED I2C");
         Wire.begin(I2C_ADDR);         // !< Begin i2c slave on given address
         Wire.onRequest(requestEvent); // !< Set request event handler
         Wire.onReceive(receiveEvent); // !< Set receive event handler
