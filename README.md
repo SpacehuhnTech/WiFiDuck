@@ -352,6 +352,7 @@ The command line interface or CLI is accessible using a serial connection to the
 | ------- | ----------- | ------- |
 | help | Returns all available commands | `help` |
 | ram | Returns available memory in bytes | `ram` |
+| version | Returns version number | `version` |
 | settings | Returns list of settings | `settings` |
 | set -n/ame <value> -v/alue <value> | Sets value of a specific setting | `set ssid "why fight duck"` |
 | reset | Resets all settings to their default values | `reset` |
