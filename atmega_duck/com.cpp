@@ -1,8 +1,8 @@
 /*!
-    \file atmega_duck/com.cpp
-    \brief Communication Module source
-    \author Stefan Kremser
-    \copyright MIT License
+   \file atmega_duck/com.cpp
+   \brief Communication Module source
+   \author Stefan Kremser
+   \copyright MIT License
  */
 
 #include "com.h"
@@ -14,8 +14,8 @@
 
 // ! Communication request codes
 #define REQ_SOT 0x01     // !< Start of transmission
-#define REQ_VERSION 0x02 // !< Request current version
 #define REQ_EOT 0x04     // !< End of transmission
+#define REQ_VERSION 0x02 // !< Request current version
 
 // ! Communication response codes
 #define RES_OK 0x00
@@ -23,153 +23,135 @@
 #define RES_REPEAT 0x02
 
 namespace com {
-    // ===== PRIVATE ===== //
-    buffer_t buffer; // !< Communication buffer Instance
+    // =========== PRIVATE ========= //
+    buffer_t receive_buf;
+    buffer_t data_buf;
 
     bool start_parser         = false;
-    bool i2c_active           = false;
-    bool serial_active        = false;
     bool ongoing_transmission = false;
 
-    /*!
-     * \brief Internal function to buffer received data
-     *
-     * Writes the receieved data into the buffer.
-     * Returns wheter or not data that is to be parsed was received.
-     */
-    bool receive(Stream& stream) {
-        if (stream.available()) {
+    // ========== PRIVATE I2C ========== //
+    #ifdef ENABLE_I2C
+
+    // time sensetive!
+    void i2c_request() {
+        // debugs("REQUEST...");
+
+        uint8_t response;
+
+        debug("(REQ)");
+
+        if ((receive_buf.len > 0) || (data_buf.len > 0)) {
+            int delayTime = duckparser::getDelayTime() + receive_buf.len + data_buf.len;
+            delayTime = min(delayTime, 255);
+            response  = (uint8_t)delayTime | (uint8_t)RES_PROCESSING;
+            // debugs("Responding PROCESSING");
+        } else if (duckparser::getRepeats()) {
+            response = (uint8_t)RES_REPEAT;
+            // debugs("Responding REPEAT");
+        } else {
+            response = (uint8_t)RES_OK;
+            // debugs("Responding OK");
+        }
+        Wire.write(response);
+        debugln(int(response));
+
+        // debugs(" [");
+        // debug(response);
+        // debugsln("]");
+
+        // Wire.write(response);
+    }
+
+    // time sensetive!
+    void i2c_receive(int len) {
+        if (receive_buf.len + (unsigned int)len <= BUFFER_SIZE) {
+            Wire.readBytes(&receive_buf.data[receive_buf.len], len);
+            receive_buf.len += len;
+        }
+        debug("(REC)\n");
+    }
+
+    void i2c_begin() {
+        debugsln("ENABLED I2C");
+        Wire.begin(I2C_ADDR);
+        Wire.onRequest(i2c_request);
+        Wire.onReceive(i2c_receive);
+    }
+
+    #else // ifdef ENABLE_I2C
+    void i2c_begin() {}
+
+    #endif // ifdef ENABLE_I2C
+
+    // ========== PUBLIC ========== //
+    void begin() {
+        i2c_begin();
+    }
+
+    void update() {
+        if (!start_parser && (receive_buf.len > 0) && (data_buf.len < BUFFER_SIZE)) {
+            unsigned int i = 0;
+
             debugs("RECEIVED ");
 
-            /*
-                        if ((stream.available() == 1) && (stream.peek() == REQ_VERSION)) {
-                            stream.read();
-                            stream.print(VERSION);
-                            return false;
-                        }
-             */
-            // ! Skip bytes
-            while (stream.available() && !ongoing_transmission) {
-                if (stream.read() == REQ_SOT) {
+            // ! Skip bytes until start of transmission
+            while (i < receive_buf.len && !ongoing_transmission) {
+                if (receive_buf.data[i] == REQ_SOT) {
                     ongoing_transmission = true;
                     debugs("[SOT] ");
                 }
+                ++i;
             }
 
             debugs("'");
 
-                while (stream.available() && ongoing_transmission) {
-                    char c = stream.read();
+            while (i < receive_buf.len && ongoing_transmission) {
+                char c = receive_buf.data[i];
 
-                    if (c == REQ_EOT) {
-                        start_parser         = true;
-                        ongoing_transmission = false;
-                    } else {
+                if (c == REQ_EOT) {
+                    start_parser         = true;
+                    ongoing_transmission = false;
+                } else {
                     if ((c != '\n') && (c != '\r')) debug(c);
-                        buffer.data[buffer.len] = c;
-                        ++buffer.len;
-                    }
-
-                    if (buffer.len == BUFFER_SIZE) {
-                        start_parser         = true;
-                        ongoing_transmission = false;
-                    }
+                    data_buf.data[data_buf.len] = c;
+                    ++data_buf.len;
                 }
-            debugs("' ");
+
+                if (data_buf.len == BUFFER_SIZE) {
+                    start_parser         = true;
+                    ongoing_transmission = false;
+                }
+
+                ++i;
             }
 
-            if (!ongoing_transmission && !start_parser) debugln("DROPPED");
-            else if (start_parser) debugln("[EOT]");
-            else debugln();
+            debugs("' ");
 
-            return start_parser;
+            if (start_parser && !ongoing_transmission) {
+                debugs("[EOT]");
+            } else if (!start_parser && ongoing_transmission) {
+                debug(" ... ");
+            } else if (!start_parser && !ongoing_transmission) {
+                debugs("DROPPED");
+            }
+
+            debugln();
+
+            receive_buf.len = 0;
         }
-
-        return false;
-    }
-
-    /*!
-     * \brief Internal function to send response
-     *
-     * Replies with wait time, if slave is still processing.
-     * Replies repeat if duckparsers repeat counter > 0.
-     * If everything was processed and the buffer is empty, it replies with OK.
-     */
-    void respond(Stream& stream) {
-        uint8_t response;
-
-        if (hasData()) {
-            uint8_t delayTime = (uint8_t)min(duckparser::getDelayTime(), 255);
-            response = delayTime | (uint8_t)RES_PROCESSING;
-            debugs("Responding PROCESSING");
-        } else if (duckparser::getRepeats()) {
-            response = (uint8_t)RES_REPEAT;
-            debugs("Responding REPEAT");
-        } else {
-            response = (uint8_t)RES_OK;
-            debugs("Responding OK");
-        }
-
-        debugs(" [");
-        debug(response);
-        debugsln("]");
-
-        stream.write(response);
-    }
-
-    /*!
-     * \brief Internal i2c request event handler
-     */
-    void requestEvent() {
-        debugsln("I2C REQUEST");
-        respond(Wire);
-    }
-
-    /*!
-     * \brief Internal i2c receive event handler
-     */
-    void receiveEvent(int len) {
-        receive(Wire);
-    }
-
-    // ===== PUBLIC ===== //
-    void begin() {
-#ifdef ENABLE_SERIAL
-        debugsln("ENABLED SERIAL");
-        SERIAL_COM.begin(SERIAL_BAUD);
-#endif // ifdef ENABLE_SERIAL
-
-#ifdef ENABLE_I2C
-        debugsln("ENABLED I2C");
-        Wire.begin(I2C_ADDR);         // !< Begin i2c slave on given address
-        Wire.onRequest(requestEvent); // !< Set request event handler
-        Wire.onReceive(receiveEvent); // !< Set receive event handler
-#endif // ifdef ENABLE_I2C
-    }
-
-    void update() {
-#ifdef ENABLE_SERIAL
-        if (receive(SERIAL_COM)) {
-            serial_active = true;
-            respond(SERIAL_COM);
-        }
-#endif // ifdef ENABLE_SERIAL
     }
 
     bool hasData() {
-        return buffer.len > 0 && start_parser;
+        return data_buf.len > 0 && start_parser;
     }
 
     const buffer_t& getBuffer() {
-        return buffer;
+        return data_buf;
     }
 
     void sendDone() {
-        buffer.len   = 0;
+        data_buf.len = 0;
         start_parser = false;
-
-#ifdef ENABLE_SERIAL
-        if (serial_active) respond(SERIAL_COM);
-#endif // ifdef ENABLE_SERIAL
     }
 }

@@ -46,7 +46,6 @@ namespace duckscript {
             return;
         }
 
-        debug("Sending: ");
         char buf[BUFFER_SIZE];
         unsigned int buf_i =  0;
         bool eol           =  false; // End of line
