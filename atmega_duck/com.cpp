@@ -22,6 +22,16 @@
 #define RES_PROCESSING 0x01
 #define RES_REPEAT 0x02
 
+typedef struct status_t {
+    uint8_t  legacy_response;
+    uint8_t  version_major;
+    uint8_t  version_minor;
+    uint8_t  version_revision;
+    uint8_t  repeat;
+    uint16_t buffer;
+    uint16_t delay;
+} status_t;
+
 namespace com {
     // =========== PRIVATE ========= //
     buffer_t receive_buf;
@@ -30,6 +40,8 @@ namespace com {
     bool start_parser         = false;
     bool ongoing_transmission = false;
 
+    status_t status;
+
     // ========== PRIVATE I2C ========== //
     #ifdef ENABLE_I2C
 
@@ -37,9 +49,11 @@ namespace com {
     void i2c_request() {
         // debugs("REQUEST...");
 
+
         uint8_t response;
 
         debug("(REQ)");
+        // debug(duckparser::getDelayTime());
 
         if ((receive_buf.len > 0) || (data_buf.len > 0)) {
             int delayTime = duckparser::getDelayTime() + receive_buf.len + data_buf.len;
@@ -53,8 +67,18 @@ namespace com {
             response = (uint8_t)RES_OK;
             // debugs("Responding OK");
         }
-        Wire.write(response);
-        debugln(int(response));
+
+        status.legacy_response = response;
+
+        status.repeat = (uint8_t)duckparser::getRepeats();
+        status.buffer = (uint16_t)receive_buf.len + (uint16_t)data_buf.len;
+        status.delay  = (uint16_t)duckparser::getDelayTime();
+
+        debug(status.delay);
+
+        Wire.write((uint8_t*)&status, sizeof(status_t));
+
+        // debugln(int(response));
 
         // debugs(" [");
         // debug(response);
@@ -86,6 +110,10 @@ namespace com {
 
     // ========== PUBLIC ========== //
     void begin() {
+        status.version_major    = 1;
+        status.version_minor    = 0;
+        status.version_revision = 1;
+
         i2c_begin();
     }
 

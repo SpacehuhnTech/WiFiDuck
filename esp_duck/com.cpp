@@ -23,6 +23,16 @@
 #define RES_REPEAT 0x02
 #define RES_ERROR 0xFE
 
+typedef struct status_t {
+    uint8_t  legacy_response;
+    uint8_t  version_major;
+    uint8_t  version_minor;
+    uint8_t  version_revision;
+    uint8_t  repeat;
+    uint16_t buffer;
+    uint16_t delay;
+} status_t;
+
 namespace com {
     // ========== PRIVATE ========== //
     bool connection = false;
@@ -37,6 +47,8 @@ namespace com {
     bool new_transmission  = false;
 
     unsigned long request_time = 0;
+
+    status_t status;
 
     // ========= PRIVATE I2C ========= //
 
@@ -58,15 +70,32 @@ namespace com {
     void i2c_request() {
         debug("I2C-Req...");
 
-        request_time = millis();
-
         uint8_t prev_response = response;
 
-        Wire.requestFrom(I2C_ADDR, 1);
+        Wire.requestFrom(I2C_ADDR, sizeof(status_t));
 
         if (Wire.available()) {
-            response = Wire.read();
-            debugf("%d", response);
+            status.legacy_response = Wire.read();
+
+            if (Wire.available() == sizeof(status_t)-1) {
+                status.version_major    = Wire.read();
+                status.version_minor    = Wire.read();
+                status.version_revision = Wire.read();
+
+                status.repeat = Wire.read();
+
+                status.buffer  = Wire.read();
+                status.buffer |= uint16_t(Wire.read()) << 8;
+
+                status.delay  = Wire.read();
+                status.delay |= uint16_t(Wire.read()) << 8;
+
+                // debugf("Version=(%1u,%1u,%1u) repeat=%4u buffer=%4u delay=%4u response=", status.version_major, status.version_minor, status.version_revision, status.repeat, status.buffer, status.delay);
+            }
+
+            response = status.legacy_response;
+
+            // debugf("%3u", response);
         } else {
             connection = false;
             response   = RES_ERROR;
@@ -79,6 +108,8 @@ namespace com {
                              ((prev_response & RES_PROCESSING) != (response & RES_PROCESSING)));
 
         debugln();
+
+        request_time = millis();
     }
 
     void i2c_begin() {
@@ -137,6 +168,14 @@ namespace com {
 
     // ===== PUBLIC ===== //
     void begin() {
+        status.legacy_response  = 0;
+        status.version_major    = 0;
+        status.version_minor    = 0;
+        status.version_revision = 0;
+        status.repeat           = 0;
+        status.buffer           = 0;
+        status.delay            = 0;
+
         i2c_begin();
     }
 

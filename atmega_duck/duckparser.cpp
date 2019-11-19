@@ -266,7 +266,7 @@ namespace duckparser {
             return DEFAULT_SLEEP;
         } else {
             unsigned long remainingTime = finishTime - currentTime;
-            return remainingTime | DEFAULT_SLEEP;
+            return (unsigned int)remainingTime;
         }
     }
 }
