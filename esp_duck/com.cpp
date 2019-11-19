@@ -151,7 +151,7 @@ namespace com {
 
             debug("Com. status ");
 
-            if (status.version != 3) {
+            if (status.version != COM_VERSION) {
                 debugf("ERROR %u\n", status.version);
                 connection = false;
                 if (callback_error) callback_error();

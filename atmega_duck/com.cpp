@@ -17,6 +17,8 @@
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
 
+#define COM_VERSION 3
+
 typedef struct status_t {
     uint8_t  version;
     uint16_t wait;
@@ -66,7 +68,7 @@ namespace com {
 
     // ========== PUBLIC ========== //
     void begin() {
-        status.version = 3;
+        status.version = COM_VERSION;
         i2c_begin();
     }
 
