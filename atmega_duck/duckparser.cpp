@@ -263,7 +263,7 @@ namespace duckparser {
         unsigned long currentTime = millis();
 
         if (currentTime > finishTime) {
-            return DEFAULT_SLEEP;
+            return 0;
         } else {
             unsigned long remainingTime = finishTime - currentTime;
             return (unsigned int)remainingTime;

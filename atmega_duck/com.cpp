@@ -17,19 +17,10 @@
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
 
-// ! Communication response codes
-#define RES_OK 0x00
-#define RES_PROCESSING 0x01
-#define RES_REPEAT 0x02
-
 typedef struct status_t {
-    uint8_t  legacy_response;
-    uint8_t  version_major;
-    uint8_t  version_minor;
-    uint8_t  version_revision;
+    uint8_t  version;
+    uint16_t wait;
     uint8_t  repeat;
-    uint16_t buffer;
-    uint16_t delay;
 } status_t;
 
 namespace com {
@@ -47,44 +38,10 @@ namespace com {
 
     // time sensetive!
     void i2c_request() {
-        // debugs("REQUEST...");
-
-
-        uint8_t response;
-
-        debug("(REQ)");
-        // debug(duckparser::getDelayTime());
-
-        if ((receive_buf.len > 0) || (data_buf.len > 0)) {
-            int delayTime = duckparser::getDelayTime() + receive_buf.len + data_buf.len;
-            delayTime = min(delayTime, 255);
-            response  = (uint8_t)delayTime | (uint8_t)RES_PROCESSING;
-            // debugs("Responding PROCESSING");
-        } else if (duckparser::getRepeats()) {
-            response = (uint8_t)RES_REPEAT;
-            // debugs("Responding REPEAT");
-        } else {
-            response = (uint8_t)RES_OK;
-            // debugs("Responding OK");
-        }
-
-        status.legacy_response = response;
-
+        status.wait   = (uint16_t)receive_buf.len + (uint16_t)data_buf.len + (uint16_t)duckparser::getDelayTime();
         status.repeat = (uint8_t)duckparser::getRepeats();
-        status.buffer = (uint16_t)receive_buf.len + (uint16_t)data_buf.len;
-        status.delay  = (uint16_t)duckparser::getDelayTime();
-
-        debug(status.delay);
 
         Wire.write((uint8_t*)&status, sizeof(status_t));
-
-        // debugln(int(response));
-
-        // debugs(" [");
-        // debug(response);
-        // debugsln("]");
-
-        // Wire.write(response);
     }
 
     // time sensetive!
@@ -93,7 +50,6 @@ namespace com {
             Wire.readBytes(&receive_buf.data[receive_buf.len], len);
             receive_buf.len += len;
         }
-        debug("(REC)\n");
     }
 
     void i2c_begin() {
@@ -110,10 +66,7 @@ namespace com {
 
     // ========== PUBLIC ========== //
     void begin() {
-        status.version_major    = 1;
-        status.version_minor    = 0;
-        status.version_revision = 1;
-
+        status.version = 3;
         i2c_begin();
     }
 
@@ -159,7 +112,7 @@ namespace com {
             if (start_parser && !ongoing_transmission) {
                 debugs("[EOT]");
             } else if (!start_parser && ongoing_transmission) {
-                debug(" ... ");
+                debug("...");
             } else if (!start_parser && !ongoing_transmission) {
                 debugs("DROPPED");
             }

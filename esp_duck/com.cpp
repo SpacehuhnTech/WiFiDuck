@@ -17,20 +17,12 @@
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
 
-// ! Communication response codes
-#define RES_OK 0x00
-#define RES_PROCESSING 0x01
-#define RES_REPEAT 0x02
-#define RES_ERROR 0xFE
+#define COM_VERSION 3
 
 typedef struct status_t {
-    uint8_t  legacy_response;
-    uint8_t  version_major;
-    uint8_t  version_minor;
-    uint8_t  version_revision;
+    uint8_t  version;
+    uint16_t wait;
     uint8_t  repeat;
-    uint16_t buffer;
-    uint16_t delay;
 } status_t;
 
 namespace com {
@@ -41,10 +33,8 @@ namespace com {
     com_callback callback_repeat = NULL;
     com_callback callback_error  = NULL;
 
-    uint8_t response = RES_PROCESSING;
-
-    bool react_on_response = false;
-    bool new_transmission  = false;
+    bool react_on_status  = false;
+    bool new_transmission = false;
 
     unsigned long request_time = 0;
 
@@ -68,44 +58,27 @@ namespace com {
     }
 
     void i2c_request() {
-        debug("I2C-Req...");
+        debug("I2C Request");
 
-        uint8_t prev_response = response;
+        uint16_t prev_wait = status.wait;
 
         Wire.requestFrom(I2C_ADDR, sizeof(status_t));
 
-        if (Wire.available()) {
-            status.legacy_response = Wire.read();
+        if (Wire.available() == sizeof(status_t)) {
+            status.version = Wire.read();
 
-            if (Wire.available() == sizeof(status_t)-1) {
-                status.version_major    = Wire.read();
-                status.version_minor    = Wire.read();
-                status.version_revision = Wire.read();
+            status.wait  = Wire.read();
+            status.wait |= uint16_t(Wire.read()) << 8;
 
-                status.repeat = Wire.read();
-
-                status.buffer  = Wire.read();
-                status.buffer |= uint16_t(Wire.read()) << 8;
-
-                status.delay  = Wire.read();
-                status.delay |= uint16_t(Wire.read()) << 8;
-
-                // debugf("Version=(%1u,%1u,%1u) repeat=%4u buffer=%4u delay=%4u response=", status.version_major, status.version_minor, status.version_revision, status.repeat, status.buffer, status.delay);
-            }
-
-            response = status.legacy_response;
-
-            // debugf("%3u", response);
+            status.repeat = Wire.read();
         } else {
             connection = false;
-            response   = RES_ERROR;
-            debug("ERROR");
+            debug(" ERROR");
         }
 
-        react_on_response = response == RES_OK ||
-                            response == RES_REPEAT ||
-                            (prev_response != response &&
-                             ((prev_response & RES_PROCESSING) != (response & RES_PROCESSING)));
+        react_on_status = status.wait == 0 ||
+                          status.repeat > 0 ||
+                          ((prev_wait&1) ^ (status.wait&1));
 
         debugln();
 
@@ -115,8 +88,6 @@ namespace com {
     void i2c_begin() {
         unsigned long start_time = millis();
 
-        connection = false;
-
         Wire.begin(I2C_SDA, I2C_SCL);
         Wire.setClock(I2C_CLOCK_SPEED);
 
@@ -124,16 +95,11 @@ namespace com {
 
         debugln("Connecting via i2c");
 
+        connection = true;
+
         send(MSG_CONNECTED);
 
-        while (start_time + 5000 > millis()) {
-            if (response == RES_OK) {
-                connection = true;
-                break;
-            }
-            delay(response);
-            i2c_request();
-        }
+        update();
 
         debug("I2C Connection ");
         debugln(connection ? "OK" : "ERROR");
@@ -142,12 +108,14 @@ namespace com {
     void i2c_update() {
         if (!connection) return;
 
-        bool processing = response & RES_PROCESSING == RES_PROCESSING;
-        bool delay_over = request_time + response < millis();
+        bool processing = status.wait > 0;
+        bool delay_over = request_time + status.wait < millis();
 
         if (new_transmission || (processing && delay_over)) {
             new_transmission = false;
             i2c_request();
+
+            debugf("status.wait=%u\n", status.wait);
         }
     }
 
@@ -168,13 +136,9 @@ namespace com {
 
     // ===== PUBLIC ===== //
     void begin() {
-        status.legacy_response  = 0;
-        status.version_major    = 0;
-        status.version_minor    = 0;
-        status.version_revision = 0;
-        status.repeat           = 0;
-        status.buffer           = 0;
-        status.delay            = 0;
+        status.version = 0;
+        status.wait    = 0;
+        status.repeat  = 0;
 
         i2c_begin();
     }
@@ -182,24 +146,25 @@ namespace com {
     void update() {
         i2c_update();
 
-        if (react_on_response) {
-            react_on_response = false;
+        if (react_on_status) {
+            react_on_status = false;
 
-            debugf("NEW STATUS [%u] = ", response);
+            debug("Com. status ");
 
-            if (response & RES_PROCESSING) {
-                debugln("PROCESSING");
-            } else if (response == RES_OK) {
+            if (status.version != 3) {
+                debugf("ERROR %u\n", status.version);
+                connection = false;
+                if (callback_error) callback_error();
+            } else if (status.wait > 0) {
+                debugf("PROCESSING %u\n", status.wait);
+            } else if (status.repeat > 0) {
+                debugf("REPEAT %u\n", status.repeat);
+                if (callback_repeat) callback_repeat();
+            } else if ((status.wait == 0) && (status.repeat == 0)) {
                 debugln("DONE");
                 if (callback_done) callback_done();
-            } else if (response == RES_REPEAT) {
-                debugln("REPEAT");
-                if (callback_repeat) callback_repeat();
-            } else if (response == RES_ERROR) {
-                debugln("ERROR");
-                if (callback_error) callback_error();
             } else {
-                debugln("UNKOWN");
+                debugln("idk");
             }
         }
     }
