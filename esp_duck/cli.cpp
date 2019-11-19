@@ -394,14 +394,17 @@ namespace cli {
          * Reads from file stream (1024 characters)
          */
         cli.addCommand("read", [](cmd* c) {
-            size_t len = 1024;
+            if (spiffs::streamAvailable()) {
+                size_t len = 1024;
 
-            char buffer[len];
+                char buffer[len];
 
-            size_t read = spiffs::streamRead(buffer, len);
+                size_t read = spiffs::streamRead(buffer, len);
 
-            print(buffer);
-            if (read < len) print("> END");
+                print(buffer);
+            } else {
+                print("> END");
+            }
         });
     }
 

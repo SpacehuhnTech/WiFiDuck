@@ -36,4 +36,5 @@ namespace spiffs {
     size_t streamReadUntil(char* buf, char delimiter, size_t max_len);
     void streamClose();
     bool streaming();
+    size_t streamAvailable();
 }

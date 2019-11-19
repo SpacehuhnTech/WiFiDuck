@@ -227,7 +227,7 @@ function write(fileName, content) {
     var end = begin + pktsize;
     if (end > content.length) end = content.length;
 
-    ws_send(content.substring(begin, end), ws_send_log);
+    ws_send_raw(content.substring(begin, end), ws_send_log);
   }
 
   ws_send("close", log_ws);
