@@ -111,6 +111,8 @@ namespace settings {
                 if (i < ssid_len) data.ssid[i] = ssid[i];
                 else data.ssid[i] = '\0';
             }
+
+            save();
         }
     }
 
@@ -122,6 +124,8 @@ namespace settings {
                 if (i < password_len) data.password[i] = password[i];
                 else data.password[i] = '\0';
             }
+
+            save();
         }
     }
 
@@ -133,17 +137,16 @@ namespace settings {
                 if (i < channel_len) data.channel[i] = channel[i];
                 else data.channel[i] = '\0';
             }
+
+            save();
         }
     }
 
     void setAutorun(const char* autorun) {
         if (autorun && (strlen(autorun) <= 64)) {
-            size_t autorun_len = strlen(autorun);
+            strcpy(data.autorun, autorun);
 
-            for (uint8_t i = 0; i<65; ++i) {
-                if (i < autorun_len) data.autorun[i] = autorun[i];
-                else data.autorun[i] = '\0';
-            }
+            save();
         }
     }
 }
