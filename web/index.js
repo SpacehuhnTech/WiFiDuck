@@ -49,7 +49,7 @@ function start_status_interval() {
   if (status_interval) return; // !< Only continue if status_interval not set
 
   ws_update_status(); // !< Get current status
-  status_interval = setInterval(check_status, 200); // !< Start interval
+  status_interval = setInterval(check_status, 500); // !< Start interval
 }
 
 // ! Stop interval that checks and updates the status continously
