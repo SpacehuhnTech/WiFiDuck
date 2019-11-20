@@ -243,6 +243,7 @@ function save() {
   write(get_editor_filename(), get_editor_content());
   unsaved_changed = false;
   E("editorinfo").innerHTML = "saved";
+  update_file_list();
 }
 
 // ! Function that is called once the websocket connection was established
