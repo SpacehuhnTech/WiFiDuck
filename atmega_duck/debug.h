@@ -23,6 +23,9 @@
 
 #define debug_init() 0
 
+#define debugs(...) 0
+#define debugsln(...) 0
+
 #define debug(...) 0
 #define debugln(...) 0
 #define debugf(...) 0
