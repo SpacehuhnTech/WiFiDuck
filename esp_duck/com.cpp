@@ -36,13 +36,13 @@ namespace com {
     bool react_on_status  = false;
     bool new_transmission = false;
 
-    unsigned long request_time = 0;
-
     status_t status;
 
     // ========= PRIVATE I2C ========= //
 
 #ifdef ENABLE_I2C
+    unsigned long request_time = 0;
+
     void i2c_start_transmission() {
         Wire.beginTransmission(I2C_ADDR);
         debug("Transmitting '");
@@ -70,9 +70,9 @@ namespace com {
             status.wait  = Wire.read();
             status.wait |= uint16_t(Wire.read()) << 8;
 
-            debugf(" %u", status.wait);
-
             status.repeat = Wire.read();
+
+            debugf(" %u", status.wait);
         } else {
             connection = false;
             debug(" ERROR");
@@ -116,8 +116,6 @@ namespace com {
         if (new_transmission || (processing && delay_over)) {
             new_transmission = false;
             i2c_request();
-
-            debugf("status.wait=%u\n", status.wait);
         }
     }
 
@@ -136,6 +134,90 @@ namespace com {
 
 #endif // ifdef ENABLE_I2C
 
+    // ========= PRIVATE I2C ========= //
+
+#ifdef ENABLE_SERIAL
+    bool ongoing_transmission = false;
+
+    void serial_start_transmission() {
+        debug("Transmitting '");
+    }
+
+    void serial_stop_transmission() {
+        SERIAL_PORT.flush();
+        debugln("' ");
+    }
+
+    void serial_transmit(char b) {
+        SERIAL_PORT.write(b);
+    }
+
+    void serial_begin() {
+        SERIAL_PORT.begin(SERIAL_BAUD);
+
+        while (SERIAL_PORT.available()) SERIAL_PORT.read();
+
+        debug("Connecting via serial");
+
+        connection = true;
+
+        send(MSG_CONNECTED);
+
+        update();
+
+        debug("Serial Connection ");
+        debugln(connection ? "OK" : "ERROR");
+    }
+
+    void serial_update() {
+        if (SERIAL_PORT.available() >= sizeof(status_t)+2) {
+            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_SOT) {}
+
+            uint16_t prev_wait = status.wait;
+
+            status.version = SERIAL_PORT.read();
+
+            status.wait  = SERIAL_PORT.read();
+            status.wait |= uint16_t(SERIAL_PORT.read()) << 8;
+
+            status.repeat = SERIAL_PORT.read();
+
+            react_on_status = status.wait == 0 ||
+                              status.repeat > 0 ||
+                              ((prev_wait&1) ^ (status.wait&1));
+
+            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_EOT) {}
+        }
+    }
+
+#else // ifdef ENABLE_SERIAL
+    void serial_start_transmission() {}
+
+    void serial_stop_transmission() {}
+
+    void serial_transmit(char b) {}
+
+    void serial_begin() {}
+
+    void serial_update() {}
+
+#endif // ifdef ENABLE_SERIAL
+
+    void start_transmission() {
+        i2c_start_transmission();
+        serial_start_transmission();
+    }
+
+    void stop_transmission() {
+        i2c_stop_transmission();
+        serial_stop_transmission();
+    }
+
+    void transmit(char b) {
+        i2c_transmit(b);
+        serial_transmit(b);
+    }
+
     // ===== PUBLIC ===== //
     void begin() {
         status.version = 0;
@@ -143,10 +225,12 @@ namespace com {
         status.repeat  = 0;
 
         i2c_begin();
+        serial_begin();
     }
 
     void update() {
         i2c_update();
+        serial_update();
 
         if (react_on_status) {
             react_on_status = false;
@@ -186,28 +270,32 @@ namespace com {
         size_t sent = 0;
         size_t i    = 0;
 
-        i2c_start_transmission();
-        i2c_transmit(REQ_SOT);
+        start_transmission();
+
+        transmit(REQ_SOT);
+
         ++sent;
 
         while (i < len) {
             char b = str[i];
 
             if ((b != '\n') && (b != '\n')) debug(b);
-            i2c_transmit(b);
+            transmit(b);
 
             ++i;
             ++sent;
 
             if (sent % PACKET_SIZE == 0) {
-                i2c_stop_transmission();
-                i2c_start_transmission();
+                stop_transmission();
+                start_transmission();
             }
         }
 
-        i2c_transmit(REQ_EOT);
+        transmit(REQ_EOT);
+
         ++sent;
-        i2c_stop_transmission();
+
+        stop_transmission();
 
         new_transmission = true;
 

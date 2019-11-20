@@ -35,14 +35,19 @@ namespace com {
 
     status_t status;
 
+    void update_status() {
+        status.wait = (uint16_t)receive_buf.len
+                      + (uint16_t)data_buf.len
+                      + (uint16_t)duckparser::getDelayTime();
+        status.repeat = (uint8_t)duckparser::getRepeats();
+    }
+
     // ========== PRIVATE I2C ========== //
-    #ifdef ENABLE_I2C
+#ifdef ENABLE_I2C
 
     // time sensetive!
     void i2c_request() {
-        status.wait   = (uint16_t)receive_buf.len + (uint16_t)data_buf.len + (uint16_t)duckparser::getDelayTime();
-        status.repeat = (uint8_t)duckparser::getRepeats();
-
+        update_status();
         Wire.write((uint8_t*)&status, sizeof(status_t));
     }
 
@@ -61,18 +66,55 @@ namespace com {
         Wire.onReceive(i2c_receive);
     }
 
-    #else // ifdef ENABLE_I2C
+#else // ifdef ENABLE_I2C
     void i2c_begin() {}
 
-    #endif // ifdef ENABLE_I2C
+#endif // ifdef ENABLE_I2C
+
+    // ========== PRIVATE SERIAL ========== //
+#ifdef ENABLE_SERIAL
+    void serial_begin() {
+        debugsln("ENABLED SERIAL");
+        SERIAL_COM.begin(SERIAL_BAUD);
+    }
+
+    void serial_send_status() {
+        debugsln("Replying with status");
+        update_status();
+        SERIAL_COM.write(REQ_SOT);
+        SERIAL_COM.write((uint8_t*)&status, sizeof(status_t));
+        SERIAL_COM.write(REQ_EOT);
+        SERIAL_COM.flush();
+    }
+
+    void serial_update() {
+        unsigned int len = SERIAL_COM.available();
+
+        if ((len > 0) && (receive_buf.len+len <= BUFFER_SIZE)) {
+            SERIAL_COM.readBytes(&receive_buf.data[receive_buf.len], len);
+            receive_buf.len += len;
+        }
+    }
+
+#else // ifdef ENABLE_SERIAL
+    void serial_begin() {}
+
+    void serial_send_status() {}
+
+    void serial_update() {}
+
+#endif // ifdef ENABLE_SERIAL
 
     // ========== PUBLIC ========== //
     void begin() {
         status.version = COM_VERSION;
         i2c_begin();
+        serial_begin();
     }
 
     void update() {
+        serial_update();
+
         if (!start_parser && (receive_buf.len > 0) && (data_buf.len < BUFFER_SIZE)) {
             unsigned int i = 0;
 
@@ -114,7 +156,7 @@ namespace com {
             if (start_parser && !ongoing_transmission) {
                 debugs("[EOT]");
             } else if (!start_parser && ongoing_transmission) {
-                debug("...");
+                debugs("...");
             } else if (!start_parser && !ongoing_transmission) {
                 debugs("DROPPED");
             }
@@ -136,5 +178,6 @@ namespace com {
     void sendDone() {
         data_buf.len = 0;
         start_parser = false;
+        serial_send_status();
     }
 }
