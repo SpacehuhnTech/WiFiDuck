@@ -38,4 +38,6 @@ namespace com {
 
     /*! Returns state of connection */
     bool connected();
+
+    int getVersion();
 }

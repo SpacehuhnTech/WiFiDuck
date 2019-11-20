@@ -90,7 +90,7 @@ namespace cli {
          * Prints the current version number
          */
         cli.addCommand("version", [](cmd* c) {
-            String res = "Version " + String(VERSION);
+            String res = "Version " + String(VERSION) + " (" + String(com::getVersion()) + ")";
             print(res);
         });
 

@@ -70,6 +70,8 @@ namespace com {
             status.wait  = Wire.read();
             status.wait |= uint16_t(Wire.read()) << 8;
 
+            debugf(" %u", status.wait);
+
             status.repeat = Wire.read();
         } else {
             connection = false;
@@ -227,5 +229,9 @@ namespace com {
 
     bool connected() {
         return connection;
+    }
+
+    int getVersion() {
+        return status.version;
     }
 }
