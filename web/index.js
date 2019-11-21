@@ -221,7 +221,6 @@ function write(fileName, content) {
   stop(fileName);
 
   fileName = fixFileName(fileName);
-  content = content.replace(/"/g, '\\"');
 
   ws_send("remove \"/temporary_script\"", log_ws);
   ws_send("create \"/temporary_script\"", log_ws);
