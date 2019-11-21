@@ -27,6 +27,10 @@ function get_editor_filename() {
   return E("editorFile").value;
 }
 
+function set_editor_filename(filename) {
+  return E("editorFile").value = filename;
+}
+
 function get_editor_content() {
   var content = E("editor").value;
 
@@ -170,7 +174,7 @@ function read(fileName) {
 
   fileName = fixFileName(fileName);
 
-  E("editorFile").value = fileName;
+  set_editor_filename(fileName);
   E("editor").value = "";
 
   ws_send("stream \"" + fileName + "\"", log_ws);
@@ -184,7 +188,7 @@ function create(fileName) {
 
   fileName = fixFileName(fileName);
 
-  E("editorFile").value = fileName;
+  set_editor_filename(fileName);
   E("editor").value = "";
 
   ws_send("create \"" + fileName + "\"", log_ws);
