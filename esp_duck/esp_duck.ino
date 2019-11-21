@@ -17,6 +17,8 @@
 void setup() {
     debug_init();
 
+    delay(200);
+
     com::begin();
 
     spiffs::begin();
