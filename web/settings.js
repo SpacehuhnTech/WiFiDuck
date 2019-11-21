@@ -29,27 +29,59 @@ function ws_connected() {
 window.addEventListener("load", function() {
 
   E("edit_ssid").onclick = function() {
-    ws_send("set ssid \"" + prompt("SSID (1-32 chars)", E("ssid").innerHTML) + "\"", function(msg) {
-      load_settings();
-    });
+    var newssid = prompt("SSID (1-32 chars)", E("ssid").innerHTML);
+
+    if (newssid) {
+      if (newssid.length >= 1 && newssid.length <= 32) {
+        ws_send("set ssid \"" + newssid + "\"", function(msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid length");
+      }
+    }
   };
 
   E("edit_password").onclick = function() {
-    ws_send("set password \"" + prompt("Password (8-64 chars)", E("password").innerHTML) + "\"", function(msg) {
-      load_settings();
-    });
+    var newpassword = prompt("Password (8-64 chars)", E("password").innerHTML);
+
+    if (newpassword) {
+      if (newpassword.length >= 8 && newpassword.length <= 64) {
+        ws_send("set password \"" + newpassword + "\"", function(msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid length");
+      }
+    }
   };
 
   E("edit_channel").onclick = function() {
-    ws_send("set channel " + prompt("Channel (1-14)", E("channel").innerHTML), function(msg) {
-      load_settings();
-    });
+    var newchannel = prompt("Channel (1-14)", E("channel").innerHTML);
+
+    if (newchannel) {
+      if (parseInt(newchannel) >= 1 && parseInt(newchannel) <= 13) {
+        ws_send("set channel " + newchannel, function(msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid channel number");
+      }
+    }
   };
 
   E("disable_autorun").onclick = function() {
     ws_send("set autorun \"\"", function(msg) {
       load_settings();
     });
+  };
+
+  E("reset").onclick = function() {
+    if (confirm("Reset all settings to default?")) {
+      ws_send("reset", function(msg) {
+        load_settings();
+      });
+    }
   };
 
   ws_init();
