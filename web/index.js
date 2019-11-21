@@ -16,6 +16,9 @@ var status_interval = undefined;
 // ! Unsaved content in the editor
 var unsaved_changed = false;
 
+// ! Flag if editor has loaded a file yet
+var file_opened = false;
+
 // ========== Global Functions ========== //
 
 // ===== Value Getters ===== //
@@ -105,7 +108,7 @@ function update_file_list() {
         var fileSize = data[1];
 
         if (fileName.length > 0) {
-          if (i == 0 && E("editor").value.length == 0) {
+          if (i == 0 && !file_opened) {
             read(fileName);
           }
           tableHTML += "<tr>\n";
@@ -180,6 +183,8 @@ function read(fileName) {
   ws_send("stream \"" + fileName + "\"", log_ws);
 
   read_stream(); // !< Read file contents (recursively)
+
+  file_opened = true;
 }
 
 // ! Create a new file
@@ -188,11 +193,15 @@ function create(fileName) {
 
   fileName = fixFileName(fileName);
 
-  set_editor_filename(fileName);
-  E("editor").value = "";
+  if (file_list.includes(fileName + " ")) {
+    read(fileName);
+  } else {
+    set_editor_filename(fileName);
+    E("editor").value = "";
 
-  ws_send("create \"" + fileName + "\"", log_ws);
-  update_file_list();
+    ws_send("create \"" + fileName + "\"", log_ws);
+    update_file_list();
+  }
 }
 
 // ! Delete a file
