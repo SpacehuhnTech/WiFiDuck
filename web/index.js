@@ -294,7 +294,6 @@ window.addEventListener("load", function() {
   E("editorRun").onclick = function() {
     if (unsaved_changed) {
       save();
-      update_file_list();
     }
 
     run(get_editor_filename());
