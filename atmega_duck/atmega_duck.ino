@@ -22,7 +22,7 @@ void setup() {
     led::begin();
     com::begin();
 
-    debug("Started! ");
+    debugs("Started! ");
     debugln(VERSION);
 }
 
@@ -32,7 +32,7 @@ void loop() {
     if (com::hasData()) {
         const buffer_t& buffer = com::getBuffer();
 
-        debug("Interpreting: ");
+        debugs("Interpreting: ");
 
         for (size_t i = 0; i<buffer.len; i++) debug(buffer.data[i]);
 

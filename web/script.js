@@ -92,6 +92,10 @@ function ws_msg_queue_update() {
 function ws_send(message, callback, force = false) {
   if (!message.endsWith('\n')) message += '\n';
 
+  ws_send_raw(message, callback, force);
+}
+
+function ws_send_raw(message, callback, force = false) {
   var obj = {
     "message": message,
     "callback": callback

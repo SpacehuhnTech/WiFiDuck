@@ -14,193 +14,243 @@
 
 // ! Communication request codes
 #define REQ_SOT 0x01     // !< Start of transmission
-#define REQ_VERSION 0x02 // !< Request current version
 #define REQ_EOT 0x04     // !< End of transmission
+#define REQ_VERSION 0x02 // !< Request current version
 
-// ! Communication response codes
-#define RES_OK 0x00
-#define RES_PROCESSING 0x01
-#define RES_REPEAT 0x02
-#define RES_ERROR 0xFE
+#define COM_VERSION 3
+
+typedef struct status_t {
+    uint8_t  version;
+    uint16_t wait;
+    uint8_t  repeat;
+} status_t;
 
 namespace com {
-    // ===== PRIVATE ===== //
-    // ! Flags for connection types
-    bool serial_connection = false;
-    bool i2c_connection    = false;
+    // ========== PRIVATE ========== //
+    bool connection = false;
 
-    // ! Callback function pointer
     com_callback callback_done   = NULL;
     com_callback callback_repeat = NULL;
     com_callback callback_error  = NULL;
 
-    // ! Last received response code
-    uint8_t response = 0x01;
+    bool react_on_status  = false;
+    bool new_transmission = false;
 
-    // ! Flag to indicate a changed response code
-    bool response_change = false;
+    status_t status;
 
-    // ! Timestamp of last status request
+    // ========= PRIVATE I2C ========= //
+
+#ifdef ENABLE_I2C
     unsigned long request_time = 0;
 
-
-    // ! Internal function to start transmitting a packet
-    void beginTransmission() {
-#ifdef ENABLE_I2C
+    void i2c_start_transmission() {
         Wire.beginTransmission(I2C_ADDR);
-#endif // ifdef ENABLE_I2C
+        debug("Transmitting '");
     }
 
-    // ! Internal function to send a single byte
-    void transmitData(char b) {
-#ifdef ENABLE_I2C
-        if (i2c_connection) Wire.write(b);
-#endif // ifdef ENABLE_I2C
-
-#ifdef ENABLE_SERIAL
-        if (serial_connection) SERIAL_PORT.print(b);
-#endif // ifdef ENABLE_SERIAL
-    }
-
-    // ! Internal function to end transmission of a packet
-    void endTransmission() {
-#ifdef ENABLE_I2C
+    void i2c_stop_transmission() {
         Wire.endTransmission();
-#endif // ifdef ENABLE_I2C
-
-#ifdef ENABLE_SERIAL
-        SERIAL_PORT.flush();
-#endif // ifdef ENABLE_I2C
+        debugln("' ");
     }
 
-#ifdef ENABLE_I2C
-    // ! Internal function to end transmission of a packet
+    void i2c_transmit(char b) {
+        Wire.write(b);
+    }
+
     void i2c_request() {
-        debug("i2c request...");
+        debug("I2C Request");
+
+        uint16_t prev_wait = status.wait;
+
+        Wire.requestFrom(I2C_ADDR, sizeof(status_t));
+
+        if (Wire.available() == sizeof(status_t)) {
+            status.version = Wire.read();
+
+            status.wait  = Wire.read();
+            status.wait |= uint16_t(Wire.read()) << 8;
+
+            status.repeat = Wire.read();
+
+            debugf(" %u", status.wait);
+        } else {
+            connection = false;
+            debug(" ERROR");
+        }
+
+        react_on_status = status.wait == 0 ||
+                          status.repeat > 0 ||
+                          ((prev_wait&1) ^ (status.wait&1));
+
+        debugln();
 
         request_time = millis();
-
-        Wire.requestFrom(I2C_ADDR, 1);
-
-        uint8_t prev_response = response;
-
-        if (Wire.available()) {
-            response = Wire.read();
-            debugln(response);
-        } else {
-            i2c_connection = false;
-            response       = RES_ERROR;
-            debugln("ERROR");
-        }
-
-        response_change = prev_response != response;
     }
 
-    // ! Internal function to check for response on i2c connection
-    void update_i2c() {
-        if (i2c_connection) {
-            if ((response != RES_ERROR) &&
-                (response & RES_PROCESSING == RES_PROCESSING) &&
-                (millis() - request_time > response)) {
-                i2c_request();
-            }
+    void i2c_begin() {
+        unsigned long start_time = millis();
+
+        Wire.begin(I2C_SDA, I2C_SCL);
+        Wire.setClock(I2C_CLOCK_SPEED);
+
+        while (Wire.available()) Wire.read();
+
+        debugln("Connecting via i2c");
+
+        connection = true;
+
+        send(MSG_CONNECTED);
+
+        update();
+
+        debug("I2C Connection ");
+        debugln(connection ? "OK" : "ERROR");
+    }
+
+    void i2c_update() {
+        if (!connection) return;
+
+        bool processing = status.wait > 0;
+        bool delay_over = request_time + status.wait < millis();
+
+        if (new_transmission || (processing && delay_over)) {
+            new_transmission = false;
+            i2c_request();
         }
     }
+
+#else // ifdef ENABLE_I2C
+    void i2c_start_transmission() {}
+
+    void i2c_stop_transmission() {}
+
+    void i2c_transmit(char b) {}
+
+    void i2c_request() {}
+
+    void i2c_begin() {}
+
+    void i2c_update() {}
 
 #endif // ifdef ENABLE_I2C
+
+    // ========= PRIVATE I2C ========= //
 
 #ifdef ENABLE_SERIAL
-    // ! Internal function to check for response on serial connection
-    void update_serial() {
-        if (SERIAL_PORT.available()) {
-            uint8_t prev_response = response;
-            response        = Serial.read();
-            response_change = (prev_response != response);
+    bool ongoing_transmission = false;
+
+    void serial_start_transmission() {
+        debug("Transmitting '");
+    }
+
+    void serial_stop_transmission() {
+        SERIAL_PORT.flush();
+        debugln("' ");
+    }
+
+    void serial_transmit(char b) {
+        SERIAL_PORT.write(b);
+    }
+
+    void serial_begin() {
+        SERIAL_PORT.begin(SERIAL_BAUD);
+
+        while (SERIAL_PORT.available()) SERIAL_PORT.read();
+
+        debug("Connecting via serial");
+
+        connection = true;
+
+        send(MSG_CONNECTED);
+
+        update();
+
+        debug("Serial Connection ");
+        debugln(connection ? "OK" : "ERROR");
+    }
+
+    void serial_update() {
+        if (SERIAL_PORT.available() >= sizeof(status_t)+2) {
+            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_SOT) {}
+
+            uint16_t prev_wait = status.wait;
+
+            status.version = SERIAL_PORT.read();
+
+            status.wait  = SERIAL_PORT.read();
+            status.wait |= uint16_t(SERIAL_PORT.read()) << 8;
+
+            status.repeat = SERIAL_PORT.read();
+
+            react_on_status = status.wait == 0 ||
+                              status.repeat > 0 ||
+                              ((prev_wait&1) ^ (status.wait&1));
+
+            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_EOT) {}
         }
     }
 
-#endif // ifdef ENABLE_I2C
+#else // ifdef ENABLE_SERIAL
+    void serial_start_transmission() {}
+
+    void serial_stop_transmission() {}
+
+    void serial_transmit(char b) {}
+
+    void serial_begin() {}
+
+    void serial_update() {}
+
+#endif // ifdef ENABLE_SERIAL
+
+    void start_transmission() {
+        i2c_start_transmission();
+        serial_start_transmission();
+    }
+
+    void stop_transmission() {
+        i2c_stop_transmission();
+        serial_stop_transmission();
+    }
+
+    void transmit(char b) {
+        i2c_transmit(b);
+        serial_transmit(b);
+    }
 
     // ===== PUBLIC ===== //
     void begin() {
-        unsigned long start_time = 0;
+        status.version = 0;
+        status.wait    = 0;
+        status.repeat  = 0;
 
-#ifdef ENABLE_SERIAL
-        SERIAL_PORT.begin(SERIAL_BAUD);
-
-        serial_connection = true;
-        send(MSG_CONNECTED);
-
-        debug("Connecting via serial...");
-
-        start_time = millis();
-
-        while (response != RES_OK && millis() - start_time < 1000) {
-            update();
-        }
-        serial_connection = (response == RES_OK);
-
-        // debugln(serial_connection ? "OK" : "ERROR");
-#endif // ifdef ENABLE_SERIAL
-
-#ifdef ENABLE_I2C
-        if (serial_connection) return;
-
-        // ! Initialize Arduino i2c implementation
-        Wire.begin(I2C_SDA, I2C_SCL);
-        Wire.setClock(I2C_CLOCK_SPEED);
-        i2c_connection = true;
-        send(MSG_CONNECTED);
-
-        debug("Connecting via i2c...");
-
-        start_time = millis();
-
-        i2c_request();
-
-        while (response != RES_OK && millis() - start_time < 1000) {
-            update();
-        }
-        i2c_connection = (response == RES_OK);
-
-        while (!i2c_connection && millis() - start_time < 1000) {
-            update();
-        }
-        i2c_connection = (response == RES_OK);
-
-        // debugf("i2c_connection=%d,response=%u\n", i2c_connection, response);
-
-        // debugln(i2c_connection ? "OK" : "ERROR");
-#endif // ifdef ENABLE_I2C
+        i2c_begin();
+        serial_begin();
     }
 
     void update() {
-#ifdef ENABLE_I2C
-        update_i2c();
-#endif // ifdef ENABLE_I2C
+        i2c_update();
+        serial_update();
 
-#ifdef ENABLE_SERIAL
-        update_serial();
-#endif // ifdef ENABLE_SERIAL
+        if (react_on_status) {
+            react_on_status = false;
 
-        if (response_change) {
-            response_change = false;
+            debug("Com. status ");
 
-            debugf("NEW STATUS [%u] = ", response);
-
-            if (response & RES_PROCESSING) {
-                debugln("PROCESSING");
-            } else if (response == RES_OK) {
+            if (status.version != COM_VERSION) {
+                debugf("ERROR %u\n", status.version);
+                connection = false;
+                if (callback_error) callback_error();
+            } else if (status.wait > 0) {
+                debugf("PROCESSING %u\n", status.wait);
+            } else if (status.repeat > 0) {
+                debugf("REPEAT %u\n", status.repeat);
+                if (callback_repeat) callback_repeat();
+            } else if ((status.wait == 0) && (status.repeat == 0)) {
                 debugln("DONE");
                 if (callback_done) callback_done();
-            } else if (response == RES_REPEAT) {
-                debugln("REPEAT");
-                if (callback_repeat) callback_repeat();
-            } else if (response == RES_ERROR) {
-                debugln("ERROR");
-                if (callback_error) callback_error();
             } else {
-                debugln("UNKOWN");
+                debugln("idk");
             }
         }
     }
@@ -220,34 +270,34 @@ namespace com {
         size_t sent = 0;
         size_t i    = 0;
 
-        beginTransmission();
-        transmitData(REQ_SOT);
-        ++sent;
+        start_transmission();
 
-        debug("Sending=");
+        transmit(REQ_SOT);
+
+        ++sent;
 
         while (i < len) {
             char b = str[i];
 
-            debug(b);
-            transmitData(b);
+            if ((b != '\n') && (b != '\n')) debug(b);
+            transmit(b);
 
             ++i;
             ++sent;
 
             if (sent % PACKET_SIZE == 0) {
-                endTransmission();
-                beginTransmission();
+                stop_transmission();
+                start_transmission();
             }
         }
 
-        transmitData(REQ_EOT);
-        ++sent;
-        endTransmission();
+        transmit(REQ_EOT);
 
-#ifdef ENABLE_I2C
-        if (i2c_connection) i2c_request();
-#endif // ifdef ENABLE_I2C
+        ++sent;
+
+        stop_transmission();
+
+        new_transmission = true;
 
         // ! Return number of characters sent, minus 2 due to the signals
         return sent-2;
@@ -266,6 +316,10 @@ namespace com {
     }
 
     bool connected() {
-        return serial_connection || i2c_connection;
+        return connection;
+    }
+
+    int getVersion() {
+        return status.version;
     }
 }

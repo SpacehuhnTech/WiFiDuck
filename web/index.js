@@ -16,6 +16,9 @@ var status_interval = undefined;
 // ! Unsaved content in the editor
 var unsaved_changed = false;
 
+// ! Flag if editor has loaded a file yet
+var file_opened = false;
+
 // ========== Global Functions ========== //
 
 // ===== Value Getters ===== //
@@ -25,6 +28,10 @@ function get_new_filename() {
 
 function get_editor_filename() {
   return E("editorFile").value;
+}
+
+function set_editor_filename(filename) {
+  return E("editorFile").value = filename;
 }
 
 function get_editor_content() {
@@ -49,7 +56,7 @@ function start_status_interval() {
   if (status_interval) return; // !< Only continue if status_interval not set
 
   ws_update_status(); // !< Get current status
-  status_interval = setInterval(check_status, 200); // !< Start interval
+  status_interval = setInterval(check_status, 500); // !< Start interval
 }
 
 // ! Stop interval that checks and updates the status continously
@@ -101,7 +108,7 @@ function update_file_list() {
         var fileSize = data[1];
 
         if (fileName.length > 0) {
-          if (i == 0 && E("editor").value.length == 0) {
+          if (i == 0 && !file_opened) {
             read(fileName);
           }
           tableHTML += "<tr>\n";
@@ -170,12 +177,14 @@ function read(fileName) {
 
   fileName = fixFileName(fileName);
 
-  E("editorFile").value = fileName;
+  set_editor_filename(fileName);
   E("editor").value = "";
 
   ws_send("stream \"" + fileName + "\"", log_ws);
 
   read_stream(); // !< Read file contents (recursively)
+
+  file_opened = true;
 }
 
 // ! Create a new file
@@ -184,11 +193,15 @@ function create(fileName) {
 
   fileName = fixFileName(fileName);
 
-  E("editorFile").value = fileName;
-  E("editor").value = "";
+  if (file_list.includes(fileName + " ")) {
+    read(fileName);
+  } else {
+    set_editor_filename(fileName);
+    E("editor").value = "";
 
-  ws_send("create \"" + fileName + "\"", log_ws);
-  update_file_list();
+    ws_send("create \"" + fileName + "\"", log_ws);
+    update_file_list();
+  }
 }
 
 // ! Delete a file
@@ -227,7 +240,7 @@ function write(fileName, content) {
     var end = begin + pktsize;
     if (end > content.length) end = content.length;
 
-    ws_send(content.substring(begin, end), ws_send_log);
+    ws_send_raw(content.substring(begin, end), ws_send_log);
   }
 
   ws_send("close", log_ws);
@@ -243,6 +256,7 @@ function save() {
   write(get_editor_filename(), get_editor_content());
   unsaved_changed = false;
   E("editorinfo").innerHTML = "saved";
+  update_file_list();
 }
 
 // ! Function that is called once the websocket connection was established
@@ -280,7 +294,6 @@ window.addEventListener("load", function() {
   E("editorRun").onclick = function() {
     if (unsaved_changed) {
       save();
-      update_file_list();
     }
 
     run(get_editor_filename());

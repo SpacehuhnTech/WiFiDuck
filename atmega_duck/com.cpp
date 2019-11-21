@@ -1,8 +1,8 @@
 /*!
-    \file atmega_duck/com.cpp
-    \brief Communication Module source
-    \author Stefan Kremser
-    \copyright MIT License
+   \file atmega_duck/com.cpp
+   \brief Communication Module source
+   \author Stefan Kremser
+   \copyright MIT License
  */
 
 #include "com.h"
@@ -14,163 +14,170 @@
 
 // ! Communication request codes
 #define REQ_SOT 0x01     // !< Start of transmission
-#define REQ_VERSION 0x02 // !< Request current version
 #define REQ_EOT 0x04     // !< End of transmission
+#define REQ_VERSION 0x02 // !< Request current version
 
-// ! Communication response codes
-#define RES_OK 0x00
-#define RES_PROCESSING 0x01
-#define RES_REPEAT 0x02
+#define COM_VERSION 3
+
+typedef struct status_t {
+    uint8_t  version;
+    uint16_t wait;
+    uint8_t  repeat;
+} status_t;
 
 namespace com {
-    // ===== PRIVATE ===== //
-    buffer_t buffer; // !< Communication buffer Instance
+    // =========== PRIVATE ========= //
+    buffer_t receive_buf;
+    buffer_t data_buf;
 
     bool start_parser         = false;
-    bool i2c_active           = false;
-    bool serial_active        = false;
     bool ongoing_transmission = false;
 
-    /*!
-     * \brief Internal function to buffer received data
-     *
-     * Writes the receieved data into the buffer.
-     * Returns wheter or not data that is to be parsed was received.
-     */
-    bool receive(Stream& stream) {
-        if (stream.available()) {
-            debug("RECEIVED ");
+    status_t status;
 
-            /*
-                        if ((stream.available() == 1) && (stream.peek() == REQ_VERSION)) {
-                            stream.read();
-                            stream.print(VERSION);
-                            return false;
-                        }
-             */
-            // ! Skip bytes
-            while (stream.available() && !ongoing_transmission) {
-                if (stream.read() == REQ_SOT) {
-                    ongoing_transmission = true;
-                    debug("[SOT] ");
-                }
-            }
+    void update_status() {
+        status.wait = (uint16_t)receive_buf.len
+                      + (uint16_t)data_buf.len
+                      + (uint16_t)duckparser::getDelayTime();
+        status.repeat = (uint8_t)duckparser::getRepeats();
+    }
 
-            if (stream.available()) {
-                debug("'");
+    // ========== PRIVATE I2C ========== //
+#ifdef ENABLE_I2C
 
-                while (stream.available() && ongoing_transmission) {
-                    char c = stream.read();
+    // time sensetive!
+    void i2c_request() {
+        update_status();
+        Wire.write((uint8_t*)&status, sizeof(status_t));
+    }
 
-                    if (c == REQ_EOT) {
-                        start_parser         = true;
-                        ongoing_transmission = false;
-                    } else {
-                        debug(c);
-                        buffer.data[buffer.len] = c;
-                        ++buffer.len;
-                    }
-
-                    if (buffer.len == BUFFER_SIZE) {
-                        start_parser         = true;
-                        ongoing_transmission = false;
-                    }
-                }
-                debug("' ");
-            }
-
-            if (!ongoing_transmission && !start_parser) debugln("DROPPED");
-            else if (start_parser) debugln("[EOT]");
-            else debugln();
-
-            return start_parser;
+    // time sensetive!
+    void i2c_receive(int len) {
+        if (receive_buf.len + (unsigned int)len <= BUFFER_SIZE) {
+            Wire.readBytes(&receive_buf.data[receive_buf.len], len);
+            receive_buf.len += len;
         }
-
-        return false;
     }
 
-    /*!
-     * \brief Internal function to send response
-     *
-     * Replies with wait time, if slave is still processing.
-     * Replies repeat if duckparsers repeat counter > 0.
-     * If everything was processed and the buffer is empty, it replies with OK.
-     */
-    void respond(Stream& stream) {
-        uint8_t response;
-
-        if (hasData()) {
-            uint8_t delayTime = (uint8_t)min(duckparser::getDelayTime(), 255);
-            response = delayTime | (uint8_t)RES_PROCESSING;
-            debug("Responding PROCESSING");
-        } else if (duckparser::getRepeats()) {
-            response = (uint8_t)RES_REPEAT;
-            debug("Responding REPEAT");
-        } else {
-            response = (uint8_t)RES_OK;
-            debug("Responding OK");
-        }
-
-        debug(" [");
-        debug(response);
-        debugln("]");
-
-        stream.write(response);
+    void i2c_begin() {
+        debugsln("ENABLED I2C");
+        Wire.begin(I2C_ADDR);
+        Wire.onRequest(i2c_request);
+        Wire.onReceive(i2c_receive);
     }
 
-    /*!
-     * \brief Internal i2c request event handler
-     */
-    void requestEvent() {
-        debugln("I2C REQUEST");
-        respond(Wire);
-    }
+#else // ifdef ENABLE_I2C
+    void i2c_begin() {}
 
-    /*!
-     * \brief Internal i2c receive event handler
-     */
-    void receiveEvent(int len) {
-        receive(Wire);
-    }
+#endif // ifdef ENABLE_I2C
 
-    // ===== PUBLIC ===== //
-    void begin() {
+    // ========== PRIVATE SERIAL ========== //
 #ifdef ENABLE_SERIAL
-        debugln("ENABLED SERIAL");
+    void serial_begin() {
+        debugsln("ENABLED SERIAL");
         SERIAL_COM.begin(SERIAL_BAUD);
+    }
+
+    void serial_send_status() {
+        debugsln("Replying with status");
+        update_status();
+        SERIAL_COM.write(REQ_SOT);
+        SERIAL_COM.write((uint8_t*)&status, sizeof(status_t));
+        SERIAL_COM.write(REQ_EOT);
+        SERIAL_COM.flush();
+    }
+
+    void serial_update() {
+        unsigned int len = SERIAL_COM.available();
+
+        if ((len > 0) && (receive_buf.len+len <= BUFFER_SIZE)) {
+            SERIAL_COM.readBytes(&receive_buf.data[receive_buf.len], len);
+            receive_buf.len += len;
+        }
+    }
+
+#else // ifdef ENABLE_SERIAL
+    void serial_begin() {}
+
+    void serial_send_status() {}
+
+    void serial_update() {}
+
 #endif // ifdef ENABLE_SERIAL
 
-#ifdef ENABLE_I2C
-        debugln("ENABLED I2C");
-        Wire.begin(I2C_ADDR);         // !< Begin i2c slave on given address
-        Wire.onRequest(requestEvent); // !< Set request event handler
-        Wire.onReceive(receiveEvent); // !< Set receive event handler
-#endif // ifdef ENABLE_I2C
+    // ========== PUBLIC ========== //
+    void begin() {
+        status.version = COM_VERSION;
+        i2c_begin();
+        serial_begin();
     }
 
     void update() {
-#ifdef ENABLE_SERIAL
-        if (receive(SERIAL_COM)) {
-            serial_active = true;
-            respond(SERIAL_COM);
+        serial_update();
+
+        if (!start_parser && (receive_buf.len > 0) && (data_buf.len < BUFFER_SIZE)) {
+            unsigned int i = 0;
+
+            debugs("RECEIVED ");
+
+            // ! Skip bytes until start of transmission
+            while (i < receive_buf.len && !ongoing_transmission) {
+                if (receive_buf.data[i] == REQ_SOT) {
+                    ongoing_transmission = true;
+                    debugs("[SOT] ");
+                }
+                ++i;
+            }
+
+            debugs("'");
+
+            while (i < receive_buf.len && ongoing_transmission) {
+                char c = receive_buf.data[i];
+
+                if (c == REQ_EOT) {
+                    start_parser         = true;
+                    ongoing_transmission = false;
+                } else {
+                    if ((c != '\n') && (c != '\r')) debug(c);
+                    data_buf.data[data_buf.len] = c;
+                    ++data_buf.len;
+                }
+
+                if (data_buf.len == BUFFER_SIZE) {
+                    start_parser         = true;
+                    ongoing_transmission = false;
+                }
+
+                ++i;
+            }
+
+            debugs("' ");
+
+            if (start_parser && !ongoing_transmission) {
+                debugs("[EOT]");
+            } else if (!start_parser && ongoing_transmission) {
+                debugs("...");
+            } else if (!start_parser && !ongoing_transmission) {
+                debugs("DROPPED");
+            }
+
+            debugln();
+
+            receive_buf.len = 0;
         }
-#endif // ifdef ENABLE_SERIAL
     }
 
     bool hasData() {
-        return buffer.len > 0 && start_parser;
+        return data_buf.len > 0 && start_parser;
     }
 
     const buffer_t& getBuffer() {
-        return buffer;
+        return data_buf;
     }
 
     void sendDone() {
-        buffer.len   = 0;
+        data_buf.len = 0;
         start_parser = false;
-
-#ifdef ENABLE_SERIAL
-        if (serial_active) respond(SERIAL_COM);
-#endif // ifdef ENABLE_SERIAL
+        serial_send_status();
     }
 }

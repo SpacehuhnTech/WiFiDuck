@@ -134,7 +134,12 @@ namespace duckparser {
         // Go through all lines
         line_node* n = l->first;
 
+        // Flag, no default delay after this command
+        bool ignore_delay;
+
         while (n) {
+            ignore_delay = false;
+
             word_list* wl  = n->words;
             word_node* cmd = wl->first;
 
@@ -146,18 +151,8 @@ namespace duckparser {
 
             // REM (= Comment -> do nothing)
             if (inComment || compare(cmd->str, cmd->len, "REM", CASE_SENSETIVE)) {
-                inComment = !line_end;
-            }
-
-            // STRING (-> type each character)
-            else if (inString || compare(cmd->str, cmd->len, "STRING", CASE_SENSETIVE)) {
-                if (inString) {
-                    type(n->str, n->len);
-                } else {
-                    type(line_str, line_str_len);
-                }
-
-                inString = !line_end;
+                inComment    = !line_end;
+                ignore_delay = true;
             }
 
             // LOCALE (-> change keyboard layout)
@@ -171,21 +166,54 @@ namespace duckparser {
                 } else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
                     keyboard::setLocale(&locale_gb);
                 }
+                ignore_delay = true;
             }
 
             // DELAY (-> sleep for x ms)
             else if (compare(cmd->str, cmd->len, "DELAY", CASE_SENSETIVE)) {
                 sleep(toInt(line_str, line_str_len));
+                ignore_delay = true;
             }
 
             // DEFAULTDELAY/DEFAULT_DELAY (set default delay per command)
             else if (compare(cmd->str, cmd->len, "DEFAULTDELAY", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "DEFAULT_DELAY", CASE_SENSETIVE)) {
                 defaultDelay = toInt(line_str, line_str_len);
+                ignore_delay = true;
             }
 
             // REPEAT (-> repeat last command n times)
             else if (compare(cmd->str, cmd->len, "REPEAT", CASE_SENSETIVE) || compare(cmd->str, cmd->len, "REPLAY", CASE_SENSETIVE)) {
-                repeatNum = toInt(line_str, line_str_len) + 1;
+                repeatNum    = toInt(line_str, line_str_len) + 1;
+                ignore_delay = true;
+            }
+
+            // STRING (-> type each character)
+            else if (inString || compare(cmd->str, cmd->len, "STRING", CASE_SENSETIVE)) {
+                if (inString) {
+                    type(n->str, n->len);
+                } else {
+                    type(line_str, line_str_len);
+                }
+
+                inString = !line_end;
+            }
+
+            // LED
+            else if (compare(cmd->str, cmd->len, "LED", CASE_SENSETIVE)) {
+                word_node* w = cmd->next;
+
+                int c[3];
+
+                for (uint8_t i = 0; i<3; ++i) {
+                    if (w) {
+                        c[i] = toInt(w->str, w->len);
+                        w    = w->next;
+                    } else {
+                        c[i] = 0;
+                    }
+                }
+
+                led::setColor(c[0], c[1], c[2]);
             }
 
             // KEYCODE
@@ -212,24 +240,6 @@ namespace duckparser {
                 }
             }
 
-            // LED
-            else if (compare(cmd->str, cmd->len, "LED", CASE_SENSETIVE)) {
-                word_node* w = cmd->next;
-
-                int c[3];
-
-                for (uint8_t i = 0; i<3; ++i) {
-                    if (w) {
-                        c[i] = toInt(w->str, w->len);
-                        w    = w->next;
-                    } else {
-                        c[i] = 0;
-                    }
-                }
-
-                led::setColor(c[0], c[1], c[2]);
-            }
-
             // Otherwise go through words and look for keys to press
             else {
                 word_node* w = wl->first;
@@ -244,7 +254,7 @@ namespace duckparser {
 
             n = n->next;
 
-            if (!inString && !inComment) sleep(defaultDelay);
+            if (!inString && !inComment && !ignore_delay) sleep(defaultDelay);
 
             if (line_end && (repeatNum > 0)) --repeatNum;
 
@@ -263,10 +273,10 @@ namespace duckparser {
         unsigned long currentTime = millis();
 
         if (currentTime > finishTime) {
-            return DEFAULT_SLEEP;
+            return 0;
         } else {
             unsigned long remainingTime = finishTime - currentTime;
-            return remainingTime | DEFAULT_SLEEP;
+            return (unsigned int)remainingTime;
         }
     }
 }

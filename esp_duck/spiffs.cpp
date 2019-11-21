@@ -209,4 +209,9 @@ namespace spiffs {
     bool streaming() {
         return streamFile;
     }
+
+    size_t streamAvailable() {
+        if (!streamFile) return 0;
+        return streamFile.available();
+    }
 }

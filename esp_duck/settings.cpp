@@ -36,6 +36,11 @@ namespace settings {
     void load() {
         eeprom::getObject(SETTINGS_ADDRES, data);
         if (data.magic_num != SETTINGS_MAGIC_NUM) reset();
+
+        if (data.ssid[32] != 0) setSSID(WIFI_SSID);
+        if (data.password[64] != 0) setPassword(WIFI_PASSWORD);
+        if (data.channel[4] != 0) setChannel(WIFI_CHANNEL);
+        if (data.autorun[64] != 0) setAutorun("");
     }
 
     void reset() {
@@ -104,46 +109,38 @@ namespace settings {
     }
 
     void setSSID(const char* ssid) {
-        if (ssid && (strlen(ssid) <= 32)) {
-            size_t ssid_len = strlen(ssid);
+        if (ssid) {
+            memset(data.ssid, 0, 33);
+            strncpy(data.ssid, ssid, 32);
 
-            for (uint8_t i = 0; i<33; ++i) {
-                if (i < ssid_len) data.ssid[i] = ssid[i];
-                else data.ssid[i] = '\0';
-            }
+            save();
         }
     }
 
     void setPassword(const char* password) {
-        if (password && (strlen(password) >= 8) && (strlen(password) <= 64)) {
-            size_t password_len = strlen(password);
+        if (password && (strlen(password) >= 8)) {
+            memset(data.password, 0, 65);
+            strncpy(data.password, password, 64);
 
-            for (uint8_t i = 0; i<65; ++i) {
-                if (i < password_len) data.password[i] = password[i];
-                else data.password[i] = '\0';
-            }
+            save();
         }
     }
 
     void setChannel(const char* channel) {
         if (channel && ((strcmp(channel, "auto") == 0) || ((atoi(channel) >= 1) && (atoi(channel) <= 13)))) {
-            size_t channel_len = strlen(channel);
+            memset(data.channel, 0, 5);
+            strncpy(data.channel, channel, 4);
 
-            for (uint8_t i = 0; i<5; ++i) {
-                if (i < channel_len) data.channel[i] = channel[i];
-                else data.channel[i] = '\0';
-            }
+            save();
         }
     }
 
     void setAutorun(const char* autorun) {
-        if (autorun && (strlen(autorun) <= 64)) {
-            size_t autorun_len = strlen(autorun);
+        if (autorun) {
+            memset(data.autorun, 0, 65);
+            strncpy(data.autorun, autorun, 64);
 
-            for (uint8_t i = 0; i<65; ++i) {
-                if (i < autorun_len) data.autorun[i] = autorun[i];
-                else data.autorun[i] = '\0';
-            }
+            save();
         }
     }
 }

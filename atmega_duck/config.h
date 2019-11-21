@@ -28,7 +28,7 @@
 // #define ENABLE_I2C
 #define I2C_ADDR 0x31
 
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 384
 #define PACKET_SIZE 32
 
 /*! ===== LED Settings ===== */

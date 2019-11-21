@@ -90,7 +90,7 @@ namespace cli {
          * Prints the current version number
          */
         cli.addCommand("version", [](cmd* c) {
-            String res = "Version " + String(VERSION);
+            String res = "Version " + String(VERSION) + " (" + String(com::getVersion()) + ")";
             print(res);
         });
 
@@ -123,7 +123,6 @@ namespace cli {
                 String value { argValue.getValue() };
 
                 settings::set(name.c_str(), value.c_str());
-                settings::save();
 
                 String response = "> set \"" + name + "\" to \"" + value + "\"";
 
@@ -395,14 +394,17 @@ namespace cli {
          * Reads from file stream (1024 characters)
          */
         cli.addCommand("read", [](cmd* c) {
-            size_t len = 1024;
+            if (spiffs::streamAvailable()) {
+                size_t len = 1024;
 
-            char buffer[len];
+                char buffer[len];
 
-            size_t read = spiffs::streamRead(buffer, len);
+                size_t read = spiffs::streamRead(buffer, len);
 
-            print(buffer);
-            if (read < len) print("> END");
+                print(buffer);
+            } else {
+                print("> END");
+            }
         });
     }
 
