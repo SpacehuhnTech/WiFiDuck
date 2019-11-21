@@ -49,14 +49,14 @@ const uint8_t ascii_es[] PROGMEM = {
     // 32, 0x20
     KEY_NONE,       KEY_SPACE,      // ' '
     KEY_MOD_LSHIFT, KEY_1,          // !
-    KEY_MOD_LSHIFT, KEY_2, 			    // "
-    KEY_MOD_RALT, 	KEY_3,         	// #
+    KEY_MOD_LSHIFT, KEY_2,          // "
+    KEY_MOD_RALT,       KEY_3,      // #
 
     // 36, 0x24
     KEY_MOD_LSHIFT, KEY_4,          // $
     KEY_MOD_LSHIFT, KEY_5,          // %
     KEY_MOD_LSHIFT, KEY_6,          // &
-    KEY_NONE,       KEY_DOT, 		    // '
+    KEY_NONE,       KEY_DOT,        // '
 
     // 40, 0x28
     KEY_MOD_LSHIFT, KEY_8,          // (
@@ -203,7 +203,6 @@ const uint8_t extended_ascii_es[] PROGMEM = {
     0xfa, KEY_MOD_LSHIFT, KEY_3,          // ·
     0xf9, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // ¨
     0xef, KEY_NONE,       KEY_APOSTROPHE  // ´
-    
 };
 
 const uint8_t utf8_es[] PROGMEM = {
@@ -215,12 +214,10 @@ const uint8_t utf8_es[] PROGMEM = {
     0xc3, 0x87, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_BACKSLASH,  // Ç
     0xc2, 0xba, 0x00, 0x00, KEY_NONE,       KEY_GRAVE,      // º
     0xc2, 0xaa, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_GRAVE,      // ª
-    0x5c, 0x00, 0x00, 0x00, KEY_MOD_RALT,   KEY_GRAVE,      // bslash
     0xe2, 0x82, 0xac, 0x00, KEY_MOD_RALT,   KEY_E,          // €
     0xc2, 0xb7, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_3,          // ·
     0xc2, 0xa8, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // ¨
     0xc2, 0xb4, 0x00, 0x00, KEY_NONE,       KEY_APOSTROPHE  // ´
-    
 };
 
 static hid_locale_t locale_es {
