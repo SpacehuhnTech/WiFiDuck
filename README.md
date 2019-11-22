@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<b>Wireless keystroke injection attack platform</b>
+<b>Keystroke injection attack platform</b>
 <br>
 A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiFi Ducky</a> project
 <br>
@@ -20,8 +20,10 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
 <br>
 <br>
 <br>
+<a href="https://www.youtube.com/watch?v=sSJuGXd8QRk">
 <img alt="running example script" src="https://raw.githubusercontent.com/spacehuhn/WiFiDuck/master/img/showcase.gif">
 <br>
+<b>Watch the full video</a></b>
 </p>
 
 ## Overview
