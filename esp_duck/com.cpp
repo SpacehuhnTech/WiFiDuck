@@ -38,6 +38,8 @@ namespace com {
 
     status_t status;
 
+    uint8_t transm_tries = 0;
+
     // ========= PRIVATE I2C ========= //
 
 #ifdef ENABLE_I2C
@@ -84,6 +86,25 @@ namespace com {
                           ((prev_wait&1) ^ (status.wait&1));
 
         debugln();
+
+        if (!react_on_status && (status.wait == prev_wait)) {
+            debug("Last message was not processed");
+
+            if (transm_tries > 3) {
+                connection = false;
+                debugln("...LOOP ERROR");
+            } else {
+                debugln("...repeating last line");
+
+                status.repeat = 1;
+
+                react_on_status = true;
+
+                ++transm_tries;
+            }
+        } else {
+            transm_tries = 0;
+        }
 
         request_time = millis();
     }
