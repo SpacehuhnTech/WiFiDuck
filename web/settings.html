@@ -5,94 +5,78 @@
 -->
 <!DOCTYPE html>
 <html>
+  	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
+		<meta name="theme-color" content="#36393E">
+		<meta name="description" content="WiFi Duck">
+		<meta name="author" content="Spacehuhn - Stefan Kremser">
+		<link rel="stylesheet" type="text/css" href="style.css">
 
-<head>
-  <meta charset="UTF-8">
+		<script src="script.js"></script>
+		<script src="settings.js"></script>
+    	<title>WiFi Duck | Settings</title>
+  	</head>
+  	<body>
+		<nav>
+			<ul class="menu">
+				<li><a href="index.html">WiFi Duck</a></li>
+				<li><a href="settings.html">Settings</a></li>
+				<li><a href="terminal.html">Terminal</a></li>
+				<li><a href="credits.html">About</a></li>
+			</ul>
+		</nav>
+		<div id="status"></div>
+		<main>
+			<section>
+				<h1>WiFi</h1>
 
-  <meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
-  <meta name="theme-color" content="#36393E">
+				<table>
+				<tr>
+					<td>SSID:</td>
+					<td id="ssid"></td>
+					<td><button class="primary" id="edit_ssid">edit</button></td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td id="password"></td>
+					<td><button class="primary" id="edit_password">edit</button></td>
+				</tr>
+				<tr>
+					<td>Channel:</td>
+					<td id="channel"></td>
+					<td><button class="primary" id="edit_channel">edit</button></td>
+				</tr>
+				<tr>
+					<td>Autorun Script:</td>
+					<td id="autorun"></td>
+					<td><button class="warn" id="disable_autorun">disable</button></td>
+				</tr>
+				</table>
 
-  <meta name="description" content="WiFi Duck">
-  <meta name="author" content="Spacehuhn - Stefan Kremser">
+				<p>Restart the device to apply new settings.</p>
 
-  <title>WiFi Duck Settings</title>
+				<button class="danger" id="reset">Reset settings</button>
+			</section>
+			<section>
+				<h1>Update</h1>
 
-  <link rel="stylesheet" type="text/css" href="style.css">
+				<p>
+					Go to <a href="https://github.com/spacehuhn/WiFiDuck/releases" target="_blank">https://wifiduck.com/releases</a>
+					to check for updates. Select a .bin file and press upload to flash the device.<br>
+				</p>
 
-  <script src="script.js"></script>
-  <script src="settings.js"></script>
-</head>
-
-<body>
-
-  <nav>
-    <a href="index.html">WiFi Duck</a>
-    <a href="settings.html">Settings</a>
-  </nav>
-
-  <div id="status"></div>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-
-        <h2>WiFi</h2>
-
-        <table>
-          <tr>
-            <td>SSID:</td>
-            <td id="ssid"></td>
-            <td><button class="primary" id="edit_ssid">edit</button></td>
-          </tr>
-          <tr>
-            <td>Password:</td>
-            <td id="password"></td>
-            <td><button class="primary" id="edit_password">edit</button></td>
-          </tr>
-          <tr>
-            <td>Channel:</td>
-            <td id="channel"></td>
-            <td><button class="primary" id="edit_channel">edit</button></td>
-          </tr>
-          <tr>
-            <td>Autorun Script:</td>
-            <td id="autorun"></td>
-            <td><button class="warn" id="disable_autorun">disable</button></td>
-          </tr>
-        </table>
-
-        <p>Restart the device to apply new settings.</p>
-
-        <button class="danger" id="reset">Reset settings</button>
-
-        <h2>Update</h2>
-
-        <p>
-          Go to <a href="https://github.com/spacehuhn/WiFiDuck/releases" target="_blank">wifiduck.com/releases</a>
-          to check for updates.<br>
-          Select a .bin file and press upload to flash the device.<br>
-        </p>
-
-        <form method='POST' action='/update' enctype='multipart/form-data'>
-          <input type='file' name='update'>
-          <input type='submit' class="warn" value='Upload'>
-        </form>
-
+				<form method='POST' action='/update' enctype='multipart/form-data'>
+				<input type='file' name='update'>
+				<input type='submit' class="warn" value='Upload'>
+				</form>
+			</section>
         <footer>
-          <a href="settings.html">Settings</a> |
-          <a href="terminal.html">Terminal</a> |
-          <a href="credits.html">Credits</a> |
-          <a href="https://github.com/spacehuhn/WiFiDuck" target="_blank">Source</a>
-          <br><br>
-          <span id="version"></span><br>
-          Copyright (c) 2019 Stefan Kremser<br>
-          <a href="https://spacehuhn.io" target="_blank">spacehuhn.io</a>
-        </footer>
-
-      </div>
-    </div>
-  </div>
-
-</body>
-
+          	<a href="https://github.com/spacehuhn/WiFiDuck" target="_blank">Source</a>
+          	<br><br>
+          	<span id="version"></span><br>
+          	Copyright © 2019 Stefan Kremser<br>
+          	<a href="https://spacehuhn.io" target="_blank">spacehuhn.io</a>
+		</footer>
+	</body>
 </html>
