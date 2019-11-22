@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<b>Keystroke injection attack platform</b>
+<b>Wireless keystroke injection attack platform</b>
 <br>
 A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiFi Ducky</a> project
 <br>
