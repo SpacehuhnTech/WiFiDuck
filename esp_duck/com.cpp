@@ -51,6 +51,7 @@ namespace com {
     void i2c_stop_transmission() {
         Wire.endTransmission();
         debugln("' ");
+        delay(1);
     }
 
     void i2c_transmit(char b) {

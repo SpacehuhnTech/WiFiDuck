@@ -9,7 +9,6 @@
 #include <stdlib.h> // malloc
 #include <string.h> // strlen
 
-
 // My own implementation, because the default one in ctype.h make problems on older ESP8266 SDKs
 char to_lower(char c) {
     if ((c >= 65) && (c <= 90)) {
@@ -278,34 +277,38 @@ line_list* parse_lines(const char* str, size_t len) {
     // Go through string and look for \r and \n to split it into lines
     line_node* n = NULL;
 
-    size_t i = 0; // current index
-    size_t j = 0; // start index of line
+    size_t stri = 0; // current index
+    size_t ls   = 0; // start index of line
 
     int ignore_delimiter = 0;
     int delimiter        = 0;
     int linebreak        = 0;
     int endofline        = 0;
 
-    for (i = 0; i <= len; ++i) {
-        if ((str[i] == '"') && ((str[i-1] != '\\') || (i==0))) ignore_delimiter = !ignore_delimiter;
+    for (stri = 0; stri < len; ++stri) {
+        char prev = stri > 0 ? str[stri-1] : 0;
+        char curr = str[stri];
+        char next = str[stri+1];
 
-        delimiter = (str[i] == ';' && str[i+1] == ';' && !ignore_delimiter && (i == 0 || str[i-1] != '\\'));
-        linebreak = ((str[i] == '\r') || (str[i] == '\n')) && !ignore_delimiter;
-        endofline = (i == len);
+        if ((curr == '"') && (prev != '\\')) ignore_delimiter = !ignore_delimiter;
+
+        delimiter = !ignore_delimiter && (curr == ';' && next == ';' && prev != '\\');
+        linebreak = !ignore_delimiter && (curr == '\r' || curr == '\n');
+        endofline = (stri+1 == len || next == '\0');
 
         if (linebreak || endofline || delimiter) {
-            size_t k = i - j; // length of line
+            size_t llen = stri - ls; // length of line
 
             // for every line, parse_words and add to list
-            if (k > 0) {
-                n        = line_node_create(&str[j], k);
-                n->words = parse_words(&str[j], k);
+            if (llen > 0) {
+                n        = line_node_create(&str[ls], llen);
+                n->words = parse_words(&str[ls], llen);
                 line_list_push(l, n);
             }
 
-            if (delimiter) ++i;
+            if (delimiter || endofline) ++stri;
 
-            j = i+1; // reset start index of line
+            ls = stri+1; // reset start index of line
         }
     }
 

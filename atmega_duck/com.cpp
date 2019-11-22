@@ -64,6 +64,9 @@ namespace com {
         Wire.begin(I2C_ADDR);
         Wire.onRequest(i2c_request);
         Wire.onReceive(i2c_receive);
+
+        data_buf.len    = 0;
+        receive_buf.len = 0;
     }
 
 #else // ifdef ENABLE_I2C
@@ -138,7 +141,8 @@ namespace com {
                     start_parser         = true;
                     ongoing_transmission = false;
                 } else {
-                    if ((c != '\n') && (c != '\r')) debug(c);
+                    debug(c);
+
                     data_buf.data[data_buf.len] = c;
                     ++data_buf.len;
                 }
