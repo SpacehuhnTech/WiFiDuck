@@ -120,12 +120,6 @@ function update_file_list() {
           tableHTML += "</tr>\n";
         }
       }
-
-      tableHTML += "<tr>\n";
-      tableHTML += "<td><input type=\"text\" class=\"smooth\" value=\"/\" id=\"newFile\"/></td>\n";
-      tableHTML += "<td>-</td>\n";
-      tableHTML += "<td><button class=\"success\" onclick=\"create(get_new_filename())\">create</button></td>\n";
-      tableHTML += "</tr>\n";
       tableHTML += "</tbody>\n";
 
       E("scriptTable").innerHTML = tableHTML;
