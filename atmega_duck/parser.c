@@ -296,8 +296,8 @@ line_list* parse_lines(const char* str, size_t len) {
 
         // disabled because ducky script isn't using quotes
         // in_quotes = (curr == '"' && !escaped) ? !in_quotes : in_quotes;
+        // delimiter = !in_quotes && !escaped && curr == ';' && next == ';';
 
-        delimiter = !in_quotes && !escaped && curr == ';' && next == ';';
         linebreak = !in_quotes && (curr == '\r' || curr == '\n');
 
         endofline = stri == len || curr == '\0';
