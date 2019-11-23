@@ -85,13 +85,12 @@ Your scripts are saved on the device itself, so you don't need a micro SD card e
 ## Changes
 
 Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predecessor:
-* Support for multiple keyboard layouts, adjustable within the script
-* No size limit per script (other than the physical limit)
+* Support for multiple keyboard layouts
+* No size limit per script (other than the physical memory limit)
 * No line length limit for the `STRING` command
 * Faster typing speed
-* Added RGB (Neopixel LED)
-* Reworked web interface
-* Replaced serial with i2c connection, to make debugging and flashing easy
+* Optional Neopixel RGB LED
+* Entirely new web interface
 * Support for I2C to enable easier debugging and DIY builds
 
 ## Hardware
