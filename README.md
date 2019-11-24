@@ -126,6 +126,8 @@ The Atmega32u4 is the USB keyboard, the ESP8266 is the WiFi access point.
 * CJMCU Beetle
 * SS Micro
 
+**DIGISPARK or other ATTINY85 based development boards, are NOT supported!**  
+
 #### ESP8266 Development Boards
 * NodeMCU 1.0 (ESP-12E Module)
 * LOLIN(WEMOS) D1 Mini
@@ -237,6 +239,13 @@ You can update it over the air! Simply connect to the Wi-Fi network its hosting
 (default SSID and password is `wifiduck`).  
 In Arduino under `Tools` > `Port` you should now see a network port.
 Select it and press `Upload`.  
+
+**Note:** It can take a minute until the device is ready.
+After the initial flashing, the ESP8266 has to format its memory.  
+
+If you connected a RGB LED:
+* Blue LED = Connection working
+* Green LED = Device ready
 
 ### Unbrick Atmega32u4
 
