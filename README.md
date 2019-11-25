@@ -95,6 +95,8 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 
 ## Hardware
 
+[Video Tutorial](https://youtu.be/-Gmv98tUiYw)  
+
 This tool requires following hardware:  
 * An Atmega32u4 based board (for example: Arduino Leonardo or Pro Micro)  
 * An ESP8266 or ESP8285 (for example NodeMCU or Wemos d1 mini)  
@@ -202,6 +204,8 @@ and `NodeMCU 1.0 (ESP-12E Module)` for the ESP8266.
 
 ## Flash Software
 
+[Video Tutorial](https://youtu.be/VQAzxBefLZo)  
+
 ### Preparations
 
 1. Download and install the [Arduino IDE](https://www.arduino.cc/en/main/software).
@@ -243,7 +247,7 @@ Select it and press `Upload`.
 **Note:** It can take a minute until the device is ready.
 After the initial flashing, the ESP8266 has to format its memory.  
 
-If you connected a RGB LED:
+If you connected the RGB LED:
 * Blue LED = Connection working
 * Green LED = Device ready
 
