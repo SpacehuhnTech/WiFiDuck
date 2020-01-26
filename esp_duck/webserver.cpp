@@ -95,6 +95,20 @@ namespace webserver {
             request->redirect("/error404.html");
         });
 
+        server.on("/run", [](AsyncWebServerRequest* request) {
+            String message;
+
+            if (request->hasParam("cmd")) {
+                message = request->getParam("cmd")->value();
+            }
+
+            request->send(200, "text/plain", "Run: " + message);
+
+            cli::parse(message.c_str(), [](const char* str) {
+                debugf("%s\n", str);
+            }, false);
+        });
+
         WEBSERVER_CALLBACK;
 
         // Arduino OTA Update
