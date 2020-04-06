@@ -6,12 +6,13 @@
 
 #include "led.h"
 
-#include "NeoPixel.h"
-#include "Adafruit_DotStar.h"
 #include "config.h"
 
-namespace led {
 #if defined(NEOPIXEL)
+
+#include "NeoPixel.h"
+
+namespace led {
     NeoPixel led { NEOPIXEL_NUM, LED_PIN, NEO_GRB + NEO_KHZ800 };
 
     void begin() {
@@ -26,8 +27,13 @@ namespace led {
 
         led.show();
     }
+}
 
 #elif defined(DOTSTAR)
+
+#include "Adafruit_DotStar.h"
+
+namespace led {
     Adafruit_DotStar led { DOTSTAR_NUM, DOTSTAR_DI, DOTSTAR_CI, DOTSTAR_BGR };
 
     void begin() {
@@ -42,11 +48,14 @@ namespace led {
 
         led.show();
     }
+}
 
 #else // if defined(NEOPIXEL)
+
+namespace led {
     void begin() {}
 
     void setColor(int r, int g, int b) {}
+}
 
 #endif // if defined(NEOPIXEL)
-}
