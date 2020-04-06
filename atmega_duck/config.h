@@ -35,7 +35,7 @@
 /*! ===== LED Settings ===== */
 // #define NEOPIXEL
 // #define NEOPIXEL_NUM 1
-// #define NEOPIXEL_PIN 7
+// #define LED_PIN 7
 
 // #define DOTSTAR
 // #define DOTSTAR_NUM 1
@@ -56,19 +56,39 @@
 #define ENABLE_SERIAL
 #endif /* if defined(BRIDGE_ENABLE) */
 
+#if defined(BRIDGE_ENABLE)
+
+  #if !defined(BRIDGE_PORT)
+  #error Serial bridge port not defined!
+  #endif /* if !defined(BRIDGE_PORT) */
+
+  #if !defined(BRIDGE_SWITCH)
+  #error Serial bridge button not defined!
+  #endif /* if !defined(BRIDGE_SWITCH) */
+
+  #if !defined(BRIDGE_RST)
+  #error Serial bridge reset not defined!
+  #endif /* if !defined(BRIDGE_RST) */
+
+  #if !defined(BRIDGE_0)
+  #error Serial bridge GPIO-0 not defined!
+  #endif /* if !defined(BRIDGE_0) */
+
+#endif   /* if defined(BRIDGE_ENABLE) */
+
 #if defined(NEOPIXEL)
 
-  #if defined(ENABLE_I2C) && (NEOPIXEL_PIN==2 || NEOPIXEL_PIN==3)
+  #if defined(ENABLE_I2C) && (LED_PIN==2 || LED_PIN==3)
   #error Neopixel pin overlaps with I2C pins, disable I2C or change the LED pin!
-  #endif /* if defined(ENABLE_I2C) && (NEOPIXEL_PIN==2 || NEOPIXEL_PIN==3) */
+  #endif /* if defined(ENABLE_I2C) && (LED_PIN==2 || LED_PIN==3) */
 
-  #if defined(ENABLE_SERIAL) && (NEOPIXEL_PIN==0 || NEOPIXEL_PIN==1)
+  #if defined(ENABLE_SERIAL) && (LED_PIN==0 || LED_PIN==1)
   #error Neopixel pin overlaps with serial pins, disable serial or change the LED pin!
-  #endif /* if defined(ENABLE_SERIAL) && (NEOPIXEL_PIN==0 || NEOPIXEL_PIN==1) */
+  #endif /* if defined(ENABLE_SERIAL) && (LED_PIN==0 || LED_PIN==1) */
 
-  #if defined(BRIDGE_ENABLE) && (NEOPIXEL_PIN==BRIDGE_RST || NEOPIXEL_PIN==BRIDGE_0 || NEOPIXEL_PIN==BRIDGE_SWITCH)
+  #if defined(BRIDGE_ENABLE) && (LED_PIN==BRIDGE_RST || LED_PIN==BRIDGE_0 || LED_PIN==BRIDGE_SWITCH)
   #error Neopixel pin overlaps with serial bridge pins, disable serial bridge or change the LED pin!
-  #endif /* if defined(BRIDGE_ENABLE) && (NEOPIXEL_PIN==BRIDGE_RST || NEOPIXEL_PIN==BRIDGE_0) */
+  #endif /* if defined(BRIDGE_ENABLE) && (LED_PIN==BRIDGE_RST || LED_PIN==BRIDGE_0) */
 
   #if defined(NEOPIXEL) && !defined(NEOPIXEL_NUM)
   #define NEOPIXEL_NUM 1
@@ -76,6 +96,15 @@
 
 #elif defined(DOTSTAR)
 
+  #if !defined(DOTSTAR_DI)
+  #error Dotstar DI pin not set!
+  #endif /* if !defined(DOTSTAR_DI) */
+
+  #if !defined(DOTSTAR_CI)
+  #error Dotstar CI pin not set!
+  #endif /* if !defined(DOTSTAR_CI) */
+
+// DI
   #if defined(ENABLE_I2C) && (DOTSTAR_DI==2 || DOTSTAR_DI==3)
   #error Dotstar DI pin overlaps with I2C pins, disable I2C or change the LED pin!
   #endif /* if defined(ENABLE_I2C) && (DOTSTAR_DI==2 || DOTSTAR_DI==3) */
@@ -88,6 +117,7 @@
   #error Dotstar DI pin overlaps with serial bridge pins, disable serial bridge or change the LED pin!
   #endif /* if defined(BRIDGE_ENABLE) && (DOTSTAR_DI==BRIDGE_RST || DOTSTAR_DI==BRIDGE_0 || DOTSTAR_DI==BRIDGE_SWITCH) */
 
+// CI
   #if defined(ENABLE_I2C) && (DOTSTAR_CI==2 || DOTSTAR_CI==3)
   #error Dotstar CI pin overlaps with I2C pins, disable I2C or change the LED pin!
   #endif /* if defined(ENABLE_I2C) && (DOTSTAR_CI==2 || DOTSTAR_CI==3) */

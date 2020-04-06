@@ -12,7 +12,7 @@
 
 namespace led {
 #if defined(NEOPIXEL)
-    NeoPixel led { NEOPIXEL_NUM, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800 };
+    NeoPixel led { NEOPIXEL_NUM, LED_PIN, NEO_GRB + NEO_KHZ800 };
 
     void begin() {
         led.begin();
