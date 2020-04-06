@@ -89,7 +89,7 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 * No size limit per script (other than the physical memory limit)
 * No line length limit for the `STRING` command
 * Faster typing speed
-* Optional Neopixel RGB LED
+* Optional Neopixel or Dotstar LED
 * Entirely new web interface
 * Support for I2C to enable easier debugging and DIY builds
 
@@ -100,7 +100,7 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 This tool requires following hardware:  
 * An Atmega32u4 based board (for example: Arduino Leonardo or Pro Micro)  
 * An ESP8266 or ESP8285 (for example NodeMCU or Wemos d1 mini)  
-* [Optional] A single Neopixel LED (WS2812b)  
+* [Optional] A single Neopixel (WS2812b) or Dotstar (apa102) LED
 
 You will also need a computer and USB data cable to flash the microcontrollers.  
 
