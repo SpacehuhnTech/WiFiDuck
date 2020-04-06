@@ -6,7 +6,7 @@
 
 #pragma once
 
-#define VERSION "1.0.1"
+#define VERSION "1.0.2"
 
 /* ===== Serial Bridge ===== */
 // #define BRIDGE_ENABLE
@@ -14,6 +14,7 @@
 // #define BRIDGE_SWITCH 6
 // #define BRIDGE_RST 4
 // #define BRIDGE_0 5
+// #define BRIDGE_0_INVERTED
 
 /*! DEBUG Settings */
 // #define ENABLE_DEBUG

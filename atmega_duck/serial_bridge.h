@@ -27,7 +27,12 @@ namespace serial_bridge {
             }
 
             if (dtr != Serial.dtr()) {
+#ifdef BRIDGE_0_INVERTED
+                digitalWrite(BRIDGE_0, Serial.dtr());
+#else // ifdef BRIDGE_0_INVERTED
                 digitalWrite(BRIDGE_0, !Serial.dtr());
+#endif // ifdef BRIDGE_0_INVERTED
+
                 dtr = Serial.dtr();
             }
 
@@ -57,7 +62,11 @@ namespace serial_bridge {
         pinMode(BRIDGE_0, OUTPUT);
         pinMode(BRIDGE_RST, OUTPUT);
 
+#ifdef BRIDGE_0_INVERTED
+        digitalWrite(BRIDGE_0, LOW);
+#else // ifdef BRIDGE_0_INVERTED
         digitalWrite(BRIDGE_0, HIGH);
+#endif // ifdef BRIDGE_0_INVERTED
         digitalWrite(BRIDGE_RST, HIGH);
 
         if (digitalRead(BRIDGE_SWITCH) == LOW) {
