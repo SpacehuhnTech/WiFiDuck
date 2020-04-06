@@ -17,9 +17,9 @@
 void setup() {
     debug_init();
 
+    led::begin();
     serial_bridge::begin();
     keyboard::begin();
-    led::begin();
     com::begin();
 
     debugs("Started! ");
