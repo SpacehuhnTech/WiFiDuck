@@ -441,6 +441,7 @@ Currently the supported keyboard layouts are:
 - [GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
 - [US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
 - [ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
+- [FR (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
 To translate a keyboard layout, you have to match each character on
@@ -506,10 +507,10 @@ if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
 9. Test your layout with a Ducky Script that contains all characters of your keyboard. For example:  
 ```
 LOCALE DE
-STRING !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
+STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
 ENTER
 ```
-10. Add a link to your layout to this README and please feel free to improve this tutorial to help future translators!
+10. Add a link to your layout to [README](README.md), to [web/index.html](web/index.html) and please feel free to improve this tutorial to help future translators!
 11. [Create a Pull Request](https://help.github.com/en/articles/creating-a-pull-request)
 
 ## License

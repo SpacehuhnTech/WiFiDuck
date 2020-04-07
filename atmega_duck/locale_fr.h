@@ -51,54 +51,54 @@ const uint8_t ascii_fr[] PROGMEM = {
 
     // 32, 0x20
     KEY_NONE,       KEY_SPACE,      // ' '
-    KEY_NONE, KEY_SLASH,            // !
-    KEY_NONE, KEY_3,                // "
-    KEY_MOD_RALT, KEY_3,            // #
+    KEY_NONE,       KEY_SLASH,      // !
+    KEY_NONE,       KEY_3,          // "
+    KEY_MOD_RALT,   KEY_3,          // #
 
     // 36, 0x24
-    KEY_NONE, KEY_RIGHTBRACE,       // $
+    KEY_NONE,       KEY_RIGHTBRACE, // $
     KEY_MOD_LSHIFT, KEY_APOSTROPHE, // %
-    KEY_NONE, KEY_1,                // &
+    KEY_NONE,       KEY_1,          // &
     KEY_NONE,       KEY_4,          // '
 
     // 40, 0x28
-    KEY_NONE, KEY_5,                // (
-    KEY_NONE, KEY_MINUS,            // )
-    KEY_NONE, KEY_BACKSLASH,        // *
+    KEY_NONE,       KEY_5,          // (
+    KEY_NONE,       KEY_MINUS,      // )
+    KEY_NONE,       KEY_BACKSLASH,  // *
     KEY_MOD_LSHIFT, KEY_EQUAL,      // +
 
     // 44, 0x2c
     KEY_NONE,       KEY_M,          // ,
     KEY_NONE,       KEY_6,          // -
-    KEY_MOD_LSHIFT,       KEY_COMMA,// .
-    KEY_MOD_LSHIFT,       KEY_DOT,  // /
+    KEY_MOD_LSHIFT, KEY_COMMA,      // .
+    KEY_MOD_LSHIFT, KEY_DOT,        // /
 
     // 48, 0x30
-    KEY_MOD_LSHIFT,       KEY_0,    // 0
-    KEY_MOD_LSHIFT,       KEY_1,    // 1
-    KEY_MOD_LSHIFT,       KEY_2,    // 2
-    KEY_MOD_LSHIFT,       KEY_3,    // 3
+    KEY_MOD_LSHIFT, KEY_0,          // 0
+    KEY_MOD_LSHIFT, KEY_1,          // 1
+    KEY_MOD_LSHIFT, KEY_2,          // 2
+    KEY_MOD_LSHIFT, KEY_3,          // 3
 
     // 52, 0x34
-    KEY_MOD_LSHIFT,       KEY_4,    // 4
-    KEY_MOD_LSHIFT,       KEY_5,    // 5
-    KEY_MOD_LSHIFT,       KEY_6,    // 6
-    KEY_MOD_LSHIFT,       KEY_7,    // 7
+    KEY_MOD_LSHIFT, KEY_4,          // 4
+    KEY_MOD_LSHIFT, KEY_5,          // 5
+    KEY_MOD_LSHIFT, KEY_6,          // 6
+    KEY_MOD_LSHIFT, KEY_7,          // 7
 
     // 56, 0x38
-    KEY_MOD_LSHIFT,       KEY_8,    // 8
-    KEY_MOD_LSHIFT,       KEY_9,    // 9
-    KEY_NONE, KEY_DOT,              // :
+    KEY_MOD_LSHIFT, KEY_8,          // 8
+    KEY_MOD_LSHIFT, KEY_9,          // 9
+    KEY_NONE,       KEY_DOT,        // :
     KEY_NONE,       KEY_COMMA,      // ;
 
     // 60, 0x3c
-    KEY_NONE, KEY_102ND,            // <
+    KEY_NONE,       KEY_102ND,      // <
     KEY_NONE,       KEY_EQUAL,      // =
     KEY_MOD_LSHIFT, KEY_102ND,      // >
     KEY_MOD_LSHIFT, KEY_M,          // ?
 
     // 64, 0x40
-    KEY_MOD_RALT, KEY_0,            // @
+    KEY_MOD_RALT,   KEY_0,          // @
     KEY_MOD_LSHIFT, KEY_Q,          // A
     KEY_MOD_LSHIFT, KEY_B,          // B
     KEY_MOD_LSHIFT, KEY_C,          // C
@@ -137,16 +137,16 @@ const uint8_t ascii_fr[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_X,          // X
     KEY_MOD_LSHIFT, KEY_Y,          // Y
     KEY_MOD_LSHIFT, KEY_W,          // Z
-    KEY_MOD_RALT,       KEY_5,      // [
+    KEY_MOD_RALT,   KEY_5,          // [
 
     // 92, 0x5c
-    KEY_MOD_RALT,       KEY_8,      // bslash
-    KEY_MOD_RALT,       KEY_MINUS,  // ]
-    KEY_MOD_RALT, KEY_9,            // ^
-    KEY_NONE, KEY_8,                // _
+    KEY_MOD_RALT,   KEY_8,          // bslash
+    KEY_MOD_RALT,   KEY_MINUS,      // ]
+    KEY_MOD_RALT,   KEY_9,          // ^
+    KEY_NONE,       KEY_8,          // _
 
     // 96, 0x60
-    KEY_MOD_RALT,       KEY_7,      // `
+    KEY_MOD_RALT,   KEY_7,          // `
     KEY_NONE,       KEY_Q,          // a
     KEY_NONE,       KEY_B,          // b
     KEY_NONE,       KEY_C,          // c
@@ -185,17 +185,21 @@ const uint8_t ascii_fr[] PROGMEM = {
     KEY_NONE,       KEY_X,          // x
     KEY_NONE,       KEY_Y,          // y
     KEY_NONE,       KEY_W,          // z
-    KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // {
+    KEY_MOD_RALT,   KEY_4,          // {
 
     // 124, 0x7c
-    KEY_MOD_RALT, KEY_6,            // |
-    KEY_MOD_RALT, KEY_EQUAL,        // }
-    KEY_MOD_RALT, KEY_2,            // ~
+    KEY_MOD_RALT,   KEY_6,          // |
+    KEY_MOD_RALT,   KEY_EQUAL,      // }
+    KEY_MOD_RALT,   KEY_2,          // ~
     KEY_NONE,       KEY_NONE        // DEL
 };
 
+const uint8_t extended_ascii_fr[] PROGMEM = {};
+
+const uint8_t utf8_fr[] PROGMEM = {};
+
 static hid_locale_t locale_fr {
     (uint8_t*)ascii_fr, 128,
-    NULL, 0,
-    NULL, 0
+    (uint8_t*)extended_ascii_fr,  sizeof(extended_ascii_fr) / 3,
+    (uint8_t*)utf8_fr, sizeof(utf8_fr) / 6
 };
