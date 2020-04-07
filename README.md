@@ -50,6 +50,7 @@ A worthy successor of the <a href="https://github.com/spacehuhn/wifi_ducky/">WiF
   - [Edit Web Files](#edit-web-files)
   - [Translate Keyboard Layout](#translate-keyboard-layout)
 - [License](#license)
+- [Credits](#credits)
 
 ## Disclaimer
 
@@ -517,3 +518,14 @@ ENTER
 
 This software is licensed under the MIT License.
 See the [license file](LICENSE) for details.  
+
+## Credits
+
+Other software used for this project:
+  - [Arduino](https://www.arduino.cc)
+  - [Neopixel Library](https://github.com/adafruit/Adafruit_NeoPixel)
+  - [Dotstar Library](https://github.com/adafruit/Adafruit_DotStar)
+  - [AVR, ESP8266 & SAMD Arduino Core](https://github.com/spacehuhn/hardware/tree/master/wifiduck)
+  - [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
+  - [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
+  - [SimpleCLI](https://github.com/spacehuhn/SimpleCLI)
