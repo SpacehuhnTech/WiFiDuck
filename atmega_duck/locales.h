@@ -14,3 +14,4 @@
 #include "locale_gb.h"
 #include "locale_es.h"
 #include "locale_fr.h"
+#include "locale_ru.h"
