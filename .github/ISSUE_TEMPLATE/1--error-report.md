@@ -1,7 +1,7 @@
 ---
 name: 1. Error report
 about: I encountered a problem and need help to solve it
-title: "[Help] "
+title: ""
 labels: help wanted
 assignees: ''
 
