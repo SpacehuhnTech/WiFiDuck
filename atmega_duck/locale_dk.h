@@ -132,8 +132,8 @@ const uint8_t ascii_dk[] PROGMEM = {
 
     // 88, 0x58
     KEY_MOD_LSHIFT, KEY_X,          // X
-    KEY_MOD_LSHIFT, KEY_Z,          // Y
-    KEY_MOD_LSHIFT, KEY_Y,          // Z
+    KEY_MOD_LSHIFT, KEY_Y,          // Y
+    KEY_MOD_LSHIFT, KEY_Z,          // Z
     KEY_MOD_RALT,   KEY_8,          // [
     
     // 92, 0x5c
@@ -180,8 +180,8 @@ const uint8_t ascii_dk[] PROGMEM = {
 
     // 120, 0x78
     KEY_NONE,       KEY_X,          // x
-    KEY_NONE,       KEY_Z,          // y
-    KEY_NONE,       KEY_Y,          // z
+    KEY_NONE,       KEY_Y,          // y
+    KEY_NONE,       KEY_Z,          // z
     KEY_MOD_RALT,   KEY_7,          // {
 
     // 124, 0x7c

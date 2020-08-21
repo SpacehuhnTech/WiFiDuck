@@ -54,7 +54,7 @@ ENTER
 
 REM dk char test
 LOCALE DK
-STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXZY[\]^_abcdefghijklmnopqrstuvwxzy{|}£¤§ÅÆØåæø
+STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}£¤§ÅÆØåæø
 ENTER
 
 REM overflow test
