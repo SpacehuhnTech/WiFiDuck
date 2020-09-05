@@ -1,7 +1,6 @@
 /*
-   Copyright (c) 2019 Stefan Kremser
    This software is licensed under the MIT License. See the license file for details.
-   Source: github.com/spacehuhn/WiFiDuck
+   Source: https://github.com/spacehuhntech/WiFiDuck
  */
 
 #include "duckscript.h"
@@ -59,6 +58,14 @@ namespace duckscript {
         }
 
         if (!eol) debugln();
+
+        if (strncmp((char*)buf, "REPEAT", _min(buf_i, 6)) != 0) {
+            if (prevMessage) free(prevMessage);
+            prevMessageLen = buf_i;
+            prevMessage    = (char*)malloc(prevMessageLen + 1);
+            memcpy(prevMessage, buf, buf_i);
+            prevMessage[buf_i] = '\0';
+        }
 
         com::send(buf, buf_i);
 
