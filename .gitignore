@@ -37,3 +37,4 @@ save-commands.json
 # Compiled binaries
 *.bin
 *.zip
+.DS_Store
