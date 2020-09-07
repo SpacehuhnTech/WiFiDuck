@@ -56,7 +56,7 @@ const uint8_t ascii_es[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_4,          // $
     KEY_MOD_LSHIFT, KEY_5,          // %
     KEY_MOD_LSHIFT, KEY_6,          // &
-    KEY_NONE,       KEY_DOT,        // '
+    KEY_NONE,       KEY_MINUS,      // '
 
     // 40, 0x28
     KEY_MOD_LSHIFT, KEY_8,          // (
