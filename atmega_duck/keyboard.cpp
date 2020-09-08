@@ -4,6 +4,7 @@
  */
 
 #include "keyboard.h"
+#include "debug.h"
 
 namespace keyboard {
     // ====== PRIVATE ====== //
@@ -101,7 +102,7 @@ namespace keyboard {
     uint8_t press(const char* strPtr) {
         // Convert string pointer into a byte pointer
         uint8_t* b = (uint8_t*)strPtr;
-
+        
         // ASCII
         if (b[0] < locale->ascii_len) {
             uint8_t modifiers = pgm_read_byte(locale->ascii + (b[0] * 2) + 0);
@@ -110,6 +111,38 @@ namespace keyboard {
             pressKey(key, modifiers);
 
             return 0;
+        }
+        
+        // UTF8
+        for (size_t i = 0; i<locale->utf8_len; ++i) {
+            uint8_t res = 0;
+
+            // Read utf8 code and match it with the given data
+            for (uint8_t j = 0; j<4; ++j) {
+                uint8_t key_code = pgm_read_byte(locale->utf8 + (i * 6) + j);
+
+                if (key_code == 0) {
+                    break;
+                }
+
+                if (key_code == b[j]) {
+                    ++res;
+                } else {
+                    res = 0;
+                    break;
+                }
+            }
+
+            // If a match was found, read out the data and type it
+            if (res > 0) {
+                uint8_t modifiers = pgm_read_byte(locale->utf8 + (i * 6) + 4);
+                uint8_t key       = pgm_read_byte(locale->utf8 + (i * 6) + 5);
+
+                pressKey(key, modifiers);
+
+                // Return the number of extra bytes we used from the string pointer
+                return res-1;
+            }
         }
 
         // Extended ASCII
@@ -123,36 +156,6 @@ namespace keyboard {
                 pressKey(key, modifiers);
 
                 return 0;
-            }
-        }
-
-        // UTF8
-        for (size_t i = 0; i<locale->utf8_len; ++i) {
-            uint8_t res = 0;
-
-            // Read utf8 code and match it with the given data
-            for (uint8_t j = 0; j<4; ++j) {
-                uint8_t key_code = pgm_read_byte(locale->utf8 + (i * 6) + j);
-
-                if (key_code == 0) break;
-
-                if (key_code == b[j]) {
-                    ++res;
-                } else {
-                    res = 0;
-                    break;
-                }
-            }
-
-            // Found a match was found, read out the data and type it
-            if (res > 0) {
-                uint8_t modifiers = pgm_read_byte(locale->utf8 + (i * 6) + 4);
-                uint8_t key       = pgm_read_byte(locale->utf8 + (i * 6) + 5);
-
-                pressKey(key, modifiers);
-
-                // Return the number of extra bytes we used from the string pointer
-                return res-1;
             }
         }
 

@@ -191,8 +191,8 @@ const uint8_t ascii_ru[] PROGMEM = {
 };
 
 const uint8_t extended_ascii_ru[] PROGMEM = {
-    0xF1, KEY_NONE,       KEY_HASHTILDE,   // ё
-    0xA1, KEY_MOD_LSHIFT, KEY_HASHTILDE,   // Ё
+    0xF1, KEY_NONE,       KEY_GRAVE,       // ё
+    0xA1, KEY_MOD_LSHIFT, KEY_GRAVE,       // Ё
     
     0xD9, KEY_NONE,       KEY_Q,           // й
     0xB9, KEY_MOD_LSHIFT, KEY_Q,           // Й
@@ -263,8 +263,8 @@ const uint8_t extended_ascii_ru[] PROGMEM = {
 };
 
 const uint8_t utf8_ru[] PROGMEM = {
-    0xd1, 0x91, 0x00, 0x00,   KEY_NONE,         KEY_HASHTILDE,   // ё
-    0xd0, 0x01, 0x00, 0x00,   KEY_MOD_LSHIFT,   KEY_HASHTILDE,   // Ё
+    0xd1, 0x91, 0x00, 0x00,   KEY_NONE,         KEY_GRAVE,       // ё
+    0xd0, 0x81, 0x00, 0x00,   KEY_MOD_LSHIFT,   KEY_GRAVE,       // Ё
 
     0xd0, 0xb9, 0x00, 0x00,   KEY_NONE,         KEY_Q,           // й
     0xd0, 0x99, 0x00, 0x00,   KEY_MOD_LSHIFT,   KEY_Q,           // Й

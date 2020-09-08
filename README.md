@@ -315,7 +315,7 @@ To write text, use the STRING function.
 | `DELAY` | `DELAY 1000` | Delay in ms |
 | `STRING` | `STRING Hello World!` | Types the following string |
 | `REPEAT` or `REPLAY` | `REPEAT 3` | Repeats the last command n times |
-| `LOCALE` | `LOCALE DE` | Sets the keyboard layout. Currently supported: `DE`, `ES`, `GB`, `US` |
+| `LOCALE` | `LOCALE DE` | Sets the keyboard layout. Available: `DE`, `ES`, `GB`, `US`, `DK`, `RU`, `FR` |
 | `KEYCODE` | `KEYCODE 0x02 0x04` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal |
 | `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) |
 
@@ -457,6 +457,7 @@ Currently the supported keyboard layouts are:
 - [US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
 - [ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
 - [DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
+- [RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
 - [FR (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
