@@ -116,6 +116,7 @@ you'll obviously need soldering equipment and a bit of experience using it.
 
 #### Preflashed All-In-One Boards
 * [DSTIKE WiFi Duck](#dstike-wifi-duck)
+* [Malduino W](https://maltronics.com/collections/malduinos/products/malduino-w)
 
 You can use any Atmega32u4 or ESP8266 based development board,
 but if you have no idea where to start, here's a list.  
