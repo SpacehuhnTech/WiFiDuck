@@ -99,11 +99,12 @@ Changes since the [WiFi Ducky](https://github.com/spacehuhn/wifi_ducky/) predece
 [Video Tutorial](https://youtu.be/-Gmv98tUiYw)  
 
 This tool requires following hardware:  
-* An Atmega32u4 based board (for example: Arduino Leonardo or Pro Micro)  
-* An ESP8266 or ESP8285 (for example NodeMCU or Wemos d1 mini)  
+* An Atmega32u4 development board (for example: **Arduino Leonardo** or **Pro Micro**)  
+* An ESP8266 or ESP8285 development board (for example **NodeMCU** or **Wemos d1 mini**)  
 * [Optional] A single Neopixel (WS2812b) or Dotstar (APA102) LED
 
 You will also need a computer and USB data cable to flash the microcontrollers.  
+After the installation, you'll only have to connect the Atmega32u4 to the 'victim' computer, as that is the one acting as a USB keyboard.  
 
 If you're a beginner,
 it's recommended you wire everything together on a breadboard first!  
@@ -148,9 +149,9 @@ Here's a map of the pins that need to be connected.
 | `D2` alias `GPIO 4` | `2` alias `SDA` |
 | `GND` | `GND` |
 
-Both chips have to be powered in order to work.  
-To share power between both, you need a voltage regulator that takes 5V and turns it into 3.3V.  
-It's because USB runs at 5V but the ESP8266 runs at 3.3V. Luckily most development boards have such a regulator on board.  
+Now we want to have the Atmega32u4 power the ESP8266, so it can run of **one** USB connection, instead of having to always plug in both.
+To share power between both chips, you need a voltage regulator that takes 5V and turns it into 3.3V.  
+That's because USB uses 5V, but the ESP8266 uses 3.3V. Luckily most development boards have such a regulator on board.  
 **DO NOT CONNECT ESP8266 VCC to the ATMEGA32u4 VCC**, it will kill the ESP826. Instead look for the `5V` or `VIN` pin on your dev board, as those will be connected to the regulator.  
 
 | ESP8266 Dev Board |      Atmega32u4      |
