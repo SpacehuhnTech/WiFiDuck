@@ -461,6 +461,7 @@ Currently the supported keyboard layouts are:
 - [DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
 - [RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
 - [FR (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
+- [BE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_be.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
 To translate a keyboard layout, you have to match each character on
