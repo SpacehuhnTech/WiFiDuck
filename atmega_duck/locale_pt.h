@@ -186,11 +186,6 @@ const uint8_t ascii_PT[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_KP4,  // |
     KEY_MOD_RALT, KEY_0, // }
     KEY_NONE, KEY_KP6,      // ~
-    KEY_NONE, KEY_SEMICOLON //ç
-    KEY_MOD_LSHIFT, KEY_SEMICOLON //Ç
-    KEY_NONE, KEY_EQUAL //«
-    KEY_MOD_LSHIFT, KEY_EQUAL //»
-
     KEY_NONE,       KEY_NONE        // DEL
 };
 
