@@ -8,7 +8,7 @@
 #include "usb_hid_keys.h"
 
 // Modifier(s), Key
-const uint8_t ascii_PT[] PROGMEM = {
+const uint8_t ascii_pt[] PROGMEM = {
     KEY_NONE,       KEY_NONE,       // NUL
     KEY_NONE,       KEY_NONE,       // SOH
     KEY_NONE,       KEY_NONE,       // STX
@@ -55,18 +55,18 @@ const uint8_t ascii_PT[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_4,          // $
     KEY_MOD_LSHIFT, KEY_5,          // %
     KEY_MOD_LSHIFT, KEY_6,          // &
-    KEY_NONE, KEY_MINUS,            // '
+    KEY_NONE,       KEY_MINUS,       // '
     // 40, 0x28
     KEY_MOD_LSHIFT, KEY_8,          // (
     KEY_MOD_LSHIFT, KEY_9,          // )
     KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // *
-    KEY_NONE, KEY_LEFTBRACE,      // +
+    KEY_NONE,       KEY_LEFTBRACE,  // +
 
     // 44, 0x2c
     KEY_NONE,       KEY_COMMA,      // ,
     KEY_NONE,       KEY_SLASH,      // -
     KEY_NONE,       KEY_DOT,        // .
-    KEY_MOD_LSHIFT,       KEY_7,    // /
+    KEY_MOD_LSHIFT, KEY_7,          // /
 
     // 48, 0x30
     KEY_NONE,       KEY_0,          // 0
@@ -84,16 +84,16 @@ const uint8_t ascii_PT[] PROGMEM = {
     KEY_NONE,       KEY_8,          // 8
     KEY_NONE,       KEY_9,          // 9
     KEY_MOD_LSHIFT, KEY_DOT,        // :
-    KEY_MOD_LSHIFT,       KEY_COMMA, // ;
+    KEY_MOD_LSHIFT, KEY_COMMA,      // ;
 
     // 60, 0x3c
-    KEY_NONE,       KEY_F3,         // <
-    KEY_MOD_LSHIFT,       KEY_0,      // =
-    KEY_MOD_LSHIFT, KEY_F3,        // >
+    KEY_NONE,       KEY_102ND,      // <
+    KEY_MOD_LSHIFT, KEY_0,          // =
+    KEY_MOD_LSHIFT, KEY_102ND,      // >
     KEY_MOD_LSHIFT, KEY_MINUS,      // ?
 
     // 64, 0x40
-    KEY_MOD_LSHIFT, KEY_2,          // @
+    KEY_MOD_RALT,   KEY_2,          // @
     KEY_MOD_LSHIFT, KEY_A,          // A
     KEY_MOD_LSHIFT, KEY_B,          // B
     KEY_MOD_LSHIFT, KEY_C,          // C
@@ -132,16 +132,16 @@ const uint8_t ascii_PT[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_X,          // X
     KEY_MOD_LSHIFT, KEY_Y,          // Y
     KEY_MOD_LSHIFT, KEY_Z,          // Z
-    KEY_MOD_RALT,       KEY_8,      // [
+    KEY_MOD_RALT,   KEY_8,          // [
 
     // 92, 0x5c
-    KEY_NONE,       KEY_BACKSLASH,  // bslash
-    KEY_MOD_RALT,       KEY_9,     // ]
-    KEY_MOD_LSHIFT, KEY_KP6,          // ^
+    KEY_NONE,       KEY_GRAVE,      // bslash
+    KEY_MOD_RALT,   KEY_9,          // ]
+    KEY_MOD_LSHIFT, KEY_BACKSLASH,  // ^
     KEY_MOD_LSHIFT, KEY_SLASH,      // _
 
     // 96, 0x60
-    KEY_MOD_LSHIFT, KEY_RIGHTBRACE,   // `
+    KEY_MOD_LSHIFT, KEY_RIGHTBRACE, // `
     KEY_NONE,       KEY_A,          // a
     KEY_NONE,       KEY_B,          // b
     KEY_NONE,       KEY_C,          // c
@@ -180,17 +180,21 @@ const uint8_t ascii_PT[] PROGMEM = {
     KEY_NONE,       KEY_X,          // x
     KEY_NONE,       KEY_Y,          // y
     KEY_NONE,       KEY_Z,          // z
-    KEY_MOD_RALT, KEY_7,            // {
+    KEY_MOD_RALT,   KEY_7,          // {
 
     // 124, 0x7c
-    KEY_MOD_LSHIFT, KEY_KP4,  // |
-    KEY_MOD_RALT, KEY_0, // }
-    KEY_NONE, KEY_KP6,      // ~
+    KEY_MOD_LSHIFT, KEY_GRAVE,      // |
+    KEY_MOD_RALT,   KEY_0,          // }
+    KEY_NONE,       KEY_BACKSLASH,  // ~
     KEY_NONE,       KEY_NONE        // DEL
 };
 
+const uint8_t extended_ascii_pt[] PROGMEM = {};
+
+const uint8_t utf8_pt[] PROGMEM = {};
+
 static hid_locale_t locale_pt {
-     (uint8_t*)ascii_PT, 128,
-    NULL, 0,
-    NULL, 0
+    (uint8_t*)ascii_pt, 128,
+    (uint8_t*)extended_ascii_pt,  sizeof(extended_ascii_pt) / 3,
+    (uint8_t*)utf8_pt, sizeof(utf8_pt) / 6
 };
