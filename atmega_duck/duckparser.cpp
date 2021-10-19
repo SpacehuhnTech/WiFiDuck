@@ -175,6 +175,8 @@ namespace duckparser {
                     keyboard::setLocale(&locale_dk);
                 } else if (compare(w->str, w->len, "BE", CASE_SENSETIVE)) {
                     keyboard::setLocale(&locale_be);
+                } else if (compare(w->str, w->len, "PT", CASE_SENSETIVE)) {
+                    keyboard::setLocale(&locale_pt);
                 }
                 ignore_delay = true;
             }
