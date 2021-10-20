@@ -17,3 +17,4 @@
 #include "locale_dk.h"
 #include "locale_be.h"
 #include "locale_pt.h"
+#include "locale_it.h"
