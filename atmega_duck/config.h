@@ -14,7 +14,7 @@
 // #define BRIDGE_RST 4
 // #define BRIDGE_0 5
 // #define BRIDGE_0_INVERTED
-#define BRIDGE_SAFE
+// #define BRIDGE_SAFE
 
 /*! DEBUG Settings */
 // #define ENABLE_DEBUG
@@ -41,6 +41,12 @@
 // #define DOTSTAR_NUM 1
 // #define DOTSTAR_DI 7
 // #define DOTSTAR_CI 8
+
+// #define LED_RGB
+// #define LED_ANODE
+// #define LED_R 5
+// #define LED_G 6
+// #define LED_B 9
 
 //*! ===== Color Modes ===== */
 #define COLOR_ESP_UNFLASHED 0,0,255

@@ -49,6 +49,30 @@ namespace led {
     }
 }
 
+#elif defined(LED_RGB)
+
+namespace led {
+    #include <Arduino.h>
+    
+    void begin() {
+        pinMode(LED_R, OUTPUT);
+        pinMode(LED_G, OUTPUT);
+        pinMode(LED_B, OUTPUT);
+    }
+
+    void setColor(int r, int g, int b) {
+#ifdef LED_ANODE
+        r = 255 - r;
+        g = 255 - g;
+        b = 255 - b;
+#endif
+
+        analogWrite(LED_R, r);
+        analogWrite(LED_G, g);
+        analogWrite(LED_B, b);
+    }
+}
+
 #else // if defined(NEOPIXEL)
 
 namespace led {
