@@ -17,12 +17,12 @@
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
 
-#define COM_VERSION 3
+#define COM_VERSION 4
 
 typedef struct status_t {
-    uint8_t  version;
-    uint16_t wait;
-    uint8_t  repeat;
+    unsigned int version : 8;
+    unsigned int wait    : 16;
+    unsigned int repeat  : 8;
 } status_t;
 
 namespace com {
@@ -193,22 +193,22 @@ namespace com {
 
     void serial_update() {
         if (SERIAL_PORT.available() >= sizeof(status_t)+2) {
-            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_SOT) {}
+            if (SERIAL_PORT.read() == REQ_SOT) {
+                uint16_t prev_wait = status.wait;
 
-            uint16_t prev_wait = status.wait;
+                status.version = SERIAL_PORT.read();
 
-            status.version = SERIAL_PORT.read();
+                status.wait  = SERIAL_PORT.read();
+                status.wait |= uint16_t(SERIAL_PORT.read()) << 8;
 
-            status.wait  = SERIAL_PORT.read();
-            status.wait |= uint16_t(SERIAL_PORT.read()) << 8;
+                status.repeat = SERIAL_PORT.read();
 
-            status.repeat = SERIAL_PORT.read();
+                react_on_status = status.wait == 0 ||
+                                  status.repeat > 0 ||
+                                  ((prev_wait&1) ^ (status.wait&1));
 
-            react_on_status = status.wait == 0 ||
-                              status.repeat > 0 ||
-                              ((prev_wait&1) ^ (status.wait&1));
-
-            while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_EOT) {}
+                while (SERIAL_PORT.available() && SERIAL_PORT.read() != REQ_EOT) {}
+            }
         }
     }
 

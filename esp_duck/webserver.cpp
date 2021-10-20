@@ -39,6 +39,7 @@ namespace webserver {
     DNSServer dnsServer;
 
     bool reboot = false;
+    IPAddress apIP(192, 168, 4, 1);
 
     void wsEvent(AsyncWebSocket* server, AsyncWebSocketClient* client, AwsEventType type, void* arg, uint8_t* data, size_t len) {
         if (type == WS_EVT_CONNECT) {
@@ -83,6 +84,7 @@ namespace webserver {
 
         // WiFi.mode(WIFI_AP_STA);
         WiFi.softAP(settings::getSSID(), settings::getPassword(), settings::getChannelNum());
+        WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
         debugf("Started Access Point \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
 
         // Webserver
@@ -168,9 +170,11 @@ namespace webserver {
             }
         });
 
-        MDNS.addService("http", "tcp", 80);
+        dnsServer.setTTL(300);
+        dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
+        dnsServer.start(53, URL, apIP);
 
-        dnsServer.start(53, URL, IPAddress(192, 168, 4, 1));
+        MDNS.addService("http", "tcp", 80);
 
         // Websocket
         ws.onEvent(wsEvent);

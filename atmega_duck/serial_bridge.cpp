@@ -12,7 +12,16 @@
 
 #include <Arduino.h> // pinMode, digitalWrite, ...
 
+#ifdef BRIDGE_SAFE
+#define BRIDGE_SAFE_NUM 123
+#include <FlashStorage.h>
+#endif
+
 namespace serial_bridge {
+#ifdef BRIDGE_SAFE
+    FlashStorage(esp_was_flashed, int);
+#endif
+
 #ifdef BRIDGE_ENABLE
     bool enabled = false;
 
@@ -36,16 +45,34 @@ namespace serial_bridge {
 #endif // ifdef BRIDGE_0_INVERTED
         digitalWrite(BRIDGE_RST, HIGH);
 
-        if (digitalRead(BRIDGE_SWITCH) == LOW) {
+        if ((digitalRead(BRIDGE_SWITCH) == LOW) 
+#ifdef BRIDGE_SAFE
+        || (esp_was_flashed.read() != BRIDGE_SAFE_NUM)
+#endif
+        ) {
             enabled = true;
-            led::setColor(0, 0, 255);
+            led::setColor(COLOR_ESP_UNFLASHED);
 
-            while (true) update();
+            // Wait until user releases button
+            while (digitalRead(BRIDGE_SWITCH) == LOW) {}
+
+            // Go into serial bridge mode until user presses button again
+            while (digitalRead(BRIDGE_SWITCH) == HIGH) {
+                update();
+            }
+
+            stop();
         }
     }
 
     void stop() {
+#ifdef BRIDGE_SAFE
+    if(esp_was_flashed.read() != BRIDGE_SAFE_NUM) {
+        esp_was_flashed.write(BRIDGE_SAFE_NUM);
+    }
+#endif
         enabled = false;
+        led::setColor(0,0,0);  
     }
 
     void update() {
@@ -53,6 +80,11 @@ namespace serial_bridge {
             if (rts != Serial.rts()) {
                 digitalWrite(BRIDGE_RST, !Serial.rts());
                 rts = Serial.rts();
+#ifdef BRIDGE_SAFE
+                if(esp_was_flashed.read() != BRIDGE_SAFE_NUM) {
+                    esp_was_flashed.write(BRIDGE_SAFE_NUM);
+                }
+#endif
             }
 
             if (dtr != Serial.dtr()) {
