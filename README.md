@@ -460,7 +460,7 @@ Currently supported keyboard layouts:
 - [ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
 - [DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
 - [RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
-- [FR (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
+- [FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
 - [BE (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_be.h)
 - [PT (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_pt.h)
 
