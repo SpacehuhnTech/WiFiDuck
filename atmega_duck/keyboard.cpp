@@ -74,6 +74,16 @@ namespace keyboard {
     }
 
     void send(report* k) {
+#ifdef ENABLE_DEBUG
+        debug("Sending Report [");
+        for (uint8_t i = 0; i<6; ++i) {
+            debug(String(prev_report.keys[i], HEX));
+            debug(",");
+        }
+        debug("#");
+        debug(String(prev_report.modifiers, HEX));
+        debugln("]");
+#endif // ENABLE_DEBUG
         HID().SendReport(2, (uint8_t*)k, sizeof(report));
     }
 

@@ -76,6 +76,13 @@ function append(str) {
 function update_file_list() {
   ws_send("mem", function(msg) {
     var lines = msg.split(/\n/);
+    
+    if(lines.length == 1) {
+      console.error("Malformed response:");
+      console.error(msg);
+      return;
+    }
+
     var byte = lines[0].split(" ")[0];
     var used = lines[1].split(" ")[0];
     var free = lines[2].split(" ")[0];

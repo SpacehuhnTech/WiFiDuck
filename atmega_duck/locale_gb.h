@@ -49,7 +49,7 @@ const uint8_t ascii_gb[] PROGMEM = {
     KEY_NONE,       KEY_SPACE,      // ' '
     KEY_MOD_LSHIFT, KEY_1,          // !
     KEY_MOD_LSHIFT, KEY_2,          // "
-    KEY_NONE, KEY_HASHTILDE,        // #
+    KEY_NONE,       KEY_BACKSLASH,  // #
 
     // 36, 0x24
     KEY_MOD_LSHIFT, KEY_4,          // $
@@ -136,7 +136,7 @@ const uint8_t ascii_gb[] PROGMEM = {
     KEY_NONE,       KEY_LEFTBRACE,  // [
 
     // 92, 0x5c
-    KEY_NONE,       KEY_BACKSLASH,  // bslash
+    KEY_NONE,       KEY_102ND,      // bslash
     KEY_NONE,       KEY_RIGHTBRACE, // ]
     KEY_MOD_LSHIFT, KEY_6,          // ^
     KEY_MOD_LSHIFT, KEY_MINUS,      // _
@@ -184,7 +184,7 @@ const uint8_t ascii_gb[] PROGMEM = {
     KEY_MOD_LSHIFT, KEY_LEFTBRACE,  // {
 
     // 124, 0x7c
-    KEY_MOD_LSHIFT, KEY_BACKSLASH,  // |
+    KEY_MOD_LSHIFT, KEY_102ND,      // |
     KEY_MOD_LSHIFT, KEY_RIGHTBRACE, // }
     KEY_MOD_LSHIFT, KEY_HASHTILDE,  // ~
     KEY_NONE,       KEY_NONE        // DEL

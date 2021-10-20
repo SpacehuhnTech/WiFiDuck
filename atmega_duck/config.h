@@ -14,6 +14,7 @@
 // #define BRIDGE_RST 4
 // #define BRIDGE_0 5
 // #define BRIDGE_0_INVERTED
+#define BRIDGE_SAFE
 
 /*! DEBUG Settings */
 // #define ENABLE_DEBUG
@@ -28,7 +29,7 @@
 // #define ENABLE_I2C
 #define I2C_ADDR 0x31
 
-#define BUFFER_SIZE 384
+#define BUFFER_SIZE 256
 #define PACKET_SIZE 32
 
 /*! ===== LED Settings ===== */
@@ -40,6 +41,9 @@
 // #define DOTSTAR_NUM 1
 // #define DOTSTAR_DI 7
 // #define DOTSTAR_CI 8
+
+//*! ===== Color Modes ===== */
+#define COLOR_ESP_UNFLASHED 0,0,255
 
 /*! ===== Parser Settings ===== */
 #define CASE_SENSETIVE false

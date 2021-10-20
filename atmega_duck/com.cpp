@@ -17,12 +17,12 @@
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
 
-#define COM_VERSION 3
+#define COM_VERSION 4
 
 typedef struct status_t {
-    uint8_t  version;
-    uint16_t wait;
-    uint8_t  repeat;
+    unsigned int version : 8;
+    unsigned int wait    : 16;
+    unsigned int repeat  : 8;
 } status_t;
 
 namespace com {
@@ -39,7 +39,7 @@ namespace com {
         status.wait = (uint16_t)receive_buf.len
                       + (uint16_t)data_buf.len
                       + (uint16_t)duckparser::getDelayTime();
-        status.repeat = (uint8_t)duckparser::getRepeats();
+        status.repeat = (uint8_t)(duckparser::getRepeats() > 255 ? 255 : duckparser::getRepeats());
     }
 
     // ========== PRIVATE I2C ========== //
@@ -82,8 +82,24 @@ namespace com {
     }
 
     void serial_send_status() {
-        debugsln("Replying with status");
         update_status();
+#ifdef ENABLE_DEBUG
+        debugs("Replying with status {");
+        debugs("wait: ");
+        debug(status.wait);
+        debugs(",repeat: ");
+        debug(status.repeat);
+        debugs("} [");
+
+        for (int i = 0; i<sizeof(status_t); ++i) {
+            char b = ((uint8_t*)&status)[i];
+            if (b < 0x10) debug('0');
+            debug(String(b, HEX));
+            debug(' ');
+        }
+        debugsln("]");
+#endif // ifdef ENABLE_DEBUG
+
         SERIAL_COM.write(REQ_SOT);
         SERIAL_COM.write((uint8_t*)&status, sizeof(status_t));
         SERIAL_COM.write(REQ_EOT);

@@ -80,10 +80,6 @@ nav {
 nav a {
 	color: inherit;
 }
-  
-nav a:last-of-type {
-	float: right;
-}
 
 .menu {
 	width: 60vw;
@@ -93,10 +89,25 @@ nav a:last-of-type {
 	margin: 0 auto;
 	display: flex;
 	flex-direction: row;
+	display:block;
 }
 
 .menu li {
-	margin: 10px 20px 10px 0;
+	margin: 10px 5px 10px 0;
+	display: inline-block;
+}
+
+.menu li:last-child {
+	float: right;
+}
+
+.menu a {
+	padding: .75em;
+	border-radius: 4px;
+}
+
+.menu a:hover {
+	background: #42444a;
 }
 
 code {
@@ -134,7 +145,7 @@ code {
 }
 
 .primary {
-	color: #4974a9;
+	color: #0092db;
 }
 
 .select {
@@ -279,12 +290,12 @@ hr {
 }
 
 a {
-	color: #0aac42;
+	color: #1ca8eb;
   	text-decoration: none;
 }
 
 a:hover {
-	color: #0aac42;
+	color: #fff;
 	text-decoration: underline dotted;
 }
 
