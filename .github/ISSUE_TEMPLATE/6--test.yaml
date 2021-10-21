@@ -1,0 +1,29 @@
+- type: textarea
+  attributes:
+    label: Operating System
+    description: What operating system are you using?
+    placeholder: Example: macOS Big Sur
+    value: operating system
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: Version
+    description: What version of our software are you running?
+    multiple: false
+    options:
+      - label: 1.0.2 (Default)
+      - label: 1.0.3 (Edge)
+  validations:
+    required: true
+- type: checkboxes
+  attributes:
+    label: Code of Conduct
+    description: The Code of Conduct helps create a safe space for everyone. We require
+      that everyone agrees to it.
+    options:
+      - label: I agree to follow this project's [Code of Conduct](link/to/coc)
+        required: true
+- type: markdown
+  attributes:
+    value: "Thanks for completing our form!"
