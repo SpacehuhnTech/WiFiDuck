@@ -1,0 +1,28 @@
+name: Question
+description: I have a question about this project
+labels: ["question"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for question.
+      options:
+      - label: I have searched the existing issues
+        required: true
+  - type: input
+    id: question
+    attributes:
+      label: Your Question
+      description: A clear and short question.
+      placeholder: How can I do X?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Description
+      description: Tell us more if needed. Add links, references, or anything that will give us more context. You can attach images by clicking this area to highlight it and then dragging files in
+      placeholder: #
+      value: #
+    validations:
+      required: false

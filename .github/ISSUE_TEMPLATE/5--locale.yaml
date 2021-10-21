@@ -1,0 +1,29 @@
+name: Keyboard Layout Translation
+description: I want to add support for a new keyboard layout and looking for help
+title: "[Locale]: "
+labels: ["locale"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for your keyboard layout.
+      options:
+      - label: I have searched the existing issues
+        required: true
+  - type: input
+    id: locale
+    attributes:
+      label: What layout are you translating?
+      description: Name of the layout
+      placeholder: DE
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Where do you need help?
+      description: Tell us how far you got and where you need assistance.
+      placeholder: #
+      value: #
+    validations:
+      required: true

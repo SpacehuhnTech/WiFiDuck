@@ -1,0 +1,49 @@
+name: Problem/Error report
+description: I encountered a problem and need help to solve it
+labels: ["help wanted"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the problem you encountered.
+      options:
+      - label: I have searched the existing issues
+        required: true
+  - type: input
+    id: description
+    attributes:
+      label: Describe your problem
+      description: A clear and short description of what the problem is.
+      placeholder: Whenever I do X, it throws an error...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Tell us how we can reproduce the behavior
+      placeholder: |
+        1. Go to ...
+        2. Click on ....
+        3. Scroll down to ....
+        4. See error
+      value: #
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: What hardware are you using?
+      description: Is it a DIY built? If you bought it, how is the product called?
+      placeholder: DIY-built (Pro Micro + D1 mini)
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Tell us more if needed. Add links, references, or anything that will give us more context. You can attach images by clicking this area to highlight it and then dragging files in
+      placeholder: I think this might be caused by ...
+      value: #
+    validations:
+      required: false

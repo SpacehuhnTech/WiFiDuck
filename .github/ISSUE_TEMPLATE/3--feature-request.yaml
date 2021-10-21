@@ -1,0 +1,47 @@
+name: Feature request
+description: I have an idea for improving this project
+title: "[Feature Request]: "
+labels: ["feature request"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for your feature.
+      options:
+      - label: I have searched the existing issues
+        required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Is your feature request related to a problem? Please describe
+      placeholder: I'm always frustrated when ...
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution
+      description: What do you want to happen?
+      placeholder: #
+      value: #
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Are there alternative solutions or features you've considered?
+      placeholder: #
+      value: #
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Tell us more if needed. Add links, references, or anything that will give us more context. You can attach images by clicking this area to highlight it and then dragging files in
+      placeholder: #
+      value: #
+    validations:
+      required: false
