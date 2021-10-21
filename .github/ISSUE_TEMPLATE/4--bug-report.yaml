@@ -3,11 +3,18 @@ description: I found a reproducible bug
 title: "[Bug]: "
 labels: ["bug"]
 body:
+  - type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+    - label: I have searched the existing issues
+      required: true
   - type: input
     id: description
     attributes:
       label: Describe the bug
-      description: A clear and concise description of what the bug is.
+      description: A clear and short description of what the bug is.
       placeholder: Doing X leads to a crash when Y is enabled...
     validations:
       required: true
@@ -29,14 +36,14 @@ body:
     attributes:
       label: What hardware are you using?
       description: Is it a DIY built? If you bought it, how is the product called?
-      placeholder: DIY using Arduino Pro Micro and Wemos D1 mini
+      placeholder: DIY built with Arduino Pro Micro + Wemos D1 mini
     validations:
       required: true
   - type: textarea
     id: context
     attributes:
-      label: Additional context
-      description: Tell us more if needed. Feel free to attach pictures of screenshots. 
+      label: Anything else?
+      description: Tell us more if needed. Add links or references - anything that will give us more context about. You can attach images by clicking this area to highlight it and then dragging files in
       placeholder: I think this might be caused by ...
       value: #
     validations:
