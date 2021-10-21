@@ -1,6 +1,5 @@
 name: Problem/Error report
 description: I encountered a problem and need help to solve it
-title: ""
 labels: ["help wanted"]
 body:
   - type: checkboxes
