@@ -1,6 +1,5 @@
 name: Question
 description: I have a question about this project
-title: #
 labels: ["question"]
 body:
   - type: checkboxes
