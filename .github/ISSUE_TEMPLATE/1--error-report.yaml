@@ -14,7 +14,7 @@ body:
     attributes:
       label: Describe your problem
       description: A clear and short description of what the problem is.
-      placeholder: Whenever I do X , it throws an error...
+      placeholder: Whenever I do X, it throws an error...
     validations:
       required: true
   - type: textarea
