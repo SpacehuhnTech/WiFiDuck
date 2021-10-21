@@ -36,7 +36,7 @@ body:
     attributes:
       label: What hardware are you using?
       description: Is it a DIY built? If you bought it, how is the product called?
-      placeholder: DIY built with Arduino Pro Micro + Wemos D1 mini
+      placeholder: DIY-built (Arduino Pro Micro + Wemos D1 mini)
     validations:
       required: true
   - type: textarea
