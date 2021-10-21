@@ -14,7 +14,7 @@ body:
     attributes:
       label: Describe your problem
       description: A clear and short description of what the problem is.
-      placeholder: Doing X leads to a crash when Y is enabled...
+      placeholder: Whenever I do X , it throws an error...
     validations:
       required: true
   - type: textarea
