@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define VERSION "1.0.4"
+#define VERSION "1.1.0"
 
 /*! ===== DEBUG Settings ===== */
 // #define ENABLE_DEBUG
