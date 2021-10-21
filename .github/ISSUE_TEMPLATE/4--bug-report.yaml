@@ -2,7 +2,6 @@ name: Bug Report
 description: I found a reproducible bug
 title: "[Bug]: "
 labels: ["bug"]
-assignees:
 body:
   - type: input
     id: description
