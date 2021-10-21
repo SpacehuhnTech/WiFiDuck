@@ -43,7 +43,7 @@ body:
     id: context
     attributes:
       label: Anything else?
-      description: Tell us more if needed. Add links, references, or anything that will give us more context about. You can attach images by clicking this area to highlight it and then dragging files in
+      description: Tell us more if needed. Add links, references, or anything that will give us more context. You can attach images by clicking this area to highlight it and then dragging files in
       placeholder: I think this might be caused by ...
       value: #
     validations:
