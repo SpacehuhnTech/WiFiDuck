@@ -76,7 +76,9 @@ If you have further questions, check out the [issue section](https://github.com/
 
 Hey, do you like this kind of project?  
 It took a huge amount of effort to create!  
-To make sure we can keep working on free and open-source projects like this, **please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**  
+
+To make sure we can keep working on free and open-source projects like this,  
+**please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**  
 
 Visit [spacehuhn.com](https://spacehuhn.com) to learn more about us. :chicken:
 
