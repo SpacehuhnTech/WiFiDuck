@@ -6,6 +6,7 @@
 
 * [About](#about)
 * [Usage](#usage)
+* [Support us](#support-us)
 * [Buy Hardware](#buy-hardware)
   + [Malduino W](#malduino-w)
   + [DSTIKE WiFi Duck](#dstike-wifi-duck)
@@ -70,6 +71,16 @@ from within a web interface. This means that, unlike other BadUSBs, you don't ne
 under Tools in the Arduino IDE.  
 
 If you have further questions, check out the [issue section](https://github.com/spacehuhn/WiFiDuck/issues).  
+
+## Support us
+
+Hey, do you like this kind of project?  
+It took a huge amount of effort to create!  
+To make sure we can keep working on free and open-source projects like this, **please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**  
+
+Visit [spacehuhn.com](https://spacehuhn.com) to learn more about us. :chicken:
+
+<a href='https://ko-fi.com/G2G75FA4V' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 ## Buy Hardware
 
@@ -138,7 +149,7 @@ you also need soldering equipment.
 
 You can use any Atmega32u4 or ESP8266 based development board,
 but if you have no idea where to start, here's a list.  
-⚠️ **Keep in mind that you will need both microcontrollers!**  
+:warning: **Keep in mind that you will need both microcontrollers!**  
 The Atmega32u4 to act as USB keyboard, and the ESP8266 for WiFi.
 
 ### Atmega32u4 Development Boards
@@ -148,7 +159,7 @@ The Atmega32u4 to act as USB keyboard, and the ESP8266 for WiFi.
 * CJMCU Beetle
 * SS Micro
 
-‼️ **DIGISPARK or other ATTINY85 based development boards, are NOT supported!** ‼️  
+:bangbang: **DIGISPARK or other ATTINY85 based development boards, are NOT supported!** :bangbang:  
 
 ### ESP8266 Development Boards
 * NodeMCU 1.0 (ESP-12E Module)
@@ -224,8 +235,8 @@ You can also order them on OSHPark:
 
 If you can't find the COM port of ESP8266 board, then you're probably missing the right drivers.
 Here are links to drivers of the 2 most used UART chips on ESP8266 development boards:
-- 💾 [CP2102](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers)
-- 💾 [CH340](https://sparks.gogo.co.nz/ch340.html)
+- :floppy_disk: [CP2102](https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers)
+- :floppy_disk: [CH340](https://sparks.gogo.co.nz/ch340.html)
 
 ### Flash Atmega32u4
 
@@ -421,16 +432,16 @@ Now you just need to [flash](#flash-software) the ESP8266 again.
 ### Translate Keyboard Layout
 
 Currently supported keyboard layouts:  
-- [DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
-- [GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
-- [US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
-- [ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
-- [DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
-- [RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
-- [FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
-- [BE (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_be.h)
-- [PT (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_pt.h)
-- [IT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_it.h)
+- [:de: DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
+- [:gb: GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
+- [:us: US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
+- [:es: ES](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_es.h)
+- [:denmark: DK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_dk.h)
+- [:ru: RU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_ru.h)
+- [:fr: FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_fr.h)
+- [:belgium: BE (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_be.h)
+- [:portugal: PT (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_pt.h)
+- [:it: IT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_it.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
 To translate a keyboard layout, you have to match each character on
