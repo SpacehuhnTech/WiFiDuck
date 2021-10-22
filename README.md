@@ -130,7 +130,7 @@ For more info see [Flash Software](#flash-software).
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=-Gmv98tUiYw">
-    <img alt="WiFi Duck Hardware Tutorial Video Thumbnail" src="https://img.youtube.com/vi/-Gmv98tUiYw/0.jpg" width="400">
+    <img alt="WiFi Duck Hardware Tutorial Video Thumbnail" src="https://img.youtube.com/vi/-Gmv98tUiYw/maxresdefault.jpg" width="400">
     <br>
     <b>Watch the video tutorial</b>
   </a>
@@ -208,8 +208,13 @@ You solder a Pro Micro board on one side and a Wemos d1 mini or NodeMCU board (d
 That's it. You don't even have to solder all pins,
 just the ones mentioned in [Connections](#connections), excluding the LED.
 
-![Preview of Pro Micro + Wemos d1 mini PCB](img/pcbs.jpg)
-![Soldered PCB](img/pcbs_soldered.jpg)
+<p align="center">
+  <img alt="PCB Layout" src="img/pcbs.jpg" width="400">
+</p>
+
+<p align="center">
+  <img alt="Soldered PCBs" src="img/pcbs_soldered.jpg" width="400">
+</p>
 
 Design Files:  
 * Pro Micro + Wemos d1 mini: https://easyeda.com/Spacehuhn/wifi-duck
@@ -223,7 +228,7 @@ You can also order them on OSHPark:
 
 <p align="center">
   <a href="https://youtu.be/VQAzxBefLZo">
-    <img alt="WiFi Duck Hardware Tutorial Video Thumbnail" src="https://img.youtube.com/vi/VQAzxBefLZo/0.jpg" width="400">
+    <img alt="WiFi Duck Hardware Tutorial Video Thumbnail" src="https://img.youtube.com/vi/VQAzxBefLZo/maxresdefault.jpg" width="400">
     <br>
     <b>Watch the video tutorial</b>
   </a>
