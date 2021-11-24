@@ -193,7 +193,6 @@ const uint8_t ascii_sk[] PROGMEM = {
 const uint8_t utf8_sk[] PROGMEM = {
     0xc2 ,0xb4, 0x00, 0x00, KEY_NONE,       KEY_EQUAL,     // ´
     0xcb ,0x87, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_EQUAL,     // ˇ
-
     0xc3, 0xa1, 0x00, 0x00, KEY_NONE,       KEY_8,         // á
     0xc3, 0xa9, 0x00, 0x00, KEY_NONE,       KEY_0,         // é
     0xc3, 0xad, 0x00, 0x00, KEY_NONE,       KEY_9,         // í
@@ -202,7 +201,6 @@ const uint8_t utf8_sk[] PROGMEM = {
     0xc5, 0x95, 0x00, 0x00, KEY_NONE,       KEY_R,         // ŕ   press "´" before
     0xc3, 0xba, 0x00, 0x00, KEY_NONE,       KEY_LEFTBRACE, // ú
     0xc3, 0xbd, 0x00, 0x00, KEY_NONE,       KEY_7,         // ý
-
     0xc4, 0x8d, 0x00, 0x00, KEY_NONE,       KEY_4,         // č
     0xc4, 0x8f, 0x00, 0x00, KEY_NONE,       KEY_D,         // ď   press "ˇ" before
     0xc4, 0xbe, 0x00, 0x00, KEY_NONE,       KEY_2,         // ľ
@@ -210,9 +208,7 @@ const uint8_t utf8_sk[] PROGMEM = {
     0xc5, 0xa1, 0x00, 0x00, KEY_NONE,       KEY_3,         // š
     0xc5, 0xa5, 0x00, 0x00, KEY_NONE,       KEY_5,         // ť
     0xc5, 0xbe, 0x00, 0x00, KEY_NONE,       KEY_6,         // ž
-
     0xc3, 0xa4, 0x00, 0x00, KEY_NONE,       KEY_RIGHTBRACE,// ä
-
     0xc3, 0xb4, 0x00, 0x00, KEY_NONE,       KEY_SEMICOLON  // ô
 
 };
