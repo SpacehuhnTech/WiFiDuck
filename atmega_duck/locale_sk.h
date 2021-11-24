@@ -210,7 +210,6 @@ const uint8_t utf8_sk[] PROGMEM = {
     0xc5, 0xbe, 0x00, 0x00, KEY_NONE,       KEY_6,         // ž
     0xc3, 0xa4, 0x00, 0x00, KEY_NONE,       KEY_RIGHTBRACE,// ä
     0xc3, 0xb4, 0x00, 0x00, KEY_NONE,       KEY_SEMICOLON  // ô
-
 };
 
 static hid_locale_t locale_sk {
