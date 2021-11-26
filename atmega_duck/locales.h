@@ -18,3 +18,4 @@
 #include "locale_be.h"
 #include "locale_pt.h"
 #include "locale_it.h"
+#include "locale_sk.h"
