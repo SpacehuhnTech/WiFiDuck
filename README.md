@@ -450,6 +450,7 @@ Currently supported keyboard layouts:
 - [:portugal: PT (ASCII only)](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_pt.h)
 - [:it: IT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_it.h)
 - [:slovakia: SK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_sk.h)
+- [:czech_republic: CZ](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_cz.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
 To translate a keyboard layout, you have to match each character on

@@ -19,3 +19,4 @@
 #include "locale_pt.h"
 #include "locale_it.h"
 #include "locale_sk.h"
+#include "locale_cz.h"
