@@ -23,3 +23,4 @@
 #include "locale_cz.h"
 #include "locale_si.h"
 #include "locale_bg.h"
+#include "locale_cafr.h"
