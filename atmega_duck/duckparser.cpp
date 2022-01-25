@@ -193,6 +193,8 @@ namespace duckparser {
                     keyboard::setLocale(&locale_bg);
                 } else if (compare(w->str, w->len, "CA-FR", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_cafr);
+                } else if (compare(w->str, w->len, "CH-DE", CASE_INSENSETIVE)) {
+                    keyboard::setLocale(&locale_chde);
                 }
                 
                 ignore_delay = true;
