@@ -157,7 +157,8 @@ namespace com {
                     start_parser         = true;
                     ongoing_transmission = false;
                 } else {
-                    debug(c);
+                    debug(c, BIN);
+                    debug(" ");
 
                     data_buf.data[data_buf.len] = c;
                     ++data_buf.len;

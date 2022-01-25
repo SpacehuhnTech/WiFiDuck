@@ -50,9 +50,26 @@ namespace duckscript {
         bool eol           =  false; // End of line
 
         while (f.available() && !eol && buf_i < BUFFER_SIZE) {
-            uint8_t b = f.read();
+            uint8_t b = f.peek();
+
+            //utf8
+            if((b & 0x80) == 0x80) {
+                uint8_t extra_chars = 0;
+            
+                if((b & 0xC0) == 0xC0) {
+                    extra_chars = 2;
+                } else if((b & 0xE0) == 0xC0) {
+                    extra_chars = 3;
+                } else if((b & 0xF0) == 0xC0) {
+                    extra_chars = 4;
+                }
+
+                // utf8 char doesn't fit into buffer
+                if ((buf_i + extra_chars) > BUFFER_SIZE) break;
+            }
+            
             eol        = (b == '\n');
-            buf[buf_i] = b;
+            buf[buf_i] = f.read();
             ++buf_i;
             // debug(char(b));
         }

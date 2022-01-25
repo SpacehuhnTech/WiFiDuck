@@ -289,27 +289,31 @@ namespace com {
         // ! Truncate string to fit into buffer
         if (len > BUFFER_SIZE) len = BUFFER_SIZE;
 
-        size_t sent = 0;
-        size_t i    = 0;
+        size_t sent = 0; // byte sent overall
+        size_t i    = 0; // index of string
+        size_t j    = 0; // byte sent for current packet
 
         start_transmission();
 
         transmit(REQ_SOT);
 
         ++sent;
+        ++j;
 
         while (i < len) {
             char b = str[i];
-
+            
             if ((b != '\n') && (b != '\n')) debug(b);
             transmit(b);
 
             ++i;
+            ++j;
             ++sent;
 
-            if (sent % PACKET_SIZE == 0) {
+            if (j == PACKET_SIZE/*sent % PACKET_SIZE == 0*/) {
                 stop_transmission();
                 start_transmission();
+                j = 0;
             }
         }
 
