@@ -112,7 +112,46 @@ namespace keyboard {
     uint8_t press(const char* strPtr) {
         // Convert string pointer into a byte pointer
         uint8_t* b = (uint8_t*)strPtr;
-        
+
+        // Key combinations (accent keys)
+        // We have to check them first, because sometimes ASCII keys are in here
+        for (uint8_t i = 0; i<locale->combinations_len; ++i) {
+            uint8_t res = 0;
+
+            // Read utf8 code and match it with the given data
+            for (uint8_t j = 0; j<4; ++j) {
+                uint8_t key_code = pgm_read_byte(locale->combinations + (i * 8) + j);
+
+                if (key_code == 0) {
+                    break;
+                }
+
+                if (key_code == b[j]) {
+                    ++res;
+                } else {
+                    res = 0;
+                    break;
+                }
+            }
+
+            // If a match was found, read out the data and type it
+            if (res > 0) {
+                uint8_t comboModifiers = pgm_read_byte(locale->combinations + (i * 8) + 4);
+                uint8_t comboKey       = pgm_read_byte(locale->combinations + (i * 8) + 5);
+
+                uint8_t modifiers = pgm_read_byte(locale->combinations + (i * 8) + 6);
+                uint8_t key       = pgm_read_byte(locale->combinations + (i * 8) + 7);
+
+                pressKey(comboKey, comboModifiers);
+                release();
+                pressKey(key, modifiers);
+                release();
+
+                // Return the number of extra bytes we used from the string pointer
+                return res-1;
+            }
+        }
+
         // ASCII
         if (b[0] < locale->ascii_len) {
             uint8_t modifiers = pgm_read_byte(locale->ascii + (b[0] * 2) + 0);
@@ -152,20 +191,6 @@ namespace keyboard {
 
                 // Return the number of extra bytes we used from the string pointer
                 return res-1;
-            }
-        }
-
-        // Extended ASCII
-        for (uint8_t i = 0; i<locale->extended_ascii_len; ++i) {
-            uint8_t key_code = pgm_read_byte(locale->extended_ascii + (i * 3));
-
-            if (b[0] == key_code) {
-                uint8_t modifiers = pgm_read_byte(locale->extended_ascii + (i * 3) + 1);
-                uint8_t key       = pgm_read_byte(locale->extended_ascii + (i * 3) + 2);
-
-                pressKey(key, modifiers);
-
-                return 0;
             }
         }
 

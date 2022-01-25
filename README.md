@@ -466,8 +466,8 @@ For example:
 `locale_xx.h` -> `locale_de.h`,  
 `ascii_xx` -> `ascii_de`,  
 `locale_xx` -> `locale_de`,  
-`extended_ascii_xx` -> `extended_ascii_de`,  
 `utf8_xx` -> `utf8_de`.  
+`combinations_xx` -> `combinations_de`,  
 4. Modify the ASCII array.  
 The ASCII array has a fixed size. Each row describes a key.
 First a modifier key like `KEY_MOD_LSHIFT`, then a character key.
@@ -480,11 +480,11 @@ This is because German keyboards use QWERTZ instead of the QWERTY layout
 and since the letter is uppercase, shift must be pressed as well.   
 Thankfully you don't have to trial and error everything, the Hak5 Community
 translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example, `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
-5. Modify or create the extended ASCII array.  
+5. [deprecated] ~~Modify or create the extended ASCII array.  
 The extended ASCII array doesn't have a fixed size and is only as long as you make it.
 First the character code. For example, [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
 It doesn't use a modifier and sits where the apostrophe key is on a US keyboard:
-`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.  
+`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.~~  
 6. Modify or create the UTF-8 array.  
 The UTF-8 array is variable in length, too.  
 The first 4 bytes are the character code.  
