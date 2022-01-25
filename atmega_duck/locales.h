@@ -20,3 +20,4 @@
 #include "locale_it.h"
 #include "locale_sk.h"
 #include "locale_cz.h"
+#include "locale_si.h"

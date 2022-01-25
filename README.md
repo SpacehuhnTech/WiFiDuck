@@ -314,7 +314,7 @@ It's compatible to Ducky Script, which was developed by the wonderful people at 
 | `DELAY` | `DELAY 1000` | Delay in ms |
 | `STRING` | `STRING Hello World!` | Types the following string |
 | `REPEAT` or `REPLAY` | `REPEAT 3` | Repeats the last command n times |
-| `LOCALE` | `LOCALE DE` | Sets the keyboard layout. Available: `DE`, `ES`, `GB`, `US`, `DK`, `RU`, `FR` |
+| `LOCALE` | `LOCALE DE` | Sets the keyboard layout. [List](#translate-keyboard-layout) |
 | `KEYCODE` | `KEYCODE 0x02 0x04` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal |
 | `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) |
 
@@ -451,6 +451,7 @@ Currently supported keyboard layouts:
 - [:it: IT](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_it.h)
 - [:slovakia: SK](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_sk.h)
 - [:czech_republic: CZ](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_cz.h)
+- [:slovenia: SI](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_si.h)
 
 All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
 To translate a keyboard layout, you have to match each character on
