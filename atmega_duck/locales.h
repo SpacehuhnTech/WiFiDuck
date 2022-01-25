@@ -25,3 +25,4 @@
 #include "locale_bg.h"
 #include "locale_cafr.h"
 #include "locale_chde.h"
+#include "locale_chfr.h"
