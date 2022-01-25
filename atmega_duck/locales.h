@@ -22,3 +22,4 @@
 #include "locale_sk.h"
 #include "locale_cz.h"
 #include "locale_si.h"
+#include "locale_bg.h"

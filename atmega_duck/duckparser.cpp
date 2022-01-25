@@ -15,6 +15,9 @@ extern "C" {
  #include "parser.h" // parse_lines
 }
 
+#define CASE_INSENSETIVE 0
+#define CASE_SENSETIVE 1
+
 namespace duckparser {
     // ====== PRIVATE ===== //
     bool inString  = false;
@@ -160,32 +163,34 @@ namespace duckparser {
             else if (compare(cmd->str, cmd->len, "LOCALE", CASE_SENSETIVE)) {
                 word_node* w = cmd->next;
 
-                if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
+                if (compare(w->str, w->len, "US", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_us);
-                } else if (compare(w->str, w->len, "DE", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "DE", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_de);
-                } else if (compare(w->str, w->len, "RU", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "RU", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_ru);
-                } else if (compare(w->str, w->len, "GB", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "GB", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_gb);
-                } else if (compare(w->str, w->len, "ES", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "ES", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_es);
-                } else if (compare(w->str, w->len, "FR", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "FR", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_fr);
-                } else if (compare(w->str, w->len, "DK", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "DK", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_dk);
-                } else if (compare(w->str, w->len, "BE", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "BE", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_be);
-                } else if (compare(w->str, w->len, "PT", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "PT", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_pt);
-                } else if (compare(w->str, w->len, "IT", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "IT", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_it);
-                } else if (compare(w->str, w->len, "SK", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "SK", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_sk);
-                } else if (compare(w->str, w->len, "CZ", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "CZ", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_cz);
-                } else if (compare(w->str, w->len, "SI", CASE_SENSETIVE)) {
+                } else if (compare(w->str, w->len, "SI", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_si);
+                } else if (compare(w->str, w->len, "BG", CASE_INSENSETIVE)) {
+                    keyboard::setLocale(&locale_bg);
                 }
                 
                 ignore_delay = true;
