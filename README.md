@@ -25,6 +25,7 @@
   + [Standard Keys](#standard-keys)
   + [Modifier Keys](#modifier-keys)
   + [Other Keys](#other-keys)
+  + [Numpad Keys](#numpad-keys)
   + [Examples](#examples)
 * [CLI Commands](#cli-commands)
   + [General](#general)
@@ -360,6 +361,17 @@ It's compatible to Ducky Script, which was developed by the wonderful people at 
 | `NUMLOCK` |
 | `PRINTSCREEN` |
 | `SCROLLLOCK` |
+
+### Numpad Keys
+
+| Key |
+| --- |
+| `NUM_0` - `NUM_9` |
+| `NUM_ASTERIX` |
+| `NUM_ENTER` |
+| `NUM_MINUS` |
+| `NUM_DOT` |
+| `NUM_PLUS` |
 
 ### Examples
 
