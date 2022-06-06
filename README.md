@@ -4,6 +4,12 @@
 <img alt="WiFi Duck Logo" src="img/thumbnail.jpg" width="640">
 </p>
 
+### 👉 Visit [wifiduck.com](https://wifiduck.com) for an improved documentation.
+
+Want to learn more about BadUSBs? Check out our online course: [learnbadusb.com](https://learnbadusb.com) 
+
+---
+
 * [About](#about)
 * [Usage](#usage)
 * [Support us](#support-us)
