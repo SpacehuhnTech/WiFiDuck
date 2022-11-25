@@ -198,6 +198,8 @@ namespace duckparser {
                     keyboard::setLocale(&locale_be);
                 } else if (compare(w->str, w->len, "PT", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_pt);
+                } else if (compare(w->str, w->len, "PT-BR", CASE_INSENSETIVE)) {
+                    keyboard::setLocale(&locale_ptbr);
                 } else if (compare(w->str, w->len, "IT", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_it);
                 } else if (compare(w->str, w->len, "SK", CASE_INSENSETIVE)) {
