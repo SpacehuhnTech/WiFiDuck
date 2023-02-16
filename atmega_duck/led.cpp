@@ -82,7 +82,7 @@ namespace led {
     int ledPin = LED_BUILTIN;
   #endif 
     void begin() {
-      pinMode(LED_PIN, OUTPUT);
+      pinMode(ledPin, OUTPUT);
     }
 
     void setColor(int r, int g, int b) {
