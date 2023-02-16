@@ -88,9 +88,9 @@ namespace led {
     void setColor(int r, int g, int b) {
       // On unless all colours are below 50 (about 20%)
       if (r > 50 && g > 50 && b > 50) {
-        digitalWrite(LED_PIN, HIGH);
+        digitalWrite(ledPin, HIGH);
       } else {
-        digitalWrite(LED_PIN, LOW);
+        digitalWrite(ledPin, LOW);
       }
     }
 }
