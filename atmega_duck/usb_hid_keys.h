@@ -28,6 +28,14 @@
 #define KEY_MOD_RMETA  0x80
 
 /**
+	HID_MOD_KEY_LEFT_CONTROL = 0x01
+	HID_MOD_KEY_LEFT_SHIFT = 0x02
+	HID_MOD_KEY_LEFT_ALT = 0x04
+	HID_MOD_KEY_LEFT_GUI = 0x08
+	HID_MOD_KEY_RIGHT_CONTROL = 0x10
+	HID_MOD_KEY_RIGHT_SHIFT = 0x20
+	HID_MOD_KEY_RIGHT_ALT = 0x40
+	HID_MOD_KEY_RIGHT_GUI = 0x80
  * Scan codes - last N slots in the HID report (usually 6).
  * 0x00 if no key pressed.
  *
@@ -217,7 +225,7 @@
 // 0xb5  Currency Sub-unit
 #define KEY_KPLEFTPAREN 0xb6  // Keypad (
 #define KEY_KPRIGHTPAREN 0xb7 // Keypad )
-// 0xb8  Keypad {
+#define KEY_B8 0xb8 // 0xb8  Keypad {
 // 0xb9  Keypad }
 // 0xba  Keypad Tab
 // 0xbb  Keypad Backspace
