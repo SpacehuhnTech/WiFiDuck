@@ -16,6 +16,7 @@ namespace settings {
 
     String toString();
 
+    const char* getMODE();
     const char* getSSID();
     const char* getPassword();
     const char* getChannel();
@@ -25,6 +26,7 @@ namespace settings {
 
     void set(const char* name, const char* value);
 
+    void setMODE(const char* mode);
     void setSSID(const char* ssid);
     void setPassword(const char* password);
     void setChannel(const char* channel);

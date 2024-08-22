@@ -18,6 +18,7 @@ namespace settings {
     typedef struct settings_t {
         uint32_t magic_num;
 
+        char mode[11];
         char ssid[33];
         char password[65];
         char channel[5];
@@ -36,6 +37,7 @@ namespace settings {
         eeprom::getObject(SETTINGS_ADDRES, data);
         if (data.magic_num != SETTINGS_MAGIC_NUM) reset();
 
+        if (data.mode[10] != 0) setMODE(MODE);
         if (data.ssid[32] != 0) setSSID(WIFI_SSID);
         if (data.password[64] != 0) setPassword(WIFI_PASSWORD);
         if (data.channel[4] != 0) setChannel(WIFI_CHANNEL);
@@ -45,6 +47,7 @@ namespace settings {
     void reset() {
         debugln("Resetting Settings");
         data.magic_num = SETTINGS_MAGIC_NUM;
+        setMODE(MODE);
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setChannel(WIFI_CHANNEL);
@@ -58,6 +61,9 @@ namespace settings {
     String toString() {
         String s;
 
+        s += "mode=";
+        s += getMODE();
+        s += "\n";
         s += "ssid=";
         s += getSSID();
         s += "\n";
@@ -72,6 +78,10 @@ namespace settings {
         s += "\n";
 
         return s;
+    }
+
+    const char* getMODE() {
+        return data.mode;
     }
 
     const char* getSSID() {
@@ -96,7 +106,9 @@ namespace settings {
     }
 
     void set(const char* name, const char* value) {
-        if (strcmp(name, "ssid") == 0) {
+        if (strcmp(name, "mode") == 0) {
+            setMODE(value);
+        } else if (strcmp(name, "ssid") == 0) {
             setSSID(value);
         } else if (strcmp(name, "password") == 0) {
             setPassword(value);
@@ -105,6 +117,15 @@ namespace settings {
         } else if (strcmp(name, "autorun") == 0) {
             setAutorun(value);
         }
+    }
+
+    void setMODE(const char* mode) {
+      if (mode) {
+        memset(data.mode, 0, sizeof(data.mode));          // Clear the buffer to ensure no leftover data
+        strncpy(data.mode, mode, sizeof(data.mode) - 1);  // Copy up to 10 characters, leave room for null terminator
+        data.mode[sizeof(data.mode) - 1] = '\0';          // Explicitly set the last character to null terminator
+        save();
+      }
     }
 
     void setSSID(const char* ssid) {

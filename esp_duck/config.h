@@ -35,12 +35,21 @@
 #define BOOT_MAGIC_NUM    1234567890
 
 /*! ===== WiFi Settings ===== */
-#define WIFI_SSID "wifiduck"
-#define WIFI_PASSWORD "wifiduck"
-#define WIFI_CHANNEL "1"
 
-#define HOSTNAME "wifiduck"
-#define URL "wifi.duck"
+/*
+Mode can be "STA" or "AP"
+  STA is for connecting to an existing access point
+  AP is for creating a new access point
+*/
+#define MODE "STA"
+
+#define WIFI_SSID "wifiduck" // wifi name for AP or STA
+#define WIFI_PASSWORD "wifiduck" // wifi password for AP or STA
+
+#define WIFI_CHANNEL "1" // wifi channel for AP
+
+#define HOSTNAME "wifiduck" // hostname
+#define URL "wifi.duck" // url to access web interface
 
 /*! ========== Safty checks ========== */
 #if !defined(ENABLE_I2C) && !defined(ENABLE_SERIAL)

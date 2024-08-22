@@ -7,11 +7,13 @@ function load_settings() {
   ws_send("settings", function(msg) {
     var lines = msg.split(/\n/);
 
-    var ssid = lines[0].split("=")[1];
-    var password = lines[1].split("=")[1];
-    var channel = lines[2].split("=")[1];
-    var autorun = lines[3].split("=")[1];
+    var mode = lines[0].split("=")[1];
+    var ssid = lines[1].split("=")[1];
+    var password = lines[2].split("=")[1];
+    var channel = lines[3].split("=")[1];
+    var autorun = lines[4].split("=")[1];
 
+    E("mode").innerHTML = mode;
     E("ssid").innerHTML = ssid;
     E("password").innerHTML = password;
     E("channel").innerHTML = channel;
@@ -26,6 +28,20 @@ function ws_connected() {
 
 // ===== Startup ===== //
 window.addEventListener("load", function() {
+
+  E("edit_mode").onclick = function() {
+    var newssid = prompt("MODE (1-11 chars)", E("mode").innerHTML);
+
+    if (newssid) {
+      if (newssid.length >= 1 && newssid.length <= 11) {
+        ws_send("set mode \"" + newssid + "\"", function(msg) {
+          load_settings();
+        });
+      } else {
+        alert("ERROR: Invalid length");
+      }
+    }
+  };
 
   E("edit_ssid").onclick = function() {
     var newssid = prompt("SSID (1-32 chars)", E("ssid").innerHTML);

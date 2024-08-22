@@ -79,15 +79,50 @@ namespace webserver {
 
     // ===== PUBLIC ===== //
     void begin() {
-        // Access Point
+        // Set hostname for the device
         WiFi.hostname(HOSTNAME);
 
-        // WiFi.mode(WIFI_AP_STA);
-        WiFi.softAP(settings::getSSID(), settings::getPassword(), settings::getChannelNum());
-        WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-        debugf("Started Access Point \"%s\":\"%s\"\n", settings::getSSID(), settings::getPassword());
+        // Determine mode based on channel setting or another configuration parameter
+        if (strcmp(settings::getMODE(), "STA") == 0) {
+            WiFi.mode(WIFI_STA); // Set WiFi to station mode
+            debugf("Attempting to connect to WiFi...");
 
-        // Webserver
+            int connectionAttempts = 0;
+            while (connectionAttempts < 10) {
+                WiFi.begin(settings::getSSID(), settings::getPassword()); // Attempt to connect
+
+                // Wait for the connection to establish
+                if (WiFi.waitForConnectResult() == WL_CONNECTED) {
+                    debugf("Connected to WiFi successfully!");
+                    IPAddress ip = WiFi.localIP(); // Get the local IP address
+                    debugf("IP Address: %s\n", ip.toString().c_str()); // Print the IP address
+                    break; // Exit loop if connected
+                } else {
+                    connectionAttempts++;
+                    debugf("Connection attempt %d failed, retrying...\n", connectionAttempts);
+
+                    // Delay before the next connection attempt
+                    delay(10000); // 10 seconds
+                }
+            }
+
+            // If connection failed after all attempts
+            if (connectionAttempts >= 10) {
+                debugf("Failed to connect after 10 attempts. Starting AP...");
+                WiFi.softAP(settings::getSSID(), settings::getPassword());
+                WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+            }
+        } else {
+            // Default to AP mode
+            debugf("Mode is set to AP (Access Point Mode). Setting up AP...");
+            WiFi.mode(WIFI_AP);
+            WiFi.softAP(settings::getSSID(), settings::getPassword());
+            WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+        }
+
+        debugf("\"%s\" Mode SSID \"%s\":\"%s\"\n", settings::getMODE(), settings::getSSID(), settings::getPassword());
+
+        // Continue with the Web server initialization...
         server.on("/", HTTP_GET, [](AsyncWebServerRequest* request) {
             request->redirect("/index.html");
         });

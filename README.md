@@ -6,7 +6,7 @@
 
 ### 👉 Visit [wifiduck.com](https://wifiduck.com) for an improved documentation.
 
-Want to learn more about BadUSBs? Check out our online course: [learnbadusb.com](https://learnbadusb.com) 
+Want to learn more about BadUSBs? Check out our online course: [learnbadusb.com](https://learnbadusb.com)
 
 ---
 
@@ -46,16 +46,16 @@ Want to learn more about BadUSBs? Check out our online course: [learnbadusb.com]
 
 ## About
 
-This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.  
+This open-source project aims to provide a user-friendly tool to learn about keystroke injection attacks and 'BadUSBs'.
 
-By emulating a USB keyboard, tools like this can gain full access to any computer with a USB port in a matter of seconds!  
-This is made possible by the fact that keyboards are trusted by computers. You can have full control over a computer with just a keyboard.  
-A BadUSB pretends to be a keyboard to the computer to send keystrokes. 
-But unlike a human, it can type hundreds of characters per second. 
-By using a simple scripting language, it's easy to make BadUSBs type whatever you want. 
+By emulating a USB keyboard, tools like this can gain full access to any computer with a USB port in a matter of seconds!
+This is made possible by the fact that keyboards are trusted by computers. You can have full control over a computer with just a keyboard.
+A BadUSB pretends to be a keyboard to the computer to send keystrokes.
+But unlike a human, it can type hundreds of characters per second.
+By using a simple scripting language, it's easy to make BadUSBs type whatever you want.
 
 With the WiFi Duck, you can simply connect via WiFi to manage all scripts
-from within a web interface. This means that, unlike other BadUSBs, you don't need to install an app, log in, compile or copy scripts to an SD card.  
+from within a web interface. This means that, unlike other BadUSBs, you don't need to install an app, log in, compile or copy scripts to an SD card.
 
 ## Usage
 
@@ -73,19 +73,36 @@ from within a web interface. This means that, unlike other BadUSBs, you don't ne
 4. Write, save and run your first Ducky Script
 5. [Recommended] Open `Settings` (top right corner) and update SSID and password
 
+### Switching Between Access Point (AP) and Station (STA) Modes
+
+The WiFi Duck firmware now supports dynamic switching between Access Point (AP) mode and Station (STA) mode. This flexibility allows you to either create a local WiFi network or connect to an existing WiFi network based on your needs.
+
+**Steps to Configure:**
+
+1. **Access Point (AP) Mode:**
+   - If you set the mode to "AP" in the settings and provide a WiFi SSID and password, the WiFi Duck will create a WiFi network using these credentials.
+   - This is ideal when you want to directly connect to the device without relying on an external WiFi network.
+
+2. **Station (STA) Mode:**
+   - When the mode is set to "STA" and the WiFi SSID and password are provided, the WiFi Duck will attempt to connect to the specified WiFi network.
+   - The device will make up to 10 connection attempts, with a 10-second delay between each attempt.
+   - If all attempts fail, the WiFi Duck will automatically switch back to AP mode and create its own network, ensuring continued access.
+
+**Note:** After updating the firmware from the Web UI, you need to go to settings and perform a `RESET SETTINGS` operation. This step is necessary because the mode configuration was not present in the previous firmware versions, and resetting will ensure the new settings are applied correctly.
+
 **Help I forgot the password:**
 [Flash the ESP8266](#flash-esp8266), but make sure that you select `Erase Flash: Sketch + WiFi Settings`
-under Tools in the Arduino IDE.  
+under Tools in the Arduino IDE.
 
-If you have further questions, check out the [issue section](https://github.com/spacehuhn/WiFiDuck/issues).  
+If you have further questions, check out the [issue section](https://github.com/spacehuhn/WiFiDuck/issues).
 
 ## Support us
 
-Hey, do you like this kind of project?  
-It took a huge amount of effort to create!  
+Hey, do you like this kind of project?
+It took a huge amount of effort to create!
 
-To make sure we can keep working on free and open-source projects like this,  
-**please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**  
+To make sure we can keep working on free and open-source projects like this,
+**please consider becoming a [:heart: Sponsor](https://github.com/sponsors/spacehuhntech) or support us via [:coffee: Ko-fi](https://ko-fi.com/spacehuhn).**
 
 Visit [spacehuhn.com](https://spacehuhn.com) to learn more about us. :chicken:
 
@@ -103,9 +120,9 @@ Visit [spacehuhn.com](https://spacehuhn.com) to learn more about us. :chicken:
   </a>
 </p>
 
-A nicely encased, inconspicuous looking BadUSB by Maltronics.  
-Having USB-A and USB-C makes it compatible with all kind of devices.  
-It comes flashed with the WiFi Duck firmware and works plug and play.  
+A nicely encased, inconspicuous looking BadUSB by Maltronics.
+Having USB-A and USB-C makes it compatible with all kind of devices.
+It comes flashed with the WiFi Duck firmware and works plug and play.
 ℹ️ **[Documentation can be found here](http://docs.maltronics.com/malduino-w/)**
 
 ### DSTIKE WiFi Duck
@@ -118,13 +135,13 @@ It comes flashed with the WiFi Duck firmware and works plug and play.
   </a>
 </p>
 
-A custom designed development board which comes preflashed with this software by Travis Lin.  
+A custom designed development board which comes preflashed with this software by Travis Lin.
 
-You can update the ESP8266 over the air and flash the Atmega32u4 via Arduino, all while enclosed in its neat little case.  
+You can update the ESP8266 over the air and flash the Atmega32u4 via Arduino, all while enclosed in its neat little case.
 📺 **[Watch the How to Update Tutorial here](https://youtu.be/e3-nsOjclsY)**.
 
-If you wish to develop your own software or help improve this one, 
-the 8-bit DIP-switch makes it easy for you to access the Atmega32u4 or ESP8266 independently. 
+If you wish to develop your own software or help improve this one,
+the 8-bit DIP-switch makes it easy for you to access the Atmega32u4 or ESP8266 independently.
 For more info see [Flash Software](#flash-software).
 
 | Mode | Atmega32u4 | ESP8266 | DIP-switch | Image |
@@ -143,22 +160,22 @@ For more info see [Flash Software](#flash-software).
   </a>
 </p>
 
-To build a WiFi Duck yourself, you need the following hardware:  
-* An Atmega32u4 development board (see the list below)  
-* An ESP8266 or ESP8285 development board (see the list below)  
+To build a WiFi Duck yourself, you need the following hardware:
+* An Atmega32u4 development board (see the list below)
+* An ESP8266 or ESP8285 development board (see the list below)
 * Optional: A single Neopixel (WS2812b) or Dotstar (APA102) LED
 
-To flash the microcontrollers you need a computer and USB cable.  
+To flash the microcontrollers you need a computer and USB cable.
 
-If you're a beginner, it's recommended you wire everything together on a breadboard first!  
-In this case, you'd also need a breadboard with a couple of jumper wires.  
+If you're a beginner, it's recommended you wire everything together on a breadboard first!
+In this case, you'd also need a breadboard with a couple of jumper wires.
 
 If you wish to solder everything together into a small gadget,
-you also need soldering equipment.  
+you also need soldering equipment.
 
 You can use any Atmega32u4 or ESP8266 based development board,
-but if you have no idea where to start, here's a list.  
-:warning: **Keep in mind that you will need both microcontrollers!**  
+but if you have no idea where to start, here's a list.
+:warning: **Keep in mind that you will need both microcontrollers!**
 The Atmega32u4 to act as USB keyboard, and the ESP8266 for WiFi.
 
 ### Atmega32u4 Development Boards
@@ -168,7 +185,7 @@ The Atmega32u4 to act as USB keyboard, and the ESP8266 for WiFi.
 * CJMCU Beetle
 * SS Micro
 
-:bangbang: **DIGISPARK or other ATTINY85 based development boards, are NOT supported!** :bangbang:  
+:bangbang: **DIGISPARK or other ATTINY85 based development boards, are NOT supported!** :bangbang:
 
 ### ESP8266 Development Boards
 * NodeMCU 1.0 (ESP-12E Module)
@@ -178,7 +195,7 @@ The Atmega32u4 to act as USB keyboard, and the ESP8266 for WiFi.
 
 ### Connections
 
-A map of pins that need to be connected.  
+A map of pins that need to be connected.
 
 | ESP8266 | Atmega32u4 |
 | ------- | ---------- |
@@ -186,16 +203,16 @@ A map of pins that need to be connected.
 | `D2` alias `GPIO 4` | `2` alias `SDA` |
 | `GND` | `GND` |
 
-Ideally, you want the Atmega32u4 to power the ESP8266, so it can run on **one** USB connection, instead of having to always plug in both.  
-To share power between both chips, you need a voltage regulator that takes 5V and turns it into 3.3V.  
-That's because USB runs on 5V, but the ESP8266 only takes 3.3V. Luckily most development boards have such a regulator on board.  
-**DO NOT CONNECT ESP8266 VCC to the ATMEGA32u4 VCC**, it will kill the ESP826. Instead look for the `5V` or `VIN` pin on your dev board, as those will be connected to the regulator.  
+Ideally, you want the Atmega32u4 to power the ESP8266, so it can run on **one** USB connection, instead of having to always plug in both.
+To share power between both chips, you need a voltage regulator that takes 5V and turns it into 3.3V.
+That's because USB runs on 5V, but the ESP8266 only takes 3.3V. Luckily most development boards have such a regulator on board.
+**DO NOT CONNECT ESP8266 VCC to the ATMEGA32u4 VCC**, it will kill the ESP826. Instead look for the `5V` or `VIN` pin on your dev board, as those will be connected to the regulator.
 
 | ESP8266 Dev Board |      Atmega32u4      |
 | ----------------- | -------------------- |
 | `5V` or `VIN`     | `RAW`, `5V` or `VIN` |
 
-To add a Neopixel (WS2812b) LED:  
+To add a Neopixel (WS2812b) LED:
 
 | Atmega32u4 | Neopixel LED |
 | ---------- | ------------ |
@@ -203,15 +220,15 @@ To add a Neopixel (WS2812b) LED:
 | `5V` alias `VCC` | `5V` alias `VCC` |
 | `GND` | `GND` |
 
-\* The Data pin can be changed later on in the software, pin 7 is just an example.  
+\* The Data pin can be changed later on in the software, pin 7 is just an example.
 
 ![Example of a DIY build using a Wemos d1 mini, a Pro Micro and a Neopixel LED](img/diy_example.jpg)
 
 ### PCB
 
-To make the DIY process easier, I designed a little PCB.  
+To make the DIY process easier, I designed a little PCB.
 
-You solder a Pro Micro board on one side and a Wemos d1 mini or NodeMCU board (depending on the PCB) on the other side.  
+You solder a Pro Micro board on one side and a Wemos d1 mini or NodeMCU board (depending on the PCB) on the other side.
 That's it. You don't even have to solder all pins,
 just the ones mentioned in [Connections](#connections), excluding the LED.
 
@@ -223,7 +240,7 @@ just the ones mentioned in [Connections](#connections), excluding the LED.
   <img alt="Soldered PCBs" src="img/pcbs_soldered.jpg" width="400">
 </p>
 
-Design Files:  
+Design Files:
 * Pro Micro + Wemos d1 mini: https://easyeda.com/Spacehuhn/wifi-duck
 * Pro Micro + NodeMCU: https://easyeda.com/Spacehuhn/diy-wifi-duck-pro-micro-nodemcu
 
@@ -272,11 +289,11 @@ For example `NodeMCU 1.0 (ESP-12E Module)`.
 
 **Pro Tip:** If the ESP8266 is already running this software
 and you just want to update it, you don't have to connect it via USB.
-You can update it over the air! Simply connect to the `wifiduck` network (default password is `wifiduck`).  
+You can update it over the air! Simply connect to the `wifiduck` network (default password is `wifiduck`).
 Then in Arduino at `Tools` > `Port` you should now see a network port.
-Select it and press `Upload`.  
+Select it and press `Upload`.
 
-**Note:** After the initial flashing, the ESP8266 has to format its memory, so it might take a minute until it's fully ready.  
+**Note:** After the initial flashing, the ESP8266 has to format its memory, so it might take a minute until it's fully ready.
 
 If you connected the RGB LED:
 * Blue LED = Connection working
@@ -284,27 +301,27 @@ If you connected the RGB LED:
 
 ### Unbrick Atmega32u4
 
-If you flashed your Atmega32u4 board with the wrong bootloader, 
-it will no longer appear in the port selection after you connect it.  
+If you flashed your Atmega32u4 board with the wrong bootloader,
+it will no longer appear in the port selection after you connect it.
 To solve this, you need to:
 
 1. Connect the reset pin `RST` to ground `GND`.
-Preferably with a jumper wires, because you need to be able to disconnect it quickly.  
-2. Open a sketch, `atmegaduck/atmega_duck.ino` or an empty sketch.  
+Preferably with a jumper wires, because you need to be able to disconnect it quickly.
+2. Open a sketch, `atmegaduck/atmega_duck.ino` or an empty sketch.
 **Make sure to have the correct board selected under `Tools` > `Board`!**
 3. Connect the board with the wire still connected.
-4. Press `Upload` and as soon as you see `Compiling...` turn to `Uploading...`, disconnect the wire.  
+4. Press `Upload` and as soon as you see `Compiling...` turn to `Uploading...`, disconnect the wire.
 
-Now it should flash the sketch and the correct bootloader.  
+Now it should flash the sketch and the correct bootloader.
 
 ## Scripting
 
 ### Basics
 
-Keys are separated by a single space.  
-Everything written in a single line gets pressed and released at the same time.  
-To write text, use the STRING function.  
-It's compatible to Ducky Script, which was developed by the wonderful people at [Hak5](https://www.hak5.org/).  
+Keys are separated by a single space.
+Everything written in a single line gets pressed and released at the same time.
+To write text, use the STRING function.
+It's compatible to Ducky Script, which was developed by the wonderful people at [Hak5](https://www.hak5.org/).
 
 | Example | Explanation |
 | ------- | ----------- |
@@ -392,7 +409,7 @@ STRING Hello World!
 
 ## CLI Commands
 
-The command line interface or CLI is accessible using a serial connection to the ESP8266 (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.  
+The command line interface or CLI is accessible using a serial connection to the ESP8266 (115200 baud, Newline ending) or via the web interface at `192.168.4.1/terminal.html`.
 
 ### General
 
@@ -424,39 +441,39 @@ The command line interface or CLI is accessible using a serial connection to the
 | close | Closes file stream | `close` |
 | read | Read and return the result from file stream | `read` |
 
-If a stream is open, everything you type (except messages containing exactly `close` or `read`) will be written to the file until you type `close`!  
+If a stream is open, everything you type (except messages containing exactly `close` or `read`) will be written to the file until you type `close`!
 
 ## How to Debug
 
 To properly debug, you need to have both the Atmega32u4
-and the ESP8266 connected via USB to your computer.  
+and the ESP8266 connected via USB to your computer.
 
 That can be tricky when you only have a all in one board, so it might be useful
 you built one yourself. You don't need to solder it, for example you can use an
-Arduino Leonardo and a NodeMCU and connect them with jumper cables.  
+Arduino Leonardo and a NodeMCU and connect them with jumper cables.
 
 Now open 2 instances of Arduino (so they run as separate processes!),
 select the COM port and open the serial monitor for each device.
 You might need to reset the Atmega32u4 to see serial output.
-If that causes problems with the i2c connection, try to reset the ESP8266 too.  
+If that causes problems with the i2c connection, try to reset the ESP8266 too.
 ## Development
 
 ### Edit Web Files
 
-If you would like to modify the web interface, you can!  
-The `web/` folder contains all `.html`, `.css`, `.js` files.  
+If you would like to modify the web interface, you can!
+The `web/` folder contains all `.html`, `.css`, `.js` files.
 You can edit and test them locally as long as you're connected to the WiFi Duck
-network thanks to the websocket connection handled by JavaScript in the background.  
+network thanks to the websocket connection handled by JavaScript in the background.
 
 To get the new files onto the ESP8266, run `python3 webconverter.py` in the
-repository folder.  
+repository folder.
 It gzips all files inside `web/`, converts them into a hex array
-and saves it in `esp_duck/webfiles.h`.  
-Now you just need to [flash](#flash-software) the ESP8266 again.  
+and saves it in `esp_duck/webfiles.h`.
+Now you just need to [flash](#flash-software) the ESP8266 again.
 
 ### Translate Keyboard Layout
 
-Currently supported keyboard layouts:  
+Currently supported keyboard layouts:
 - [:de: DE](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h)
 - [:gb: GB](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_gb.h)
 - [:us: US](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h)
@@ -476,49 +493,49 @@ Currently supported keyboard layouts:
 - [:switzerland: CH-FR](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_chfr.h)
 - [:hungary: HU](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_hu.h)
 
-All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).  
+All standard keys are defined in [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h).
 To translate a keyboard layout, you have to match each character on
-your keyboard to the one(s) of a US keyboard.  
-This stuff is hard to explain in writing and requires a lot of manual work and testing.  
+your keyboard to the one(s) of a US keyboard.
+This stuff is hard to explain in writing and requires a lot of manual work and testing.
 
-1. Copy one of the existing layouts files, like [locale_us.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h).  
-Preferably one that is close to your keyboard layout, it will save you time!  
+1. Copy one of the existing layouts files, like [locale_us.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_us.h).
+Preferably one that is close to your keyboard layout, it will save you time!
 2. Add `#include "locale_xx.h"` to the end of the locales.h file.
 3. Rename the file and its variables to your language code.
-For example:  
-`locale_xx.h` -> `locale_de.h`,  
-`ascii_xx` -> `ascii_de`,  
-`locale_xx` -> `locale_de`,  
-`utf8_xx` -> `utf8_de`.  
-`combinations_xx` -> `combinations_de`,  
-4. Modify the ASCII array.  
+For example:
+`locale_xx.h` -> `locale_de.h`,
+`ascii_xx` -> `ascii_de`,
+`locale_xx` -> `locale_de`,
+`utf8_xx` -> `utf8_de`.
+`combinations_xx` -> `combinations_de`,
+4. Modify the ASCII array.
 The ASCII array has a fixed size. Each row describes a key.
 First a modifier key like `KEY_MOD_LSHIFT`, then a character key.
 Some ASCII characters can't be typed or don't require a modifier,
 that's where you must place `KEY_NONE`.
-Check [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h) for the available keys.  
-If multiple modifiers are required, you must use a bitwise OR to connect them: `KEY_MOD_RALT | KEY_MOD_LSHIFT`.  
-For example, in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.  
+Check [usb_hid_keys.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/usb_hid_keys.h) for the available keys.
+If multiple modifiers are required, you must use a bitwise OR to connect them: `KEY_MOD_RALT | KEY_MOD_LSHIFT`.
+For example, in [locale_de.h](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/locale_de.h#L136) `Z` is saved as `KEY_MOD_LSHIFT, KEY_Y`.
 This is because German keyboards use QWERTZ instead of the QWERTY layout
-and since the letter is uppercase, shift must be pressed as well.   
+and since the letter is uppercase, shift must be pressed as well.
 Thankfully you don't have to trial and error everything, the Hak5 Community
-translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example, `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.  
-5. [deprecated] ~~Modify or create the extended ASCII array.  
+translated a lot of layouts already [here](https://github.com/hak5darren/USB-Rubber-Ducky/tree/master/Encoder/resources). It's just written in a different syntax. For example, `ASCII_20` (20 in hexadecimal) is the 32th character in our ascii array.
+5. [deprecated] ~~Modify or create the extended ASCII array.
 The extended ASCII array doesn't have a fixed size and is only as long as you make it.
 First the character code. For example, [ä](https://theasciicode.com.ar/extended-ascii-code/letter-a-umlaut-diaeresis-a-umlaut-lowercase-ascii-code-132.html) has the index 132, or 84 in hex.
 It doesn't use a modifier and sits where the apostrophe key is on a US keyboard:
-`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.~~  
-6. Modify or create the UTF-8 array.  
-The UTF-8 array is variable in length, too.  
-The first 4 bytes are the character code.  
+`0x84, KEY_NONE,       KEY_APOSTROPHE, // ä`.~~
+6. Modify or create the UTF-8 array.
+The UTF-8 array is variable in length, too.
+The first 4 bytes are the character code.
 For example, [Ä](https://www.fileformat.info/info/unicode/char/00c4/index.htm) has the hex code c384 or 0xc3 0x84. The other 2 bytes are not used so we set them to 0.
-Because the letter is uppercase, we need to press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.  
-7. Edit the hid_locale_t structure.  
-If you renamed all variables accordingly, there's nothing left to do.  
+Because the letter is uppercase, we need to press the shift key and like before, the letter is typed by pressing the same key as the apostrophe key of a US keyboard: `0xc3, 0x84, 0x00, 0x00, KEY_MOD_LSHIFT, KEY_APOSTROPHE, // Ä`.
+7. Edit the hid_locale_t structure.
+If you renamed all variables accordingly, there's nothing left to do.
 8. Go to [duckparser.cpp](https://github.com/spacehuhn/WiFiDuck/blob/master/atmega_duck/duckparser.cpp#L163) at `// LOCALE (-> change keyboard layout)` you can see a bunch of else if statements.
-You need to copy one for your layout.  
+You need to copy one for your layout.
 
-Before adding GB layout:  
+Before adding GB layout:
 ```c
 if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
     keyboard::setLocale(&locale_us);
@@ -537,7 +554,7 @@ if (compare(w->str, w->len, "US", CASE_SENSETIVE)) {
    keyboard::setLocale(&locale_gb);
 }
 ```
-9. Test your layout with a Ducky Script that contains all characters of your keyboard. For example:  
+9. Test your layout with a Ducky Script that contains all characters of your keyboard. For example:
 ```
 LOCALE DE
 STRING !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~²³äöüÄÖÜß€°§`
@@ -548,15 +565,15 @@ ENTER
 
 ## Disclaimer
 
-This tool is intended to be used for testing, training, and educational purposes only.  
-Never use it to do harm or create damage!  
+This tool is intended to be used for testing, training, and educational purposes only.
+Never use it to do harm or create damage!
 
-The continuation of this project counts on you!  
+The continuation of this project counts on you!
 
 ## License
 
 This software is licensed under the MIT License.
-See the [license file](LICENSE) for details.  
+See the [license file](LICENSE) for details.
 
 ## Credits
 
