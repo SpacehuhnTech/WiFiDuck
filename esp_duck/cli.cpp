@@ -151,6 +151,10 @@ namespace cli {
          * i2c connection problem
          */
         cli.addCommand("status", [](cmd* c) {
+            if (duckscript::getError()) {
+                print(String("Script error: ") + duckscript::getError());
+                return;
+            }
             if (com::connected()) {
                 if (duckscript::isRunning()) {
                     String s = "running " + duckscript::currentScript();

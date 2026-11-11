@@ -20,6 +20,7 @@ namespace settings {
     const char* getPassword();
     const char* getChannel();
     const char* getAutorun();
+    const char* getStartup(); // Compatibility with the original fork.
 
     int getChannelNum();
 
@@ -29,4 +30,5 @@ namespace settings {
     void setPassword(const char* password);
     void setChannel(const char* channel);
     void setAutorun(const char* autorun);
+    void setStartup(const char* startup);
 }

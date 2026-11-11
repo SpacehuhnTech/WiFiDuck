@@ -59,8 +59,25 @@ function log_ws(msg) {
 }
 
 function set_version(str) {
-  E("version").innerHTML = str;
+  var version = E("version");
+  if (version) version.textContent = str;
 }
+
+// Show the firmware version on pages that do not open a WebSocket.
+function getCookie(name) {
+  var prefix = name + "=";
+  var cookies = document.cookie.split(";");
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].trim();
+    if (cookie.indexOf(prefix) == 0) return cookie.substring(prefix.length);
+  }
+  return "";
+}
+
+window.addEventListener("load", function() {
+  var version = getCookie("CURRENT_VERSION");
+  if (version) set_version("Version " + version);
+}, false);
 
 var ws = null; // web socket instance
 var ws_callback = log_ws; // message receive callback

@@ -42,3 +42,10 @@ save-commands.json
 *.hex
 
 *.uf2
+
+# Python caches
+__pycache__/
+*.pyc
+
+# PlatformIO build products and cached board packages
+.pio/

@@ -9,6 +9,7 @@
 #include "config.h"
 // #include "debug.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "led.h"
 
 extern "C" {
@@ -144,7 +145,48 @@ namespace duckparser {
         }
     }
 
+    // Mouse values are strict signed decimal bytes, matching the HID descriptor.
+    bool mouseValue(word_node* w, int8_t& result) {
+        if (!w || w->len == 0) return false;
+
+        size_t i = 0;
+        bool negative = w->str[0] == '-';
+        if (negative || w->str[0] == '+') ++i;
+        if (i == w->len) return false;
+
+        int value = 0;
+        for (; i < w->len; ++i) {
+            char c = w->str[i];
+            if (c < '0' || c > '9') return false;
+            value = value * 10 + (c - '0');
+            if (value > 127) return false;
+        }
+
+        result = negative ? -value : value;
+        return true;
+    }
+
+    bool mouseButton(word_node* w, uint8_t& button) {
+        if (!w) return true; // Use the command's default button.
+        if (w->next) return false;
+
+        if (compare(w->str, w->len, "LEFT", CASE_INSENSETIVE)) button = mouse::LEFT;
+        else if (compare(w->str, w->len, "RIGHT", CASE_INSENSETIVE)) button = mouse::RIGHT;
+        else if (compare(w->str, w->len, "MIDDLE", CASE_INSENSETIVE)) button = mouse::MIDDLE;
+        else return false;
+        return true;
+    }
+
     // ====== PUBLIC ===== //
+
+    void reset() {
+        inString = false;
+        inComment = false;
+        repeatNum = 0;
+        defaultDelay = 5;
+        keyboard::release();
+        mouse::release();
+    }
 
     void parse(const char* str, size_t len) {
         interpretTime = millis();
@@ -164,10 +206,19 @@ namespace duckparser {
             word_list* wl  = n->words;
             word_node* cmd = wl->first;
 
-            const char* line_str = cmd->str + cmd->len + 1;
-            size_t line_str_len  = n->len - cmd->len - 1;
+            if (!cmd) {
+                n = n->next;
+                continue;
+            }
 
-            char last_char = n->str[n->len];
+            const char* line_str = cmd->str + cmd->len;
+            size_t line_str_len  = n->str + n->len - line_str;
+            if (line_str_len > 0) {
+                ++line_str;
+                --line_str_len;
+            }
+
+            char last_char = n->str + n->len < str + len ? n->str[n->len] : '\0';
             bool line_end  = last_char == '\r' || last_char == '\n';
 
             // REM (= Comment -> do nothing)
@@ -179,6 +230,11 @@ namespace duckparser {
             // LOCALE (-> change keyboard layout)
             else if (compare(cmd->str, cmd->len, "LOCALE", CASE_SENSETIVE)) {
                 word_node* w = cmd->next;
+
+                if (!w) {
+                    n = n->next;
+                    continue;
+                }
 
                 if (compare(w->str, w->len, "US", CASE_INSENSETIVE)) {
                     keyboard::setLocale(&locale_us);
@@ -248,6 +304,42 @@ namespace duckparser {
                 }
 
                 inString = !line_end;
+            }
+
+            // MOUSEMOVE x y [wheel]
+            else if (compare(cmd->str, cmd->len, "MOUSEMOVE", CASE_SENSETIVE)) {
+                word_node* x = cmd->next;
+                word_node* y = x ? x->next : NULL;
+                word_node* wheel = y ? y->next : NULL;
+                int8_t dx = 0, dy = 0, scroll = 0;
+
+                if (mouseValue(x, dx) && mouseValue(y, dy) &&
+                    (!wheel || (!wheel->next && mouseValue(wheel, scroll)))) {
+                    mouse::move(dx, dy, scroll);
+                }
+            }
+
+            // MOUSESCROLL wheel
+            else if (compare(cmd->str, cmd->len, "MOUSESCROLL", CASE_SENSETIVE)) {
+                word_node* w = cmd->next;
+                int8_t scroll = 0;
+                if (w && !w->next && mouseValue(w, scroll)) mouse::move(0, 0, scroll);
+            }
+
+            // MOUSECLICK/MOUSEPRESS [LEFT|RIGHT|MIDDLE]
+            else if (compare(cmd->str, cmd->len, "MOUSECLICK", CASE_SENSETIVE) ||
+                     compare(cmd->str, cmd->len, "MOUSEPRESS", CASE_SENSETIVE)) {
+                uint8_t button = mouse::LEFT;
+                if (mouseButton(cmd->next, button)) {
+                    if (compare(cmd->str, cmd->len, "MOUSECLICK", CASE_SENSETIVE)) mouse::click(button);
+                    else mouse::press(button);
+                }
+            }
+
+            // MOUSERELEASE [LEFT|RIGHT|MIDDLE] (no argument releases all)
+            else if (compare(cmd->str, cmd->len, "MOUSERELEASE", CASE_SENSETIVE)) {
+                uint8_t button = mouse::ALL;
+                if (mouseButton(cmd->next, button)) mouse::release(button);
             }
 
             // LED
