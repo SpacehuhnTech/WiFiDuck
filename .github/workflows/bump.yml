@@ -1,0 +1,38 @@
+name: Increment Version
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - esp_duck/version.h
+      - atmega_duck/version.h
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: version-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: github.repository == 'jLynx/WiFiDuck' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Check version bump logic
+        run: python3 tests/version_test.py
+      - name: Increment both firmware versions
+        run: python3 tools/bump_version.py
+      - name: Commit build number
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add esp_duck/version.h atmega_duck/version.h
+          git commit -m 'Increment firmware build number [skip ci]'
+          git push origin HEAD:master

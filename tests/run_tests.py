@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -40,6 +41,8 @@ def main():
                                       "atmega_duck/keyboard.cpp", "atmega_duck/duckparser.cpp",
                                       "atmega_duck/com.cpp", str(obj)]),
             "script": ("esp_duck", ["tests/script_test.cpp", "esp_duck/duckscript.cpp"]),
+            "settings": ("esp_duck", ["tests/settings_test.cpp", "esp_duck/settings.cpp",
+                                        "esp_duck/eeprom.cpp"]),
         }
         for name, (include, sources) in suites.items():
             exe = build / (name + (".exe" if os.name == "nt" else ""))
@@ -48,10 +51,18 @@ def main():
             subprocess.run([str(exe)], check=True)
 
     header = (ROOT / "esp_duck/webfiles.h").read_text()
-    array = re.search(r"const uint8_t index_html\[\] PROGMEM = \{ (.*?) \};", header).group(1)
-    content = gzip.decompress(bytes(int(value, 16) for value in array.split(",")))
-    assert content == (ROOT / "web/index.html").read_text().encode("utf-8")
-    print("Embedded web documentation matches web/index.html")
+    for source in (ROOT / "web").iterdir():
+        variable = source.name.replace(".", "_").lower()
+        array = re.search(r"const uint8_t " + variable + r"\[\] PROGMEM = \{ (.*?) \};", header).group(1)
+        content = gzip.decompress(bytes(int(value, 16) for value in array.split(",")))
+        assert content == source.read_text(encoding="utf-8").encode("utf-8"), source.name
+    print("All embedded web assets match their source files")
+    subprocess.run([sys.executable, str(ROOT / "tests/version_test.py")], check=True)
+    node = shutil.which("node")
+    if node:
+        subprocess.run([node, str(ROOT / "tests/web_version_test.js")], check=True)
+    else:
+        print("Node.js not found; web version display test skipped")
 
 
 if __name__ == "__main__":

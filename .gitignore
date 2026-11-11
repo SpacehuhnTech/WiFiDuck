@@ -42,3 +42,7 @@ save-commands.json
 *.hex
 
 *.uf2
+
+# Python caches
+__pycache__/
+*.pyc

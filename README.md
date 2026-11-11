@@ -1,5 +1,9 @@
 # WiFi Duck
 
+This fork includes the latest official WiFiDuck master, mouse commands, and
+compatible versions of the original jLynx fork improvements. See the
+[fork synchronization notes](docs/fork-sync.md) for retained features and versioning.
+
 <p align="center">
 <img alt="WiFi Duck Logo" src="img/thumbnail.jpg" width="640">
 </p>
