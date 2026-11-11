@@ -194,7 +194,14 @@ int main(int argc, char* argv[]) {
         messages.clear();
         duckscript::run("/mouse_wiggle");
         size_t limit = 100;
-        while (count("LED 0 0 25\n") < 2 && limit--) duckscript::nextLine();
+        while (count("LED 0 0 25\n") < 2 && limit--) {
+            duckscript::nextLine();
+            // Supply the AVR's repeat callbacks as it finishes each delay.
+            if (messages.back().find("REPEAT ") == 0) {
+                unsigned int repeats = (unsigned int)std::stoul(messages.back().substr(7));
+                for (unsigned int i = 0; i < repeats; ++i) duckscript::repeat();
+            }
+        }
         assert(limit && duckscript::isRunning());
         unsigned int active = 0, rest = 0;
         int dx = 0, dy = 0;

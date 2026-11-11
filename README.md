@@ -343,8 +343,9 @@ syntax stops the script and reports an error in the status indicator.
 [Mouse wiggle example](examples/mouse_wiggle.duck): a small script that loops
 forever, moves gently for five seconds each minute, shows blue while moving,
 and returns to normal green during the 55-second rest and on Stop. `ONSTOP`
-is optional; other scripts keep their existing LED behavior. Stop takes effect
-after the current command's delay finishes.
+is optional; other scripts keep their existing LED behavior. The example uses
+one-second delays during the rest so Stop can restore green promptly. Stop
+takes effect after the current command's delay finishes.
 
 ### Mouse Commands
 
