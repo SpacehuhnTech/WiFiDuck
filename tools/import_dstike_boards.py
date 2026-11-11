@@ -98,7 +98,8 @@ def main():
             }
         save_json(ROOT / "boards" / ("dstike_wifiduck_" + architecture + ".json"), board)
         print("Imported DSTIKE " + architecture, flush=True)
-    save_json(ROOT / "boards/arduino-package-source.json", {"index_url": INDEX, "packages": records})
+    save_json(ROOT / ".pio/board-packages/arduino-package-source.json",
+              {"index_url": INDEX, "packages": records})
 
 
 if __name__ == "__main__":

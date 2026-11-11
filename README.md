@@ -1,9 +1,5 @@
 # WiFi Duck
 
-This fork includes the latest official WiFiDuck master, mouse commands, and
-compatible versions of the original jLynx fork improvements. See the
-[fork synchronization notes](docs/fork-sync.md) for retained features and versioning.
-
 <p align="center">
 <img alt="WiFi Duck Logo" src="img/thumbnail.jpg" width="640">
 </p>
@@ -340,12 +336,9 @@ Loops can nest up to eight levels. Counts are total iterations (unlike
 and `ONSTOP` run on the ESP; update its firmware to use them. Invalid control
 syntax stops the script and reports an error in the status indicator.
 
-[Mouse wiggle example](examples/mouse_wiggle.duck): a small script that loops
-forever, moves gently for five seconds each minute, shows blue while moving,
-and returns to normal green during the 55-second rest and on Stop. `ONSTOP`
-is optional; other scripts keep their existing LED behavior. The example uses
-one-second delays during the rest so Stop can restore green promptly. Stop
-takes effect after the current command's delay finishes.
+`ONSTOP` is optional; other scripts keep their existing LED behavior. Stop
+takes effect after the current command's delay finishes. Use short delays
+inside loops when you want Stop to take effect promptly.
 
 ### Mouse Commands
 

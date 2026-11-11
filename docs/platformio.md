@@ -106,7 +106,9 @@ The importer reads the official package index, downloads pinned AVR **1.8.5**
 and ESP8266 **2.7.4** archives, verifies their published SHA-256 checksums,
 then imports DSTIKE `boards.txt` properties and pin variants. The source
 URLs, checksums, and properties are recorded in
-`boards/arduino-package-source.json`. Download caches live under `.pio/`.
+`.pio/board-packages/arduino-package-source.json`, alongside the downloaded
+archives. This provenance record and the download cache are ignored by Git;
+only the board descriptors, required pin headers, and license are committed.
 
 The PlatformIO AVR Arduino core is provided by the pinned Atmel AVR platform.
 The ESP platform uses Arduino core 2.7.4, matching the official ESP package.

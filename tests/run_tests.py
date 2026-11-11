@@ -7,7 +7,6 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -48,10 +47,7 @@ def main():
             exe = build / (name + (".exe" if os.name == "nt" else ""))
             subprocess.run([compiler] + flags + ["-DESP8266", "-I" + str(ROOT / include)] +
                            [str(ROOT / source) for source in sources] + ["-o", str(exe)], check=True)
-            run_args = [str(exe)]
-            if name == "script":
-                run_args.append(str(ROOT / "examples/mouse_wiggle.duck"))
-            subprocess.run(run_args, check=True)
+            subprocess.run([str(exe)], check=True)
 
     header = (ROOT / "esp_duck/webfiles.h").read_text()
     for source in (ROOT / "web").iterdir():
@@ -60,7 +56,6 @@ def main():
         content = gzip.decompress(bytes(int(value, 16) for value in array.split(",")))
         assert content == source.read_text(encoding="utf-8").encode("utf-8"), source.name
     print("All embedded web assets match their source files")
-    subprocess.run([sys.executable, str(ROOT / "tests/version_test.py")], check=True)
     node = shutil.which("node")
     if node:
         subprocess.run([node, str(ROOT / "tests/web_version_test.js")], check=True)

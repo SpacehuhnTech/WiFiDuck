@@ -5,8 +5,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <fstream>
-#include <iterator>
 
 unsigned long testTime = 1000;
 std::vector<std::string> messages;
@@ -33,7 +31,7 @@ size_t count(const std::string& command) {
     return std::count(messages.begin(), messages.end(), command);
 }
 
-int main(int argc, char* argv[]) {
+int main() {
     contents = "MOUSEPRESS LEFT\n";
     duckscript::run("/mouse.duck");
     assert(duckscript::isRunning());
@@ -185,12 +183,12 @@ int main(int argc, char* argv[]) {
     assert(messages[1] == "LOOP 0\n");
     assert(!duckscript::getError());
 
-    // Exercise the shipped example through the real script engine, including
-    // the first rewind, its timing, and cleanup during the next active burst.
-    if (argc > 1) {
-        std::ifstream example(argv[1]);
-        assert(example.good());
-        contents.assign(std::istreambuf_iterator<char>(example), std::istreambuf_iterator<char>());
+    // Exercise timed loops, repeat callbacks, and cleanup during the next burst.
+    {
+        contents = "DEFAULTDELAY 0\nONSTOP LED 0 25 0\nLOOP 0\n"
+                   "LED 0 0 25\nMOUSEMOVE 2 0\nDELAY 2500\n"
+                   "MOUSEMOVE -2 0\nDELAY 2500\nLED 0 25 0\n"
+                   "DELAY 1000\nREPEAT 54\nENDLOOP\n";
         messages.clear();
         duckscript::run("/mouse_wiggle");
         size_t limit = 100;

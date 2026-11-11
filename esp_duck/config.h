@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "version.h"
-#define VERSION CURRENT_VERSION
+#define VERSION "1.3.0.2"
 
 /*! ===== DEBUG Settings ===== */
 // #define ENABLE_DEBUG
