@@ -46,3 +46,6 @@ save-commands.json
 # Python caches
 __pycache__/
 *.pyc
+
+# PlatformIO build products and cached board packages
+.pio/

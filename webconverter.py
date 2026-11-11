@@ -6,6 +6,7 @@
 import os
 import binascii
 import gzip
+import io
 
 def get_file_content(path):
     file = open(path,"r", encoding="utf-8")
@@ -13,6 +14,8 @@ def get_file_content(path):
     file.close();
 
     gzip_content = gzip.compress(content, mtime=0)
+    # Python versions differ in their gzip OS marker; normalize it for all hosts.
+    gzip_content = gzip_content[:9] + b"\xff" + gzip_content[10:]
 
     print(f"({len(content)} -> {len(gzip_content)} byte)...", end="")
 
@@ -82,7 +85,7 @@ def write_arrays(files, output):
 def main():
     web_files = sorted(os.listdir("web/"))
 
-    outputfile = open("esp_duck/webfiles.h", "w+", encoding="utf-8", newline="\n")
+    outputfile = io.StringIO()
     outputfile.write("#pragma once\n\n")
 
     outputfile.write(f"#define WEBSERVER_CALLBACK ")
@@ -93,7 +96,15 @@ def main():
 
     write_arrays(web_files, outputfile)
 
+    content = outputfile.getvalue()
     outputfile.close()
+    output_path = "esp_duck/webfiles.h"
+    if os.path.exists(output_path):
+        with open(output_path, "r", encoding="utf-8") as existing:
+            if existing.read() == content:
+                return
+    with open(output_path, "w", encoding="utf-8", newline="\n") as output:
+        output.write(content)
 
 if __name__== "__main__":
   main()

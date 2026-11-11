@@ -238,6 +238,9 @@ You can also order them on OSHPark:
 
 ## Flash Software
 
+For DSTIKE WiFi Duck, PlatformIO can build both firmware images and upload via
+USB or ESP8266 OTA. See [PlatformIO setup and flashing](docs/platformio.md).
+
 <p align="center">
   <a href="https://youtu.be/VQAzxBefLZo">
     <img alt="WiFi Duck Hardware Tutorial Video Thumbnail" src="https://img.youtube.com/vi/VQAzxBefLZo/maxresdefault.jpg" width="400">
