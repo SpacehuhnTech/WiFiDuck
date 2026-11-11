@@ -154,6 +154,47 @@
                         </tr>
                     </tbody>
                 </table>
+                <h3>Mouse Commands</h3>
+                <p>
+                    Run one mouse command per line. DEFAULTDELAY and REPEAT work with mouse commands.<br>
+                    Buttons: LEFT, RIGHT, MIDDLE (case insensitive). Movement and wheel values: signed decimal integers from -127 to 127.<br>
+                    Positive X moves right, positive Y moves down, positive wheel scrolls up. Movement is relative and depends on the computer's mouse settings.<br>
+                    Held inputs are released when a script finishes or stops, after the current command and delay finish.<br>
+                    Flash both microcontrollers with this version to enable mouse support and input cleanup.
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Command</th><th>Example</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>MOUSEMOVE</code></td>
+                            <td><code>MOUSEMOVE 50 -20</code></td>
+                            <td>Moves by X and Y, with an optional third wheel value</td>
+                        </tr>
+                        <tr>
+                            <td><code>MOUSECLICK</code></td>
+                            <td><code>MOUSECLICK LEFT</code></td>
+                            <td>Clicks LEFT (default), RIGHT, or MIDDLE; preserves other held buttons</td>
+                        </tr>
+                        <tr>
+                            <td><code>MOUSEPRESS</code></td>
+                            <td><code>MOUSEPRESS LEFT</code></td>
+                            <td>Holds a button for dragging; defaults to LEFT</td>
+                        </tr>
+                        <tr>
+                            <td><code>MOUSERELEASE</code></td>
+                            <td><code>MOUSERELEASE</code></td>
+                            <td>Releases all mouse buttons, or only the specified button</td>
+                        </tr>
+                        <tr>
+                            <td><code>MOUSESCROLL</code></td>
+                            <td><code>MOUSESCROLL -3</code></td>
+                            <td>Scrolls the vertical wheel</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Invalid mouse arguments are ignored. Release a held button with MOUSERELEASE or a click of that button.</p>
                 <h3>Standard Keys</h3>
                 <table>
                     <thead>

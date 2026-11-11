@@ -28,6 +28,7 @@ Want to learn more about BadUSBs? Check out our online course: [learnbadusb.com]
 * [Scripting](#scripting)
   + [Basics](#basics)
   + [Functions](#functions)
+  + [Mouse Commands](#mouse-commands)
   + [Standard Keys](#standard-keys)
   + [Modifier Keys](#modifier-keys)
   + [Other Keys](#other-keys)
@@ -325,6 +326,44 @@ It's compatible to Ducky Script, which was developed by the wonderful people at 
 | `KEYCODE` | `KEYCODE 0x02 0x04` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal |
 | `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) |
 
+### Mouse Commands
+
+Mouse commands run one per line and support `DEFAULTDELAY` and `REPEAT`.
+Flash **both the Atmega32u4 and ESP8266** with this version; the communication
+protocol was updated to release held inputs when a script finishes or stops.
+Stopping takes effect after the current command (including any delay) finishes.
+
+| Command | Example | Description |
+| ------- | ------- | ----------- |
+| `MOUSEMOVE x y [wheel]` | `MOUSEMOVE 50 -20` | Moves the pointer relative to its current position, with optional scrolling |
+| `MOUSECLICK [button]` | `MOUSECLICK LEFT` | Presses and releases a button; defaults to `LEFT` |
+| `MOUSEPRESS [button]` | `MOUSEPRESS LEFT` | Holds a button for dragging; defaults to `LEFT` |
+| `MOUSERELEASE [button]` | `MOUSERELEASE LEFT` | Releases a button; no argument releases all mouse buttons |
+| `MOUSESCROLL wheel` | `MOUSESCROLL -3` | Scrolls the vertical wheel |
+
+Buttons are `LEFT`, `RIGHT`, or `MIDDLE` (case insensitive). Movement and wheel
+values must be signed decimal integers from **-127 to 127**. Invalid mouse
+arguments are ignored. Positive X moves right, positive Y moves down, and
+positive wheel values scroll up. Pointer distance depends on the host's mouse
+speed and acceleration settings; these values are relative movements, not
+absolute screen coordinates. Use `REPEAT` for larger movements.
+
+`MOUSEPRESS` keeps its button held across subsequent commands until
+`MOUSERELEASE`, a click of that button, or script completion/stop. Clicking a
+different button preserves other held buttons.
+
+```
+REM Move, click, drag, then scroll
+DEFAULTDELAY 100
+MOUSEMOVE 50 20
+MOUSECLICK LEFT
+MOUSEPRESS LEFT
+MOUSEMOVE 30 0
+REPEAT 3
+MOUSERELEASE LEFT
+MOUSESCROLL -3
+```
+
 ### Standard Keys
 
 | Key |
@@ -453,6 +492,14 @@ repository folder.
 It gzips all files inside `web/`, converts them into a hex array
 and saves it in `esp_duck/webfiles.h`.  
 Now you just need to [flash](#flash-software) the ESP8266 again.  
+
+### Test Firmware Logic
+
+Run `python tests/run_tests.py` with a C++14 compiler (`clang++` by default).
+Use `--cxx /path/to/compiler` or set `CXX` to choose another compiler.
+These host tests cover mouse reports, script parsing, keyboard compatibility,
+repeat behavior, input cleanup, and the embedded web documentation.
+USB enumeration and pointer behavior still need to be checked on hardware.
 
 ### Translate Keyboard Layout
 

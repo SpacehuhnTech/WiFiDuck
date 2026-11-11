@@ -96,6 +96,7 @@ namespace duckscript {
     }
 
     void repeat() {
+        if (!running) return;
         if (!prevMessage) {
             stopAll();
         } else {
@@ -108,6 +109,7 @@ namespace duckscript {
         if (running) {
             if (f) f.close();
             running = false;
+            com::reset();
             debugln("Stopped script");
         }
     }
@@ -116,9 +118,7 @@ namespace duckscript {
         if (fileName.length() == 0) stopAll();
         else {
             if (running && f && (fileName == currentScript())) {
-                f.close();
-                running = false;
-                debugln("Stopped script");
+                stopAll();
             }
         }
     }

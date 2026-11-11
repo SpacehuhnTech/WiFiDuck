@@ -16,8 +16,9 @@
 #define REQ_SOT 0x01     // !< Start of transmission
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
+#define REQ_RESET 0x03   // !< Reset script state and release HID inputs
 
-#define COM_VERSION 4
+#define COM_VERSION 5
 
 typedef struct status_t {
     unsigned int version : 8;
@@ -331,6 +332,10 @@ namespace com {
 
     void onDone(com_callback c) {
         callback_done = c;
+    }
+
+    void reset() {
+        if (connection) send((char)REQ_RESET);
     }
 
     void onRepeat(com_callback c) {
