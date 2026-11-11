@@ -10,7 +10,8 @@
 unsigned long testTime = 1000;
 TestHID testHID;
 TestWire Wire;
-namespace led { void setColor(int, int, int) {} }
+int ledR = 0, ledG = 0, ledB = 0;
+namespace led { void setColor(int r, int g, int b) { ledR = r; ledG = g; ledB = b; } }
 
 void parse(const std::string& text) {
     // Pass a buffer with no terminator to exercise the real transport contract.
@@ -158,6 +159,22 @@ int main() {
     report(1, { 0, 0, 0, 0, 0, 0, 0, 0 }, 2);
     report(2, { 0, 0, 0, 0 });
     report(3, { 0, 2, 0, 0 });
+
+    // An ESP ONSTOP cleanup queues LED restoration behind the reset. Both
+    // must reach the AVR even when the previous command was a held input.
+    clear();
+    frame("LED 0 0 25\nMOUSEPRESS LEFT\n");
+    const std::string cleanup = std::string("\x01\x03\x04") + "\x01LED 0 25 0\n\x04";
+    Wire.deliver(std::vector<uint8_t>(cleanup.begin(), cleanup.end()));
+    com::update();
+    assert(!com::hasData());
+    assert(ledB == 25); // Reset retains ordinary scripts' LED behavior.
+    com::update();
+    assert(com::hasData());
+    const buffer_t& color = com::getBuffer();
+    duckparser::parse(color.data, color.len);
+    com::sendDone();
+    assert(ledR == 0 && ledG == 25 && ledB == 0);
 
     std::cout << "Mouse HID, parser, keyboard compatibility, and reset tests passed\n";
 }

@@ -329,9 +329,22 @@ It's compatible to Ducky Script, which was developed by the wonderful people at 
 | `DELAY` | `DELAY 1000` | Delay in ms |
 | `STRING` | `STRING Hello World!` | Types the following string |
 | `REPEAT` or `REPLAY` | `REPEAT 3` | Repeats the last command n times |
+| `LOOP` / `ENDLOOP` | `LOOP 3` ... `ENDLOOP` | Runs a block 3 times; `LOOP 0` repeats until stopped |
+| `ONSTOP LED` | `ONSTOP LED 0 25 0` | Restores this LED color on Stop, script completion, or a script error |
 | `LOCALE` | `LOCALE DE` | Sets the keyboard layout. [List](#translate-keyboard-layout) |
 | `KEYCODE` | `KEYCODE 0x02 0x04` | Types a specific key code (modifier, key1[, ..., key6]) in decimal or hexadecimal |
 | `LED` | `LED 40 20 10` |Changes the color of the LED in decimal RGB values (0-255) |
+
+Loops can nest up to eight levels. Counts are total iterations (unlike
+`REPEAT`, which adds repetitions of the previous command). `LOOP`, `ENDLOOP`,
+and `ONSTOP` run on the ESP; update its firmware to use them. Invalid control
+syntax stops the script and reports an error in the status indicator.
+
+[Mouse wiggle example](examples/mouse_wiggle.duck): a small script that loops
+forever, moves gently for five seconds each minute, shows blue while moving,
+and returns to normal green during the 55-second rest and on Stop. `ONSTOP`
+is optional; other scripts keep their existing LED behavior. Stop takes effect
+after the current command's delay finishes.
 
 ### Mouse Commands
 

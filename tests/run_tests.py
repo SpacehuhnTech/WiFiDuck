@@ -48,7 +48,10 @@ def main():
             exe = build / (name + (".exe" if os.name == "nt" else ""))
             subprocess.run([compiler] + flags + ["-DESP8266", "-I" + str(ROOT / include)] +
                            [str(ROOT / source) for source in sources] + ["-o", str(exe)], check=True)
-            subprocess.run([str(exe)], check=True)
+            run_args = [str(exe)]
+            if name == "script":
+                run_args.append(str(ROOT / "examples/mouse_wiggle.duck"))
+            subprocess.run(run_args, check=True)
 
     header = (ROOT / "esp_duck/webfiles.h").read_text()
     for source in (ROOT / "web").iterdir():
