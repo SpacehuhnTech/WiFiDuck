@@ -18,4 +18,5 @@ namespace duckscript {
 
     bool isRunning();
     String currentScript();
+    const char* getError();
 };

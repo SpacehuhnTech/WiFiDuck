@@ -1,0 +1,28 @@
+{
+  "name": "DSTIKE WiFi Duck (ESP8266)",
+  "vendor": "DSTIKE",
+  "url": "https://wifiduck.com",
+  "frameworks": [
+    "arduino"
+  ],
+  "build": {
+    "core": "esp8266",
+    "mcu": "esp8266",
+    "f_cpu": "160000000L",
+    "f_flash": "40000000L",
+    "flash_mode": "dio",
+    "variant": "dstike",
+    "variants_dir": "boards/variants/esp8266",
+    "ldscript": "eagle.flash.4m3m.ld",
+    "extra_flags": "-DESP8266 -DARDUINO_ESP8266_DSTIKE_WIFI_DUCK -DENABLE_I2C -DI2C_SDA=4 -DI2C_SCL=5 -DFLASHMODE_DIO -DPIO_FRAMEWORK_ARDUINO_LWIP2_LOW_MEMORY"
+  },
+  "upload": {
+    "maximum_ram_size": 81920,
+    "require_upload_port": true,
+    "maximum_size": 1044464,
+    "flash_size": "4MB",
+    "speed": 115200,
+    "protocol": "esptool",
+    "resetmethod": "nodemcu"
+  }
+}

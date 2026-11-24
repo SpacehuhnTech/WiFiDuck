@@ -22,6 +22,9 @@ namespace com {
     /*! Updates the communication module */
     void update();
 
+    /*! Resets script state and releases held keyboard keys and mouse buttons */
+    void reset();
+
     /*! Transmits string */
     unsigned int send(char str);
     unsigned int send(const char* str);

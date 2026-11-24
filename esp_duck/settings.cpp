@@ -48,6 +48,7 @@ namespace settings {
         setSSID(WIFI_SSID);
         setPassword(WIFI_PASSWORD);
         setChannel(WIFI_CHANNEL);
+        setAutorun("");
     }
 
     void save() {
@@ -95,6 +96,10 @@ namespace settings {
         return data.autorun;
     }
 
+    const char* getStartup() {
+        return getAutorun();
+    }
+
     void set(const char* name, const char* value) {
         if (strcmp(name, "ssid") == 0) {
             setSSID(value);
@@ -102,7 +107,7 @@ namespace settings {
             setPassword(value);
         } else if (strcmp(name, "channel") == 0) {
             setChannel(value);
-        } else if (strcmp(name, "autorun") == 0) {
+        } else if (strcmp(name, "autorun") == 0 || strcmp(name, "startup") == 0) {
             setAutorun(value);
         }
     }
@@ -141,5 +146,9 @@ namespace settings {
 
             save();
         }
+    }
+
+    void setStartup(const char* startup) {
+        setAutorun(startup);
     }
 }

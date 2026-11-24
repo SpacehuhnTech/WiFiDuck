@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define VERSION "1.2.0"
+#define VERSION "1.3.0.2"
 
 /* ===== Serial Bridge ===== */
 // #define BRIDGE_ENABLE
@@ -33,9 +33,8 @@
 #define PACKET_SIZE 32
 
 /*! ===== LED Settings ===== */
-// #define NEOPIXEL
+// #define NO_LED // Disable the default LED (remove NEOPIXEL if set separately).
 // #define NEOPIXEL_NUM 1
-// #define LED_PIN 7
 
 // #define DOTSTAR
 // #define DOTSTAR_NUM 1
@@ -47,6 +46,16 @@
 // #define LED_R 5
 // #define LED_G 6
 // #define LED_B 9
+
+// Preserve the fork's NeoPixel default unless another LED type is selected.
+#if !defined(DOTSTAR) && !defined(LED_RGB) && !defined(NO_LED)
+  #ifndef NEOPIXEL
+    #define NEOPIXEL
+  #endif
+  #ifndef LED_PIN
+    #define LED_PIN 7
+  #endif
+#endif
 
 // *! ===== Color Modes ===== */
 #define COLOR_ESP_UNFLASHED 0, 0, 255

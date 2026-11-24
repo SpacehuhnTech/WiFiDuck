@@ -248,9 +248,9 @@ word_list* parse_words(const char* str, size_t len) {
     int ignore_space = 0;
 
     for (i = 0; i <= len; ++i) {
-        if ((str[i] == '\\') && (escaped == 0)) {
+        if ((i < len) && (str[i] == '\\') && (escaped == 0)) {
             escaped = 1;
-        } else if ((str[i] == '"') && (escaped == 0)) {
+        } else if ((i < len) && (str[i] == '"') && (escaped == 0)) {
             ignore_space = !ignore_space;
         } else if ((i == len) || ((str[i] == ' ') && (ignore_space == 0) && (escaped == 0))) {
             size_t k = i - j; // length of word
@@ -289,8 +289,8 @@ line_list* parse_lines(const char* str, size_t len) {
 
     for (stri = 0; stri <= len; ++stri) {
         char prev = stri > 0 ? str[stri-1] : 0;
-        char curr = str[stri];
-        char next = str[stri+1];
+        char curr = stri < len ? str[stri] : '\0';
+        char next = stri + 1 < len ? str[stri+1] : '\0';
 
         escaped = prev == '\\';
 

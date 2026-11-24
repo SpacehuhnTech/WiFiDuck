@@ -7,6 +7,7 @@
 #include "debug.h"
 
 #include "keyboard.h"
+#include "mouse.h"
 #include "led.h"
 #include "com.h"
 #include "duckparser.h"
@@ -19,6 +20,7 @@ void setup() {
     led::begin();
     serial_bridge::begin();
     keyboard::begin();
+    mouse::begin();
     com::begin();
 
     debugs("Started! ");

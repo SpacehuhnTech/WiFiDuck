@@ -8,6 +8,7 @@
 #include "com.h"
 
 #include <Wire.h> // Arduino i2c
+#include <string.h> // memmove
 
 #include "debug.h"
 #include "duckparser.h"
@@ -16,8 +17,9 @@
 #define REQ_SOT 0x01     // !< Start of transmission
 #define REQ_EOT 0x04     // !< End of transmission
 #define REQ_VERSION 0x02 // !< Request current version
+#define REQ_RESET 0x03   // !< Reset script state and release HID inputs
 
-#define COM_VERSION 4
+#define COM_VERSION 5
 
 typedef struct status_t {
     unsigned int version : 8;
@@ -184,7 +186,18 @@ namespace com {
 
             debugln();
 
-            receive_buf.len = 0;
+            // Keep later frames queued, including a reset sent while parsing.
+            noInterrupts();
+            size_t remaining = receive_buf.len - i;
+            memmove(receive_buf.data, receive_buf.data + i, remaining);
+            receive_buf.len = remaining;
+            interrupts();
+
+            // A control frame bypasses STRING/REM continuation state.
+            if (start_parser && data_buf.len == 1 && data_buf.data[0] == REQ_RESET) {
+                duckparser::reset();
+                sendDone();
+            }
         }
     }
 

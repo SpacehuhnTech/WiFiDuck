@@ -10,6 +10,7 @@
 
 namespace duckparser {
     void parse(const char* str, size_t len);
+    void reset();
     int getRepeats();
     unsigned int getDelayTime();
 };

@@ -1,0 +1,41 @@
+{
+  "name": "DSTIKE WiFi Duck (ATmega32u4)",
+  "vendor": "Arduino",
+  "url": "https://wifiduck.com",
+  "frameworks": [
+    "arduino"
+  ],
+  "build": {
+    "core": "arduino",
+    "mcu": "atmega32u4",
+    "f_cpu": "16000000L",
+    "variant": "dstike",
+    "variants_dir": "boards/variants/avr",
+    "hwids": [
+      [
+        "0x2341",
+        "0x8036"
+      ],
+      [
+        "0x2341",
+        "0x0036"
+      ],
+      [
+        "0x1B4F",
+        "0x9205"
+      ]
+    ],
+    "usb_product": "Leonardo",
+    "extra_flags": "-DARDUINO_AVR_ATMEGA32U4 -DENABLE_I2C -DNEOPIXEL -DNEOPIXEL_NUM=1 -DLED_PIN=7"
+  },
+  "upload": {
+    "maximum_ram_size": 2560,
+    "require_upload_port": true,
+    "maximum_size": 28672,
+    "speed": 57600,
+    "protocol": "avr109",
+    "disable_flushing": true,
+    "use_1200bps_touch": true,
+    "wait_for_upload_port": true
+  }
+}
