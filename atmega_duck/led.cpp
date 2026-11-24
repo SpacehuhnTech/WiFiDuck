@@ -73,12 +73,25 @@ namespace led {
     }
 }
 
-#else // if defined(NEOPIXEL)
-
+#else // Use onboard LED, or LED_PIN if defined
+#include <Arduino.h>
 namespace led {
-    void begin() {}
+  #if defined(LED_PIN)
+    int ledPin = LED_PIN;
+  #else
+    int ledPin = LED_BUILTIN;
+  #endif 
+    void begin() {
+      pinMode(ledPin, OUTPUT);
+    }
 
-    void setColor(int r, int g, int b) {}
+    void setColor(int r, int g, int b) {
+      // On unless all colours are below 50 (about 20%)
+      if (r > 50 && g > 50 && b > 50) {
+        digitalWrite(ledPin, HIGH);
+      } else {
+        digitalWrite(ledPin, LOW);
+      }
+    }
 }
-
 #endif // if defined(NEOPIXEL)
