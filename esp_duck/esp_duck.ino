@@ -4,7 +4,7 @@
  */
 
 #include "config.h"
-#include "debug.h"
+#include "debug.h" 
 
 #include "com.h"
 #include "duckscript.h"
